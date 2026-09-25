@@ -30,10 +30,19 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
 - [x] Claude skills (`.claude/skills`) and agents (`.claude/agents`).
 - [x] Phase 2a: Magikarp, Nidoran♂, Oddish, Poliwag, Onix, Larvitar lines — 19 lines / 51 species, balanced 47–53%,
       engine: Splash, Belly Drum, Water/Volt Absorb, Poison Point, per-line `evoRate`, 1–4 move sets.
-- [ ] Phase 2: Eevee branches (Vaporeon / Jolteon / Flareon as separate roster lines), Hoenn starters, Bagon, Beldum.
+- [x] Phase 2b: ALL 386 FireRed species — 19 curated + 196 generated lines (`tools/gen-roster.ts`), every branch
+      (Eevee, Tyrogue, Wurmple, Nincada/Shedinja...) is its own line; levels auto-tuned (`tools/tune-levels.ts`,
+      60k-battle sim: rms 1.7%); engine: Hidden Power, Counter/Mirror Coat, Transform, Wonder Guard, Roar, Heal Bell,
+      Magnitude, Present, Endeavor...; team select search + type/region filters; type-themed gauntlet.
+- [~] VFX for the ~74 moves the generated movesets introduced (`src/vfx/recipes/elemental2.ts`, `physical2.ts`);
+      moves without a recipe still use the generic type-colored animation.
+- [x] Fixes: camera kept orbiting in battle (title scene leak); pale sprites (Neutral tone mapping); redesigned HUD cards.
 - [ ] Phase 3: weather, held items, local 2-player versus, unlockables (see ROADMAP).
 
 ## Known issues / polish backlog
+- Generated movesets are heuristic (`tools/gen-roster.ts`): to hand-tune a line, move it into `CURATED` in
+  `src/data/roster.ts` and re-run `npm run roster:generate && npm run levels:tune`.
+- Assets for all 386 species are ~66 MB in `public/assets` (artwork is the biggest part).
 - Surf's wave and Aurora Beam's rainbow are the weakest VFX (see `src/vfx/recipes/water.ts`, `ice.ts`).
 - Bright arenas + bloom wash additive effects to white above intensity ~1.2 — prefer `softHit` (common.ts)
   and intensities 0.6–1.2 in new recipes.

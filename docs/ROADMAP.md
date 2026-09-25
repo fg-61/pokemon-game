@@ -7,7 +7,12 @@
 - Gauntlet (5 trainers + Champion) and Quick Battle; TR/EN UI; procedural music/SFX + cries.
 - Claude skills (add-pokemon, move-vfx, balance-sim, firered-data, playtest) and agents.
 
-## Phase 2 — roster expansion (use the `add-pokemon` skill)
+## Phase 2 — roster expansion — done
+All 386 FireRed species are playable (19 curated + 196 generated lines, auto-balanced levels).
+Remaining: hand-curate popular generated lines (starters of Johto/Hoenn, pseudo-legendaries, legendaries) and give
+their signature moves dedicated VFX.
+
+### History (use the `add-pokemon` skill for new curated lines)
 Done: Magikarp→Gyarados, Nidoran♂→Nidoking, Oddish→Vileplume, Poliwag→Poliwrath, Onix→Steelix,
 Larvitar→Tyranitar (19 lines / 51 species).
 

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type { Side } from '../battle/types';
-import { MOVES } from '../data/gamedata';
+import { effectiveMove } from '../battle/engine';
 import type { PokeType } from '../data/types';
 import type { PokemonSprite } from '../render/pokemonSprite';
 import { defaultChargeRecipe, defaultRecipe } from './recipes';
@@ -22,7 +22,7 @@ export interface PlayMoveArgs {
 
 /** Build the recipe context and run the move's VFX. Guarantees every impact fires exactly once. */
 export async function playMoveFx(a: PlayMoveArgs): Promise<void> {
-  const move = MOVES[a.moveKey];
+  const move = effectiveMove(a.moveKey);
   const type = (move.type === 'MYSTERY' ? 'GHOST' : move.type) as PokeType;
   const fired = new Set<number>();
   const phase = a.phase ?? 'strike';

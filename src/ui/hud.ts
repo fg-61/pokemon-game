@@ -1,7 +1,8 @@
 import type { Battle } from '../battle/engine';
 import type { Action, BattleMon, Side, StatusCond, TimingGrade } from '../battle/types';
 import { CONFIG } from '../battle/config';
-import { MOVES, SPECIES } from '../data/gamedata';
+import { SPECIES } from '../data/gamedata';
+import { effectiveMove } from '../battle/engine';
 import { TYPE_COLOR } from '../data/typeColors';
 import type { PokeType } from '../data/types';
 import { assetUrl } from '../render/pokemonSprite';
@@ -369,7 +370,7 @@ export class Hud {
     clear(this.cmdEl);
     const allOut = mon.moves.every((m) => m.pp <= 0);
     mon.moves.forEach((slot, i) => {
-      const mv = MOVES[slot.key];
+      const mv = effectiveMove(slot.key);
       let eff: HTMLElement | null = null;
       if (mv.category !== 'status') {
         const est = b.estimateDamage(side, slot.key);

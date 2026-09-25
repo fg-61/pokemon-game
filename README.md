@@ -22,8 +22,8 @@ npm run build      # production build in dist/
 
 ## Neler var / What's inside
 - **Veri**: pret/pokefirered decompile'ından çıkarılan 386 tür + 354 hareket + tip tablosu (`npm run data:extract`).
-- **Kadro**: 19 evrim hattı / 51 tür / 17 tipin hepsi, FireRed'de yasal moveset'ler (`npm run roster:validate`).
-- **Denge**: AI-vs-AI simülatör; tüm hatlar %47-53 kazanma oranında (`npm run sim`).
+- **Kadro**: FireRed'deki 386 türün tamamı (215 hat: 19 elle, 196 otomatik), FireRed'de yasal moveset'ler (`npm run roster:validate`).
+- **Denge**: AI-vs-AI simülatör + otomatik seviye ayarı; 215 hattın sapması ~%1.7 (`npm run sim`, `npm run levels:tune`).
 - **Görsel**: 4 arena, animasyonlu sprite'lar, kadrodaki her harekete özel VFX, evrim sineması, bloom + ekran efektleri.
 - **Ses**: orijinal prosedürel chiptune müzik, tipe özel efektler, gerçek Pokémon çığlıkları.
 - **Claude skill & agent'ları** (`.claude/`): add-pokemon, move-vfx, balance-sim, firered-data, playtest;

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T16:40:49.096Z",
+  "generatedAt": "2026-09-25T16:58:26.507Z",
   "source": {
     "showdownFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/{dex}.gif",
     "showdownBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/{dex}.gif",
@@ -223,6 +223,144 @@
         "source": "showdown"
       }
     },
+    "10": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 49,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 54,
+        "frameH": 49,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "11": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 46,
+        "frameH": 58,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 51,
+        "frameH": 58,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "12": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 97,
+        "frameH": 93,
+        "frames": 63,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 94,
+        "frameH": 99,
+        "frames": 67,
+        "source": "showdown"
+      }
+    },
+    "13": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 39,
+        "frameH": 57,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 57,
+        "frameH": 57,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "14": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 40,
+        "frameH": 62,
+        "frames": 74,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 39,
+        "frameH": 62,
+        "frames": 78,
+        "source": "showdown"
+      }
+    },
+    "15": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 79,
+        "frameH": 90,
+        "frames": 120,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 80,
+        "frameH": 94,
+        "frames": 123,
+        "source": "showdown"
+      }
+    },
     "16": {
       "files": [
         "artwork.png",
@@ -292,6 +430,144 @@
         "source": "showdown"
       }
     },
+    "19": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 47,
+        "frameH": 65,
+        "frames": 26,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 47,
+        "frameH": 68,
+        "frames": 25,
+        "source": "showdown"
+      }
+    },
+    "20": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 68,
+        "frames": 61,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 82,
+        "frameH": 67,
+        "frames": 58,
+        "source": "showdown"
+      }
+    },
+    "21": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 37,
+        "frameH": 56,
+        "frames": 24,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 57,
+        "frames": 23,
+        "source": "showdown"
+      }
+    },
+    "22": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 152,
+        "frameH": 139,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 156,
+        "frameH": 146,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "23": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 46,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 58,
+        "frameH": 45,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "24": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 91,
+        "frameH": 87,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 119,
+        "frameH": 86,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
     "25": {
       "files": [
         "artwork.png",
@@ -335,6 +611,121 @@
         "frameW": 95,
         "frameH": 117,
         "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "27": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 49,
+        "frameH": 51,
+        "frames": 30,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 50,
+        "frames": 29,
+        "source": "showdown"
+      }
+    },
+    "28": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 65,
+        "frameH": 72,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 72,
+        "frameH": 73,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "29": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 47,
+        "frameH": 45,
+        "frames": 64,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 46,
+        "frameH": 45,
+        "frames": 67,
+        "source": "showdown"
+      }
+    },
+    "30": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 45,
+        "frameH": 60,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 55,
+        "frameH": 60,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "31": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 86,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 89,
+        "frameH": 84,
+        "frames": 50,
         "source": "showdown"
       }
     },
@@ -407,6 +798,190 @@
         "source": "showdown"
       }
     },
+    "35": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 60,
+        "frameH": 52,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 69,
+        "frameH": 52,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "36": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 84,
+        "frameH": 69,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 78,
+        "frameH": 72,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "37": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 51,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 62,
+        "frameH": 53,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "38": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 83,
+        "frameH": 81,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 99,
+        "frameH": 83,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "39": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 50,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 48,
+        "frameH": 49,
+        "frames": 53,
+        "source": "showdown"
+      }
+    },
+    "40": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 76,
+        "frameH": 72,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 61,
+        "frameH": 74,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "41": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 108,
+        "frameH": 88,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 112,
+        "frameH": 92,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "42": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 164,
+        "frameH": 140,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 151,
+        "frameH": 142,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
     "43": {
       "files": [
         "artwork.png",
@@ -473,6 +1048,328 @@
         "frameW": 85,
         "frameH": 58,
         "frames": 32,
+        "source": "showdown"
+      }
+    },
+    "46": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 38,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 58,
+        "frameH": 37,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "47": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 81,
+        "frameH": 66,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 82,
+        "frameH": 67,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "48": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 67,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 59,
+        "frameH": 66,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "49": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 127,
+        "frameH": 89,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 113,
+        "frameH": 98,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "50": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 47,
+        "frameH": 39,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 48,
+        "frameH": 39,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "51": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 69,
+        "frameH": 54,
+        "frames": 120,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 72,
+        "frameH": 55,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "52": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 65,
+        "frames": 42,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 55,
+        "frameH": 64,
+        "frames": 41,
+        "source": "showdown"
+      }
+    },
+    "53": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 70,
+        "frameH": 74,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 118,
+        "frameH": 70,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "54": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 57,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 46,
+        "frameH": 58,
+        "frames": 52,
+        "source": "showdown"
+      }
+    },
+    "55": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 78,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 78,
+        "frames": 53,
+        "source": "showdown"
+      }
+    },
+    "56": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 60,
+        "frames": 28,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 69,
+        "frameH": 64,
+        "frames": 27,
+        "source": "showdown"
+      }
+    },
+    "57": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 75,
+        "frameH": 69,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 69,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "58": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 49,
+        "frameH": 61,
+        "frames": 24,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 66,
+        "frameH": 61,
+        "frames": 23,
+        "source": "showdown"
+      }
+    },
+    "59": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 78,
+        "frameH": 86,
+        "frames": 52,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 122,
+        "frameH": 86,
+        "frames": 51,
         "source": "showdown"
       }
     },
@@ -683,6 +1580,121 @@
         "source": "showdown"
       }
     },
+    "69": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 59,
+        "frameH": 53,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 45,
+        "frameH": 53,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "70": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 69,
+        "frameH": 55,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 55,
+        "frameH": 56,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "71": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 102,
+        "frameH": 86,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 87,
+        "frameH": 90,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "72": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 49,
+        "frameH": 77,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 49,
+        "frameH": 75,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "73": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 89,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 86,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
     "74": {
       "files": [
         "artwork.png",
@@ -752,6 +1764,213 @@
         "source": "showdown"
       }
     },
+    "77": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 72,
+        "frames": 99,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 73,
+        "frames": 100,
+        "source": "showdown"
+      }
+    },
+    "78": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 95,
+        "frameH": 99,
+        "frames": 78,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 130,
+        "frameH": 100,
+        "frames": 72,
+        "source": "showdown"
+      }
+    },
+    "79": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 62,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 69,
+        "frameH": 64,
+        "frames": 53,
+        "source": "showdown"
+      }
+    },
+    "80": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 96,
+        "frameH": 75,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 101,
+        "frameH": 72,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "81": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 39,
+        "frames": 35,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 44,
+        "frameH": 39,
+        "frames": 34,
+        "source": "showdown"
+      }
+    },
+    "82": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 93,
+        "frameH": 73,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 70,
+        "frameH": 74,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "83": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 48,
+        "frameH": 54,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 47,
+        "frameH": 55,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "84": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 46,
+        "frameH": 74,
+        "frames": 45,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 47,
+        "frameH": 74,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "85": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 106,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 82,
+        "frameH": 101,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
     "86": {
       "files": [
         "artwork.png",
@@ -794,6 +2013,98 @@
       "back": {
         "frameW": 141,
         "frameH": 72,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "88": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 55,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 53,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "89": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 141,
+        "frameH": 83,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 136,
+        "frameH": 78,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "90": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 41,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 53,
+        "frameH": 40,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "91": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 87,
+        "frameH": 89,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 86,
+        "frameH": 90,
         "frames": 59,
         "source": "showdown"
       }
@@ -890,6 +2201,627 @@
         "source": "showdown"
       }
     },
+    "96": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 61,
+        "frames": 70,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 62,
+        "frameH": 61,
+        "frames": 70,
+        "source": "showdown"
+      }
+    },
+    "97": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 90,
+        "frameH": 82,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 79,
+        "frameH": 79,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "98": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 54,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 62,
+        "frameH": 56,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "99": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 91,
+        "frameH": 87,
+        "frames": 46,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 82,
+        "frameH": 78,
+        "frames": 46,
+        "source": "showdown"
+      }
+    },
+    "100": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 49,
+        "frameH": 47,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 49,
+        "frameH": 47,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "101": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 76,
+        "frameH": 63,
+        "frames": 90,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 77,
+        "frameH": 63,
+        "frames": 93,
+        "source": "showdown"
+      }
+    },
+    "102": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 81,
+        "frameH": 33,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 88,
+        "frameH": 33,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "103": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 146,
+        "frameH": 103,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 134,
+        "frameH": 104,
+        "frames": 48,
+        "source": "showdown"
+      }
+    },
+    "104": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 44,
+        "frameH": 53,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 46,
+        "frameH": 51,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "105": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 71,
+        "frames": 42,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 59,
+        "frameH": 72,
+        "frames": 45,
+        "source": "showdown"
+      }
+    },
+    "106": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 49,
+        "frameH": 72,
+        "frames": 28,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 41,
+        "frameH": 71,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "107": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 81,
+        "frames": 20,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 56,
+        "frameH": 77,
+        "frames": 23,
+        "source": "showdown"
+      }
+    },
+    "108": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 63,
+        "frames": 23,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 81,
+        "frameH": 62,
+        "frames": 27,
+        "source": "showdown"
+      }
+    },
+    "109": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 81,
+        "frameH": 81,
+        "frames": 122,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 77,
+        "frames": 181,
+        "source": "showdown"
+      }
+    },
+    "110": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 107,
+        "frameH": 92,
+        "frames": 239,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 105,
+        "frameH": 98,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "111": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 70,
+        "frameH": 61,
+        "frames": 72,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 77,
+        "frameH": 62,
+        "frames": 75,
+        "source": "showdown"
+      }
+    },
+    "112": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 100,
+        "frameH": 86,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 109,
+        "frameH": 82,
+        "frames": 48,
+        "source": "showdown"
+      }
+    },
+    "113": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 78,
+        "frameH": 62,
+        "frames": 52,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 75,
+        "frameH": 62,
+        "frames": 52,
+        "source": "showdown"
+      }
+    },
+    "114": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 57,
+        "frames": 55,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 57,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "115": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 100,
+        "frameH": 91,
+        "frames": 70,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 117,
+        "frameH": 91,
+        "frames": 73,
+        "source": "showdown"
+      }
+    },
+    "116": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 35,
+        "frameH": 61,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 38,
+        "frameH": 58,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "117": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 73,
+        "frameH": 78,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 72,
+        "frameH": 79,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "118": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 83,
+        "frameH": 58,
+        "frames": 68,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 90,
+        "frameH": 64,
+        "frames": 69,
+        "source": "showdown"
+      }
+    },
+    "119": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 89,
+        "frameH": 73,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 92,
+        "frameH": 79,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "120": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 52,
+        "frameH": 54,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 51,
+        "frameH": 54,
+        "frames": 62,
+        "source": "showdown"
+      }
+    },
+    "121": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 65,
+        "frames": 57,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 65,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "122": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 79,
+        "frameH": 80,
+        "frames": 75,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 72,
+        "frameH": 78,
+        "frames": 75,
+        "source": "showdown"
+      }
+    },
     "123": {
       "files": [
         "artwork.png",
@@ -910,6 +2842,121 @@
         "frameW": 99,
         "frameH": 112,
         "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "124": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 81,
+        "frameH": 70,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 78,
+        "frameH": 72,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "125": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 82,
+        "frameH": 82,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 97,
+        "frameH": 81,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "126": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 82,
+        "frameH": 85,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 106,
+        "frameH": 87,
+        "frames": 123,
+        "source": "showdown"
+      }
+    },
+    "127": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 96,
+        "frameH": 80,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 77,
+        "frameH": 78,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "128": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 101,
+        "frameH": 99,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 136,
+        "frameH": 108,
+        "frames": 51,
         "source": "showdown"
       }
     },
@@ -956,6 +3003,374 @@
         "frameW": 154,
         "frameH": 106,
         "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "131": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 98,
+        "frameH": 88,
+        "frames": 89,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 97,
+        "frameH": 86,
+        "frames": 93,
+        "source": "showdown"
+      }
+    },
+    "132": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 47,
+        "frameH": 39,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 40,
+        "frameH": 39,
+        "frames": 61,
+        "source": "showdown"
+      }
+    },
+    "133": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 59,
+        "frames": 25,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 58,
+        "frames": 29,
+        "source": "showdown"
+      }
+    },
+    "134": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 106,
+        "frameH": 69,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 140,
+        "frameH": 67,
+        "frames": 48,
+        "source": "showdown"
+      }
+    },
+    "135": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 73,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 70,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "136": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 63,
+        "frameH": 97,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 83,
+        "frameH": 103,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "137": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 57,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 58,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "138": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 48,
+        "frameH": 49,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 57,
+        "frameH": 47,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "139": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 77,
+        "frameH": 68,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 75,
+        "frameH": 67,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "140": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 37,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 52,
+        "frameH": 37,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "141": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 77,
+        "frames": 36,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 77,
+        "frames": 35,
+        "source": "showdown"
+      }
+    },
+    "142": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 193,
+        "frameH": 148,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 170,
+        "frameH": 164,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "143": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 91,
+        "frameH": 83,
+        "frames": 106,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 78,
+        "frameH": 82,
+        "frames": 106,
+        "source": "showdown"
+      }
+    },
+    "144": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 176,
+        "frameH": 175,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 170,
+        "frameH": 176,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "145": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 149,
+        "frameH": 110,
+        "frames": 30,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 142,
+        "frameH": 115,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "146": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 221,
+        "frameH": 185,
+        "frames": 46,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 197,
+        "frameH": 198,
+        "frames": 97,
         "source": "showdown"
       }
     },
@@ -1028,6 +3443,1340 @@
         "source": "showdown"
       }
     },
+    "150": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 104,
+        "frameH": 98,
+        "frames": 90,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 161,
+        "frameH": 97,
+        "frames": 90,
+        "source": "showdown"
+      }
+    },
+    "151": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 44,
+        "frameH": 55,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 48,
+        "frameH": 54,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "152": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 36,
+        "frameH": 67,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 52,
+        "frameH": 68,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "153": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 88,
+        "frames": 52,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 54,
+        "frameH": 86,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "154": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 97,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 80,
+        "frameH": 92,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "155": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 42,
+        "frameH": 49,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 49,
+        "frameH": 49,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "156": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 46,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 63,
+        "frameH": 43,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "157": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 103,
+        "frameH": 122,
+        "frames": 56,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 75,
+        "frameH": 120,
+        "frames": 56,
+        "source": "showdown"
+      }
+    },
+    "158": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 62,
+        "frames": 26,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 52,
+        "frameH": 61,
+        "frames": 25,
+        "source": "showdown"
+      }
+    },
+    "159": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 82,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 82,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "160": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 86,
+        "frameH": 102,
+        "frames": 64,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 99,
+        "frameH": 95,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "161": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 59,
+        "frames": 47,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 72,
+        "frameH": 60,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "162": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 89,
+        "frameH": 77,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 107,
+        "frameH": 73,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "163": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 67,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 61,
+        "frameH": 66,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "164": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 115,
+        "frameH": 88,
+        "frames": 30,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 105,
+        "frameH": 94,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "165": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 65,
+        "frameH": 54,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 71,
+        "frameH": 54,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "166": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 87,
+        "frames": 41,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 52,
+        "frameH": 88,
+        "frames": 42,
+        "source": "showdown"
+      }
+    },
+    "167": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 61,
+        "frameH": 31,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 62,
+        "frameH": 30,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "168": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 86,
+        "frameH": 65,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 84,
+        "frameH": 68,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "169": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 147,
+        "frameH": 111,
+        "frames": 27,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 125,
+        "frameH": 118,
+        "frames": 28,
+        "source": "showdown"
+      }
+    },
+    "170": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 84,
+        "frameH": 57,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 58,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "171": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 86,
+        "frameH": 86,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 130,
+        "frameH": 88,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "172": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 56,
+        "frames": 47,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 46,
+        "frameH": 56,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "173": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 48,
+        "frames": 42,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 46,
+        "frameH": 48,
+        "frames": 41,
+        "source": "showdown"
+      }
+    },
+    "174": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 44,
+        "frameH": 60,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 44,
+        "frameH": 60,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "175": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 51,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 48,
+        "frameH": 50,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "176": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 75,
+        "frames": 26,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 61,
+        "frameH": 74,
+        "frames": 25,
+        "source": "showdown"
+      }
+    },
+    "177": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 46,
+        "frameH": 52,
+        "frames": 38,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 48,
+        "frameH": 54,
+        "frames": 37,
+        "source": "showdown"
+      }
+    },
+    "178": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 107,
+        "frameH": 62,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 102,
+        "frameH": 64,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "179": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 58,
+        "frames": 75,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 60,
+        "frames": 74,
+        "source": "showdown"
+      }
+    },
+    "180": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 71,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 68,
+        "frameH": 69,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "181": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 73,
+        "frameH": 105,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 83,
+        "frameH": 105,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "182": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 61,
+        "frameH": 59,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 49,
+        "frameH": 59,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "183": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 52,
+        "frames": 54,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 52,
+        "frames": 57,
+        "source": "showdown"
+      }
+    },
+    "184": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 93,
+        "frameH": 94,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 111,
+        "frameH": 95,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "185": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 70,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 70,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "186": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 67,
+        "frameH": 81,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 79,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "187": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 92,
+        "frameH": 65,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 92,
+        "frameH": 63,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "188": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 45,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 66,
+        "frameH": 45,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "189": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 94,
+        "frameH": 86,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 78,
+        "frameH": 88,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "190": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 67,
+        "frameH": 65,
+        "frames": 30,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 63,
+        "frameH": 64,
+        "frames": 29,
+        "source": "showdown"
+      }
+    },
+    "191": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 48,
+        "frameH": 48,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 37,
+        "frameH": 48,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "192": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 77,
+        "frameH": 78,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 66,
+        "frameH": 76,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "193": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 124,
+        "frameH": 81,
+        "frames": 120,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 90,
+        "frameH": 79,
+        "frames": 120,
+        "source": "showdown"
+      }
+    },
+    "194": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 63,
+        "frameH": 51,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 56,
+        "frameH": 52,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "195": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 52,
+        "frameH": 81,
+        "frames": 70,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 88,
+        "frameH": 80,
+        "frames": 73,
+        "source": "showdown"
+      }
+    },
+    "196": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 77,
+        "frames": 44,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 90,
+        "frameH": 84,
+        "frames": 44,
+        "source": "showdown"
+      }
+    },
+    "197": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 74,
+        "frames": 30,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 77,
+        "frameH": 78,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "198": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 69,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 70,
+        "frameH": 69,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "199": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 89,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 88,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "200": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 70,
+        "frameH": 67,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 69,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "201": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 77,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 56,
+        "frameH": 78,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "202": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 45,
+        "frameH": 72,
+        "frames": 75,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 58,
+        "frameH": 72,
+        "frames": 78,
+        "source": "showdown"
+      }
+    },
+    "203": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 52,
+        "frameH": 92,
+        "frames": 119,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 66,
+        "frameH": 86,
+        "frames": 123,
+        "source": "showdown"
+      }
+    },
+    "204": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 60,
+        "frameH": 63,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 63,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "205": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 97,
+        "frameH": 73,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 95,
+        "frameH": 74,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "206": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 45,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 71,
+        "frameH": 43,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "207": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 80,
+        "frameH": 94,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 74,
+        "frameH": 96,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
     "208": {
       "files": [
         "artwork.png",
@@ -1051,6 +4800,75 @@
         "source": "showdown"
       }
     },
+    "209": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 62,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 62,
+        "frameH": 63,
+        "frames": 53,
+        "source": "showdown"
+      }
+    },
+    "210": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 81,
+        "frameH": 88,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 71,
+        "frameH": 88,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "211": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 65,
+        "frameH": 54,
+        "frames": 72,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 77,
+        "frameH": 57,
+        "frames": 72,
+        "source": "showdown"
+      }
+    },
     "212": {
       "files": [
         "artwork.png",
@@ -1070,6 +4888,351 @@
       "back": {
         "frameW": 63,
         "frameH": 99,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "213": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 75,
+        "frameH": 61,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 59,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "214": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 94,
+        "frameH": 91,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 79,
+        "frameH": 85,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "215": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 76,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 72,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "216": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 61,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 40,
+        "frameH": 62,
+        "frames": 53,
+        "source": "showdown"
+      }
+    },
+    "217": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 99,
+        "frames": 45,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 96,
+        "frames": 48,
+        "source": "showdown"
+      }
+    },
+    "218": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 67,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 70,
+        "frameH": 66,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "219": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 74,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 90,
+        "frameH": 74,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "220": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 37,
+        "frames": 109,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 56,
+        "frameH": 37,
+        "frames": 112,
+        "source": "showdown"
+      }
+    },
+    "221": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 74,
+        "frameH": 76,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 85,
+        "frameH": 78,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "222": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 74,
+        "frameH": 73,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 83,
+        "frameH": 75,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "223": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 61,
+        "frameH": 66,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 74,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "224": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 94,
+        "frameH": 64,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 95,
+        "frameH": 63,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "225": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 63,
+        "frameH": 75,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 76,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "226": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 135,
+        "frameH": 63,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 129,
+        "frameH": 68,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "227": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 120,
+        "frameH": 68,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 123,
+        "frameH": 67,
         "frames": 63,
         "source": "showdown"
       }
@@ -1117,6 +5280,374 @@
         "frameW": 97,
         "frameH": 99,
         "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "230": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 101,
+        "frames": 72,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 53,
+        "frameH": 101,
+        "frames": 75,
+        "source": "showdown"
+      }
+    },
+    "231": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 54,
+        "frames": 52,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 53,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "232": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 113,
+        "frameH": 71,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 101,
+        "frameH": 69,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "233": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 58,
+        "frameH": 67,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 64,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "234": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 96,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 63,
+        "frameH": 94,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "235": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 78,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 61,
+        "frameH": 76,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "236": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 42,
+        "frameH": 73,
+        "frames": 35,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 35,
+        "frameH": 72,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "237": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 90,
+        "frameH": 75,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 77,
+        "frameH": 72,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "238": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 65,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 49,
+        "frameH": 65,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "239": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 77,
+        "frameH": 67,
+        "frames": 32,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 68,
+        "frameH": 67,
+        "frames": 31,
+        "source": "showdown"
+      }
+    },
+    "240": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 66,
+        "frames": 32,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 66,
+        "frames": 31,
+        "source": "showdown"
+      }
+    },
+    "241": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 84,
+        "frameH": 80,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 88,
+        "frameH": 79,
+        "frames": 62,
+        "source": "showdown"
+      }
+    },
+    "242": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 87,
+        "frameH": 78,
+        "frames": 52,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 84,
+        "frameH": 78,
+        "frames": 54,
+        "source": "showdown"
+      }
+    },
+    "243": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 86,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 97,
+        "frameH": 88,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "244": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 83,
+        "frameH": 91,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 137,
+        "frameH": 92,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "245": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 111,
+        "frameH": 90,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 118,
+        "frameH": 95,
+        "frames": 59,
         "source": "showdown"
       }
     },
@@ -1185,6 +5716,3180 @@
       "back": {
         "frameW": 113,
         "frameH": 104,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "249": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 160,
+        "frameH": 131,
+        "frames": 70,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 172,
+        "frameH": 140,
+        "frames": 69,
+        "source": "showdown"
+      }
+    },
+    "250": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 161,
+        "frameH": 148,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 146,
+        "frameH": 143,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "251": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 69,
+        "frames": 76,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 66,
+        "frameH": 72,
+        "frames": 75,
+        "source": "showdown"
+      }
+    },
+    "252": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 63,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 52,
+        "frameH": 62,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "253": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 82,
+        "frameH": 83,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 90,
+        "frameH": 83,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "254": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 104,
+        "frameH": 97,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 121,
+        "frameH": 90,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "255": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 37,
+        "frameH": 65,
+        "frames": 63,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 36,
+        "frameH": 64,
+        "frames": 67,
+        "source": "showdown"
+      }
+    },
+    "256": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 65,
+        "frameH": 87,
+        "frames": 27,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 52,
+        "frameH": 86,
+        "frames": 31,
+        "source": "showdown"
+      }
+    },
+    "257": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 87,
+        "frameH": 100,
+        "frames": 47,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 90,
+        "frameH": 97,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "258": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 51,
+        "frameH": 70,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 68,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "259": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 64,
+        "frameH": 81,
+        "frames": 51,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 63,
+        "frameH": 80,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "260": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 98,
+        "frameH": 94,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 97,
+        "frameH": 86,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "261": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 58,
+        "frames": 34,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 58,
+        "frames": 34,
+        "source": "showdown"
+      }
+    },
+    "262": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 77,
+        "frameH": 83,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 97,
+        "frameH": 89,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "263": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 69,
+        "frameH": 51,
+        "frames": 48,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 55,
+        "frames": 48,
+        "source": "showdown"
+      }
+    },
+    "264": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 100,
+        "frameH": 43,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 103,
+        "frameH": 41,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "265": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 44,
+        "frameH": 57,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 47,
+        "frameH": 55,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "266": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 54,
+        "frameH": 43,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 55,
+        "frameH": 43,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "267": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 85,
+        "frameH": 87,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 80,
+        "frameH": 100,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "268": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 54,
+        "frameH": 44,
+        "frames": 69,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 44,
+        "frames": 69,
+        "source": "showdown"
+      }
+    },
+    "269": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 104,
+        "frameH": 75,
+        "frames": 43,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 101,
+        "frameH": 84,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "270": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 35,
+        "frames": 19,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 62,
+        "frameH": 35,
+        "frames": 19,
+        "source": "showdown"
+      }
+    },
+    "271": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 66,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 62,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "272": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 114,
+        "frameH": 94,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 111,
+        "frameH": 94,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "273": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 41,
+        "frameH": 50,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 41,
+        "frameH": 50,
+        "frames": 29,
+        "source": "showdown"
+      }
+    },
+    "274": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 67,
+        "frameH": 73,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 79,
+        "frameH": 73,
+        "frames": 29,
+        "source": "showdown"
+      }
+    },
+    "275": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 160,
+        "frameH": 82,
+        "frames": 44,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 134,
+        "frameH": 80,
+        "frames": 44,
+        "source": "showdown"
+      }
+    },
+    "276": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 50,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 83,
+        "frameH": 47,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "277": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 170,
+        "frameH": 48,
+        "frames": 19,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 164,
+        "frameH": 49,
+        "frames": 23,
+        "source": "showdown"
+      }
+    },
+    "278": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 147,
+        "frameH": 28,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 134,
+        "frameH": 30,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "279": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 105,
+        "frameH": 96,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 100,
+        "frameH": 96,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "280": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 36,
+        "frameH": 56,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 38,
+        "frameH": 55,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "281": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 48,
+        "frameH": 72,
+        "frames": 38,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 45,
+        "frameH": 72,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "282": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 98,
+        "frameH": 100,
+        "frames": 77,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 101,
+        "frameH": 101,
+        "frames": 77,
+        "source": "showdown"
+      }
+    },
+    "283": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 79,
+        "frameH": 56,
+        "frames": 70,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 83,
+        "frameH": 56,
+        "frames": 73,
+        "source": "showdown"
+      }
+    },
+    "284": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 81,
+        "frameH": 62,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 68,
+        "frameH": 64,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "285": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 40,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 55,
+        "frameH": 40,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "286": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 70,
+        "frameH": 77,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 96,
+        "frameH": 75,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "287": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 95,
+        "frameH": 35,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 95,
+        "frameH": 33,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "288": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 86,
+        "frameH": 84,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 82,
+        "frameH": 79,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "289": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 106,
+        "frameH": 76,
+        "frames": 89,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 90,
+        "frameH": 71,
+        "frames": 89,
+        "source": "showdown"
+      }
+    },
+    "290": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 61,
+        "frameH": 34,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 33,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "291": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 95,
+        "frameH": 73,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 76,
+        "frameH": 76,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "292": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 61,
+        "frameH": 62,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 60,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "293": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 52,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 52,
+        "frameH": 52,
+        "frames": 53,
+        "source": "showdown"
+      }
+    },
+    "294": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 97,
+        "frameH": 82,
+        "frames": 56,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 85,
+        "frameH": 82,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "295": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 86,
+        "frameH": 88,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 107,
+        "frameH": 89,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "296": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 74,
+        "frameH": 70,
+        "frames": 31,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 66,
+        "frameH": 71,
+        "frames": 31,
+        "source": "showdown"
+      }
+    },
+    "297": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 106,
+        "frameH": 91,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 93,
+        "frameH": 96,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "298": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 37,
+        "frameH": 76,
+        "frames": 34,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 44,
+        "frameH": 76,
+        "frames": 34,
+        "source": "showdown"
+      }
+    },
+    "299": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 62,
+        "frames": 61,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 63,
+        "frameH": 62,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "300": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 63,
+        "frameH": 59,
+        "frames": 35,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 66,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "301": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 69,
+        "frameH": 81,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 84,
+        "frameH": 81,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "302": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 68,
+        "frames": 43,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 68,
+        "frames": 44,
+        "source": "showdown"
+      }
+    },
+    "303": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 87,
+        "frameH": 58,
+        "frames": 33,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 63,
+        "frameH": 57,
+        "frames": 71,
+        "source": "showdown"
+      }
+    },
+    "304": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 43,
+        "frameH": 49,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 47,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "305": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 78,
+        "frameH": 62,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 80,
+        "frameH": 61,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "306": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 110,
+        "frameH": 101,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 145,
+        "frameH": 98,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "307": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 63,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 50,
+        "frameH": 63,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "308": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 67,
+        "frameH": 94,
+        "frames": 44,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 91,
+        "frames": 47,
+        "source": "showdown"
+      }
+    },
+    "309": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 57,
+        "frameH": 42,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 59,
+        "frameH": 44,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "310": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 67,
+        "frameH": 84,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 72,
+        "frameH": 81,
+        "frames": 53,
+        "source": "showdown"
+      }
+    },
+    "311": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 63,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 48,
+        "frameH": 65,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "312": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 63,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 48,
+        "frameH": 65,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "313": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 72,
+        "frameH": 78,
+        "frames": 35,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 75,
+        "frameH": 76,
+        "frames": 35,
+        "source": "showdown"
+      }
+    },
+    "314": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 57,
+        "frameH": 69,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 57,
+        "frameH": 68,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "315": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 75,
+        "frameH": 62,
+        "frames": 72,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 66,
+        "frameH": 64,
+        "frames": 72,
+        "source": "showdown"
+      }
+    },
+    "316": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 56,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 87,
+        "frameH": 60,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "317": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 83,
+        "frameH": 74,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 82,
+        "frameH": 73,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "318": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 76,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 59,
+        "frameH": 75,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "319": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 82,
+        "frameH": 106,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 74,
+        "frameH": 106,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "320": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 110,
+        "frameH": 72,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 107,
+        "frameH": 72,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "321": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 150,
+        "frameH": 85,
+        "frames": 119,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 175,
+        "frameH": 106,
+        "frames": 62,
+        "source": "showdown"
+      }
+    },
+    "322": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 60,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 59,
+        "frameH": 59,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "323": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 85,
+        "frameH": 78,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 89,
+        "frameH": 77,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "324": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 67,
+        "frameH": 81,
+        "frames": 239,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 69,
+        "frameH": 82,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
+    "325": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 39,
+        "frameH": 100,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 33,
+        "frameH": 101,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "326": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 85,
+        "frameH": 77,
+        "frames": 47,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 86,
+        "frameH": 80,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "327": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 65,
+        "frameH": 73,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 67,
+        "frameH": 73,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "328": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 49,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 56,
+        "frameH": 47,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "329": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 121,
+        "frameH": 54,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 116,
+        "frameH": 51,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "330": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 137,
+        "frameH": 110,
+        "frames": 43,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 170,
+        "frameH": 114,
+        "frames": 44,
+        "source": "showdown"
+      }
+    },
+    "331": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 85,
+        "frameH": 54,
+        "frames": 49,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 79,
+        "frameH": 54,
+        "frames": 49,
+        "source": "showdown"
+      }
+    },
+    "332": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 87,
+        "frameH": 91,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 80,
+        "frameH": 90,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "333": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 97,
+        "frameH": 57,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 74,
+        "frameH": 60,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "334": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 148,
+        "frameH": 93,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 124,
+        "frameH": 97,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "335": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 71,
+        "frameH": 82,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 89,
+        "frameH": 86,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
+    "336": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 77,
+        "frameH": 92,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 68,
+        "frameH": 96,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "337": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 49,
+        "frameH": 68,
+        "frames": 89,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 47,
+        "frameH": 67,
+        "frames": 93,
+        "source": "showdown"
+      }
+    },
+    "338": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 94,
+        "frameH": 83,
+        "frames": 89,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 85,
+        "frameH": 84,
+        "frames": 93,
+        "source": "showdown"
+      }
+    },
+    "339": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 53,
+        "frameH": 46,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 74,
+        "frameH": 44,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "340": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 79,
+        "frameH": 66,
+        "frames": 58,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 89,
+        "frameH": 70,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "341": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 59,
+        "frames": 35,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 73,
+        "frameH": 57,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "342": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 106,
+        "frameH": 78,
+        "frames": 72,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 104,
+        "frameH": 73,
+        "frames": 72,
+        "source": "showdown"
+      }
+    },
+    "343": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 69,
+        "frameH": 64,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 60,
+        "frameH": 64,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "344": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 73,
+        "frameH": 89,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 67,
+        "frameH": 89,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "345": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 78,
+        "frameH": 72,
+        "frames": 99,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 72,
+        "frames": 99,
+        "source": "showdown"
+      }
+    },
+    "346": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 78,
+        "frameH": 92,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 68,
+        "frameH": 91,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "347": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 68,
+        "frameH": 41,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 69,
+        "frameH": 40,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "348": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 80,
+        "frameH": 85,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 118,
+        "frameH": 84,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "349": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 47,
+        "frameH": 56,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 53,
+        "frameH": 59,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "350": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 102,
+        "frameH": 98,
+        "frames": 63,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 102,
+        "frameH": 97,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "351": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 41,
+        "frameH": 63,
+        "frames": 45,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 41,
+        "frameH": 63,
+        "frames": 45,
+        "source": "showdown"
+      }
+    },
+    "352": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 55,
+        "frameH": 71,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 54,
+        "frameH": 69,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "353": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 41,
+        "frameH": 67,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 44,
+        "frameH": 65,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "354": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 71,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 88,
+        "frameH": 71,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "355": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 52,
+        "frameH": 68,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 51,
+        "frameH": 67,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "356": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 100,
+        "frameH": 85,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 113,
+        "frameH": 87,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "357": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 207,
+        "frameH": 83,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 183,
+        "frameH": 77,
+        "frames": 119,
+        "source": "showdown"
+      }
+    },
+    "358": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 45,
+        "frameH": 77,
+        "frames": 69,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 41,
+        "frameH": 79,
+        "frames": 70,
+        "source": "showdown"
+      }
+    },
+    "359": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 63,
+        "frameH": 96,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 84,
+        "frameH": 93,
+        "frames": 62,
+        "source": "showdown"
+      }
+    },
+    "360": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 80,
+        "frameH": 57,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 70,
+        "frameH": 58,
+        "frames": 39,
+        "source": "showdown"
+      }
+    },
+    "361": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 48,
+        "frameH": 51,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 46,
+        "frameH": 51,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "362": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 76,
+        "frameH": 79,
+        "frames": 61,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 77,
+        "frameH": 79,
+        "frames": 62,
+        "source": "showdown"
+      }
+    },
+    "363": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 49,
+        "frameH": 46,
+        "frames": 39,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 57,
+        "frameH": 46,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "364": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 83,
+        "frameH": 54,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 103,
+        "frameH": 52,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "365": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 102,
+        "frameH": 75,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 115,
+        "frameH": 71,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "366": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 60,
+        "frameH": 58,
+        "frames": 54,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 61,
+        "frameH": 58,
+        "frames": 58,
+        "source": "showdown"
+      }
+    },
+    "367": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 97,
+        "frameH": 69,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 149,
+        "frameH": 95,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "368": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 86,
+        "frameH": 78,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 100,
+        "frameH": 79,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "369": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 73,
+        "frameH": 72,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 74,
+        "frameH": 76,
+        "frames": 83,
+        "source": "showdown"
+      }
+    },
+    "370": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 38,
+        "frameH": 47,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 36,
+        "frameH": 47,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "371": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 39,
+        "frameH": 63,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 38,
+        "frameH": 62,
+        "frames": 30,
+        "source": "showdown"
+      }
+    },
+    "372": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 61,
+        "frameH": 63,
+        "frames": 68,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 61,
+        "frameH": 63,
+        "frames": 73,
+        "source": "showdown"
+      }
+    },
+    "373": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 141,
+        "frameH": 96,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 192,
+        "frameH": 88,
+        "frames": 60,
+        "source": "showdown"
+      }
+    },
+    "374": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 37,
+        "frames": 58,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 53,
+        "frameH": 38,
+        "frames": 58,
+        "source": "showdown"
+      }
+    },
+    "375": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 109,
+        "frameH": 73,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 97,
+        "frameH": 70,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "376": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 146,
+        "frameH": 77,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 151,
+        "frameH": 77,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "377": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 96,
+        "frameH": 87,
+        "frames": 69,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 88,
+        "frameH": 88,
+        "frames": 69,
+        "source": "showdown"
+      }
+    },
+    "378": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 111,
+        "frameH": 86,
+        "frames": 79,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 95,
+        "frameH": 87,
+        "frames": 79,
+        "source": "showdown"
+      }
+    },
+    "379": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 127,
+        "frameH": 81,
+        "frames": 69,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 106,
+        "frameH": 83,
+        "frames": 69,
+        "source": "showdown"
+      }
+    },
+    "380": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 112,
+        "frameH": 73,
+        "frames": 87,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 114,
+        "frameH": 81,
+        "frames": 87,
+        "source": "showdown"
+      }
+    },
+    "381": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 125,
+        "frameH": 83,
+        "frames": 87,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 123,
+        "frameH": 97,
+        "frames": 87,
+        "source": "showdown"
+      }
+    },
+    "382": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 238,
+        "frameH": 59,
+        "frames": 38,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 232,
+        "frameH": 58,
+        "frames": 38,
+        "source": "showdown"
+      }
+    },
+    "383": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 111,
+        "frameH": 98,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 145,
+        "frameH": 93,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "384": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 146,
+        "frameH": 157,
+        "frames": 95,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 166,
+        "frameH": 169,
+        "frames": 95,
+        "source": "showdown"
+      }
+    },
+    "385": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 96,
+        "frameH": 72,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 82,
+        "frameH": 70,
+        "frames": 59,
+        "source": "showdown"
+      }
+    },
+    "386": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 119,
+        "frameH": 90,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 91,
+        "frameH": 91,
         "frames": 59,
         "source": "showdown"
       }

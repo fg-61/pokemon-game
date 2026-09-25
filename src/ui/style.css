@@ -274,3 +274,13 @@ button { font-family: inherit; cursor: pointer; }
 .info-card { width: min(410px, 48vw); }
 .info-card .type-badge { font-size: 9px; padding: 1px 5px; letter-spacing: 0.04em; }
 .info-card .nm { flex: 0 1 auto; min-width: 60px; }
+
+/* team select filters */
+.filter-bar { width: 100%; max-width: 1280px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.filter-bar .search { flex: 1; min-width: 180px; padding: 9px 14px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.35); color: var(--text); font: inherit; font-size: 14px; outline: none; }
+.filter-bar .search:focus { border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(88, 225, 255, 0.2); }
+.filter-bar .filter { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: #141c3a; color: var(--text); font: inherit; font-size: 13px; }
+.filter-bar .count { font-size: 12px; color: var(--muted); font-weight: 700; min-width: 70px; text-align: right; }
+.mon-card .dexno { position: absolute; top: 8px; left: 10px; font-size: 10px; font-weight: 800; color: rgba(255, 255, 255, 0.45); }
+.mon-card .name small { font-size: 11px; color: var(--cyan); font-weight: 600; }
+.mon-card.legendary { background: linear-gradient(160deg, rgba(110, 84, 20, 0.85), rgba(40, 28, 60, 0.92)); border-color: rgba(255, 211, 90, 0.35); }

@@ -16,5 +16,7 @@ import './psychic';
 import './rock';
 import './steel';
 import './water';
+import './elemental2';
+import './physical2';
 
 export { defaultChargeRecipe, defaultRecipe } from './defaults';

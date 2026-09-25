@@ -11,6 +11,7 @@ import { MOVES, SPECIES } from '../src/data/gamedata';
 import { ROSTER } from '../src/data/roster';
 import { SUPPORTED_EFFECTS } from '../src/battle/engine';
 
+const verbose = process.argv.includes('-v') || process.argv.includes('--verbose');
 let errors = 0;
 let warnings = 0;
 const err = (m: string) => {
@@ -41,7 +42,7 @@ const rosterDex = new Set<number>((JSON.parse(readFileSync('src/data/roster-dex.
 const seen = new Set<string>();
 
 for (const line of ROSTER) {
-  console.log(`${line.id} (${line.role}, Lv${line.level})`);
+  if (verbose) console.log(`${line.id} (${line.role}, Lv${line.level})`);
   if (seen.has(line.id)) err(`duplicate line id ${line.id}`);
   seen.add(line.id);
   line.stages.forEach((stage, i) => {
@@ -64,13 +65,13 @@ for (const line of ROSTER) {
         continue;
       }
       const how = legal.get(mk);
-      if (!how) err(`${sp.name} cannot learn ${mv.name} in FireRed`);
+      if (!how && !legal.has('SKETCH')) err(`${sp.name} cannot learn ${mv.name} in FireRed`);
       if (!SUPPORTED_EFFECTS.has(mv.effect)) warn(`${sp.name}: ${mv.name} effect ${mv.effect} not implemented (treated as plain hit/fail)`);
-      parts.push(`${mv.name}[${mv.type.slice(0, 3)} ${mv.power || '-'} ${how ?? '??'}]`);
+      parts.push(`${mv.name}[${mv.type.slice(0, 3)} ${mv.power || '-'} ${how ?? (legal.has('SKETCH') ? 'Sketch' : '??')}]`);
     }
     const b = sp.base;
     const bst = b.hp + b.atk + b.def + b.spa + b.spd + b.spe;
-    console.log(`  ${i + 1}. ${sp.name.padEnd(11)} BST ${bst}  ${parts.join('  ')}`);
+    if (verbose) console.log(`  ${i + 1}. ${sp.name.padEnd(11)} BST ${bst}  ${parts.join('  ')}`);
   });
 }
 

@@ -107,6 +107,7 @@ export function titleScreen(parent: HTMLElement, onPick: (mode: 'gauntlet' | 'qu
 // ------------------------------------------------------------------ team select
 
 const STAT_KEYS = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'] as const;
+const TYPE_LIST: PokeType[] = ['NORMAL', 'FIRE', 'WATER', 'ELECTRIC', 'GRASS', 'ICE', 'FIGHTING', 'POISON', 'GROUND', 'FLYING', 'PSYCHIC', 'BUG', 'ROCK', 'GHOST', 'DRAGON', 'DARK', 'STEEL'];
 const STAT_NAMES = { hp: 'HP', atk: 'Atk', def: 'Def', spa: 'SpA', spd: 'SpD', spe: 'Spe' };
 const STAT_COLORS = { hp: '#ff5959', atk: '#f5ac78', def: '#fae078', spa: '#9db7f5', spd: '#a7db8d', spe: '#fa92b2' };
 
@@ -121,31 +122,81 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
   const goBtn = h('button', { class: 'btn primary', disabled: true, onclick: () => done() }, t('battle'));
 
   const cards = new Map<string, HTMLElement>();
+  const searchText = new Map<string, string>();
   for (const line of ROSTER) {
     const base = SPECIES[line.stages[0].species];
+    const last = SPECIES[line.stages[line.stages.length - 1].species];
+    const branch = line.tags?.includes('branch');
     const card = h(
       'div',
       {
-        class: 'mon-card',
+        class: `mon-card ${line.tags?.includes('legendary') ? 'legendary' : ''}`,
         onclick: () => toggle(line),
         onmouseenter: () => {
           audio.playSfx('uiHover', { volume: 0.25 });
           setFocus(line);
         },
       },
+      h('div', { class: 'dexno' }, `#${String(base.dex).padStart(3, '0')}`),
       h('div', { class: 'art' }, h('img', { src: assetUrl(base.dex, 'frlg-front.png'), alt: base.name, loading: 'lazy' })),
-      h('div', { class: 'name' }, base.name),
+      h('div', { class: 'name' }, base.name, branch ? h('small', null, ` → ${last.name}`) : null),
       h('div', { class: 'role' }, line.role),
       h('div', { class: 'types' }, base.types.map(typeBadge)),
       h(
         'div',
         { class: 'chain' },
-        line.stages.flatMap((s, i) => [i > 0 ? h('span', null, '›') : null, h('img', { src: iconUrl(s.species), title: SPECIES[s.species].name })]),
+        line.stages.flatMap((s, i) => [i > 0 ? h('span', null, '›') : null, h('img', { src: iconUrl(s.species), title: SPECIES[s.species].name, loading: 'lazy' })]),
       ),
     );
     cards.set(line.id, card);
+    searchText.set(line.id, line.stages.map((s) => SPECIES[s.species].name.toLowerCase()).join(' ') + ' ' + line.role.toLowerCase());
     grid.appendChild(card);
   }
+
+  // ---- filters: text search, type, region
+  let q = '';
+  let typeFilter = '';
+  let region = '';
+  const applyFilter = () => {
+    let shown = 0;
+    for (const line of ROSTER) {
+      const types = new Set(line.stages.flatMap((s) => SPECIES[s.species].types));
+      const ok =
+        (!q || searchText.get(line.id)!.includes(q)) &&
+        (!typeFilter || types.has(typeFilter as PokeType)) &&
+        (!region || (region === 'curated' ? !line.tags : line.tags?.includes(region)));
+      cards.get(line.id)!.classList.toggle('hidden', !ok);
+      if (ok) shown++;
+    }
+    countEl.textContent = `${shown} / ${ROSTER.length}`;
+  };
+  const countEl = h('span', { class: 'count' });
+  const search = h('input', { class: 'search', type: 'search', placeholder: t('search') }) as HTMLInputElement;
+  search.addEventListener('input', () => {
+    q = search.value.trim().toLowerCase();
+    applyFilter();
+  });
+  search.addEventListener('keydown', (e) => e.stopPropagation());
+  const typeSel = h('select', { class: 'filter' }, h('option', { value: '' }, t('allTypes')), ...TYPE_LIST.map((ty) => h('option', { value: ty }, ty))) as HTMLSelectElement;
+  typeSel.onchange = () => {
+    typeFilter = typeSel.value;
+    applyFilter();
+  };
+  const regionSel = h(
+    'select',
+    { class: 'filter' },
+    h('option', { value: '' }, t('allRegions')),
+    h('option', { value: 'curated' }, t('featured')),
+    h('option', { value: 'kanto' }, 'Kanto'),
+    h('option', { value: 'johto' }, 'Johto'),
+    h('option', { value: 'hoenn' }, 'Hoenn'),
+    h('option', { value: 'legendary' }, t('legendary')),
+  ) as HTMLSelectElement;
+  regionSel.onchange = () => {
+    region = regionSel.value;
+    applyFilter();
+  };
+  const filterBar = h('div', { class: 'filter-bar' }, search, typeSel, regionSel, countEl);
 
   const renderDetail = () => {
     clear(detail);
@@ -233,7 +284,7 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
 
   const randomize = () => {
     picked.length = 0;
-    const ids = ROSTER.map((l) => l.id).sort(() => Math.random() - 0.5);
+    const ids = ROSTER.filter((l) => !cards.get(l.id)!.classList.contains('hidden')).map((l) => l.id).sort(() => Math.random() - 0.5);
     picked.push(...ids.slice(0, 3));
     audio.playSfx('uiSelect');
     renderSlots();
@@ -260,12 +311,14 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
 
   root.append(
     h('div', { class: 'select-head' }, h('div', null, h('h2', null, t('chooseTeam')), h('p', null, `${opts.title} · ${t('chooseTeamHint')}`)), h('button', { class: 'btn', onclick: () => (cleanup(), audio.playSfx('uiBack'), opts.onBack()) }, t('back'))),
+    filterBar,
     h('div', { class: 'select-body' }, grid, detail),
     h('div', { class: 'select-foot' }, h('div', { style: 'display:flex;gap:10px;align-items:center' }, h('b', null, t('team')), slots), h('div', { style: 'display:flex;gap:10px' }, h('button', { class: 'btn', onclick: randomize }, '🎲 ', t('random')), goBtn)),
   );
   cards.get(focus.id)?.classList.add('focus');
   renderDetail();
   renderSlots();
+  applyFilter();
   parent.appendChild(root);
 }
 

@@ -27,6 +27,11 @@ export interface Volatile {
   locked: { move: string; left: number } | null; // Outrage / Thrash
   flashFire: boolean;
   lastMove: string | null;
+  /** last damaging hit taken (Counter / Mirror Coat / Revenge) */
+  lastTaken: { dmg: number; physical: boolean; at: number } | null;
+  /** Transform: species copied and the original data to restore on switch-out */
+  transformed: string | null;
+  orig: { types: PokeType[]; stats: StatBlock; moves: MoveSlot[]; ability: string } | null;
 }
 
 export interface BattleMon {
@@ -104,6 +109,7 @@ export type BattleEvent =
   | { t: 'evolve'; side: Side; from: string; to: string; newMoves: string[] }
   | { t: 'screen'; side: Side; screen: 'reflect' | 'lightScreen'; on: boolean }
   | { t: 'seeded'; side: Side }
+  | { t: 'transform'; side: Side; into: string }
   | { t: 'ability'; side: Side; ability: string; text: string }
   | { t: 'msg'; text: string }
   | { t: 'evoGain'; side: Side; evo: number }

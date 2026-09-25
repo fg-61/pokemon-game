@@ -13,7 +13,9 @@
     "data:extract": "node tools/extract-firered.mjs",
     "assets:fetch": "node tools/fetch-assets.mjs",
     "roster:validate": "tsx tools/validate-roster.ts",
-    "sim": "tsx tools/sim.ts"
+    "sim": "tsx tools/sim.ts",
+    "roster:generate": "tsx tools/gen-roster.ts",
+    "levels:tune": "tsx tools/tune-levels.ts"
   },
   "dependencies": {
     "@fontsource/pixelify-sans": "^5.3.0",

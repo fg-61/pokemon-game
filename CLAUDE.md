@@ -13,14 +13,16 @@ Update the HANDOFF status section at the end of every session.
 - `npm run typecheck` · `npm test` (vitest) · `npm run build`
 - `npm run roster:validate` — movesets legal in FireRed + effects implemented + assets present
 - `npm run sim [-- --n 3000 | --duel | --ai hard]` — headless AI-vs-AI balance simulator
+- `npm run roster:generate` — regenerate the 196 auto lines (src/data/roster.generated.ts) + roster-dex.json
+- `npm run levels:tune [-- --iters 4 --n 60000]` — auto-balance per-line levels into src/data/levels.json
 - `npm run data:extract` — regenerate src/data/generated from pret/pokefirered
 - `npm run assets:fetch [-- --ids 1-9]` — sprites/cries for roster-dex.json
 - Headless screenshots: `npx vite --config vite.nohmr.config.ts` (port 5174, no HMR) +
   `node tools/shoot.mjs --url "http://localhost:5174/?quick=1&auto=1&fixed=1" --game --at 3000,9000 --out tests/screenshots/x`
 
 ## Layout
-- `src/data/` — generated FireRed JSON (`generated/`), typed access (`gamedata.ts`), `roster.ts` (playable lines,
-  movesets, per-line balance levels), `roster-dex.json` (dex list for the asset tool), `typeColors.ts`.
+- `src/data/` — generated FireRed JSON (`generated/`), typed access (`gamedata.ts`), `roster.ts` (CURATED lines +
+  merge with `roster.generated.ts` and `levels.json`), `roster-dex.json` (dex list for the asset tool), `typeColors.ts`.
 - `src/battle/` — pure game logic, no DOM/three: `engine.ts` (Battle: ATB tick, act(), Gen 3 damage, effects,
   evolution), `ai.ts`, `config.ts` (all balance knobs), `stats.ts`, `runner.ts` (headless autoBattle), `rng.ts`.
 - `src/render/` — `stage.ts` (renderer, bloom + grade post pass, camera director), `arena.ts` (4 themes, platforms),

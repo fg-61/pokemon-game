@@ -20,6 +20,11 @@ npm run sim -- --duel           # 1v1 line-vs-line matrix (row win % vs column)
 - Evolution: most lines evolve at least once in ~50–75% of games; 3-stage lines reach stage 3 in ~25–50%.
 - `--duel` matrix: type counters should show (e.g. water vs fire > 65%), but no row averaging > 65%.
 
+## Automatic level tuning
+`npm run levels:tune [-- --iters 6 --n 24000 | --only id1,id2]` runs the simulator in parallel worker processes and
+writes `src/data/levels.json` (overrides the `level` field of every line). With 215 lines use n ≥ 24000 per
+iteration (each line then plays ~650 battles; ±2% noise).
+
 ## Knobs (in order of preference)
 1. Per-line `level` in `src/data/roster.ts` — the FireRed way to balance. ±1 level ≈ ±2–3% win rate.
 2. Movesets (keep them FireRed-legal: `npm run roster:validate`).

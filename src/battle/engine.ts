@@ -54,7 +54,9 @@ export const SUPPORTED_EFFECTS = new Set<string>([
   'SLEEP', 'POISON', 'TOXIC', 'PARALYZE', 'WILL_O_WISP', 'CONFUSE', 'LEECH_SEED', 'PROTECT', 'REFLECT', 'LIGHT_SCREEN',
   'RESTORE_HP', 'SOFTBOILED', 'SYNTHESIS', 'MORNING_SUN', 'MOONLIGHT', 'REST', 'HAZE', 'FOCUS_ENERGY',
   'CALM_MIND', 'BULK_UP', 'DRAGON_DANCE', 'COSMIC_POWER', 'DEFENSE_CURL', 'TICKLE', 'SWAGGER', 'FLATTER',
-  'SPLASH', 'BELLY_DRUM', 'ATTACK_UP', 'ATTACK_UP_2', 'DEFENSE_UP', 'DEFENSE_UP_2', 'SPEED_UP', 'SPEED_UP_2', 'SPECIAL_ATTACK_UP',
+  'SPLASH', 'BELLY_DRUM', 'HIDDEN_POWER', 'COUNTER', 'MIRROR_COAT', 'TRANSFORM', 'MAGNITUDE', 'PRESENT', 'ENDEAVOR',
+  'SMELLINGSALT', 'REVENGE', 'HEAL_BELL', 'REFRESH', 'WISH', 'ROAR', 'TRAP', 'RAGE', 'ROLLOUT', 'FURY_CUTTER', 'KNOCK_OFF', 'THIEF',
+  'BEAT_UP', 'WEATHER_BALL', 'FOCUS_PUNCH', 'PAY_DAY', 'UPROAR', 'ATTACK_UP', 'ATTACK_UP_2', 'DEFENSE_UP', 'DEFENSE_UP_2', 'SPEED_UP', 'SPEED_UP_2', 'SPECIAL_ATTACK_UP',
   'SPECIAL_ATTACK_UP_2', 'SPECIAL_DEFENSE_UP', 'SPECIAL_DEFENSE_UP_2', 'EVASION_UP', 'ATTACK_DOWN', 'ATTACK_DOWN_2',
   'DEFENSE_DOWN', 'DEFENSE_DOWN_2', 'SPEED_DOWN', 'SPEED_DOWN_2', 'SPECIAL_DEFENSE_DOWN_2', 'ACCURACY_DOWN',
   'EVASION_DOWN', 'ATTACK_UP_HIT', 'DEFENSE_UP_HIT', 'SPECIAL_ATTACK_UP_HIT', 'ATTACK_DOWN_HIT', 'DEFENSE_DOWN_HIT',
@@ -63,10 +65,27 @@ export const SUPPORTED_EFFECTS = new Set<string>([
 
 let uidCounter = 0;
 
+/**
+ * Runtime overrides of the raw FireRed move data. Hidden Power with our all-31 IVs is Dark / 70 power
+ * (Gen 3 formula), which makes it a special move.
+ */
+export function effectiveMove(key: string): MoveData {
+  const m = MOVES[key];
+  if (m.effect === 'HIDDEN_POWER') return { ...m, type: 'DARK', power: 70, category: 'special' };
+  return m;
+}
+
+/** Stats for a species (Shedinja always has exactly 1 HP, as in the games). */
+export function statsFor(speciesKey: string, level: number) {
+  const st = calcStats(SPECIES[speciesKey].base, level);
+  if (speciesKey === 'SHEDINJA') st.hp = 1;
+  return st;
+}
+
 export function buildMon(line: RosterLine, stage = 0): BattleMon {
   const st = line.stages[stage];
   const sp = SPECIES[st.species];
-  const stats = calcStats(sp.base, line.level);
+  const stats = statsFor(st.species, line.level);
   return {
     uid: `${line.id}-${++uidCounter}`,
     lineId: line.id,
@@ -106,6 +125,9 @@ function freshVolatile(): BattleMon['vol'] {
     locked: null,
     flashFire: false,
     lastMove: null,
+    lastTaken: null,
+    transformed: null,
+    orig: null,
   };
 }
 
@@ -250,6 +272,9 @@ export class Battle {
   private doSwitch(side: Side, index: number, ev: BattleEvent[], atb: number) {
     const st = this.sides[side];
     const out = this.active(side);
+    if (out.vol.orig) {
+      Object.assign(out, { types: out.vol.orig.types, stats: out.vol.orig.stats, moves: out.vol.orig.moves, ability: out.vol.orig.ability });
+    }
     if (!out.fainted) {
       ev.push({ t: 'switchOut', side, index: st.active });
       out.boosts = { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0 };
@@ -257,6 +282,7 @@ export class Battle {
       if (out.status === 'tox') out.statusCounter = 0;
     }
     st.active = index;
+    this.readySignaled[side] = false;
     const inc = this.active(side);
     inc.atb = atb;
     inc.vol = freshVolatile();
@@ -286,7 +312,7 @@ export class Battle {
     mon.name = sp.name;
     mon.types = sp.types as PokeType[];
     mon.ability = sp.abilities[0] ?? 'NONE';
-    mon.stats = calcStats(sp.base, mon.level);
+    mon.stats = statsFor(stage.species, mon.level);
     const heal = Math.floor(mon.stats.hp * CONFIG.evo.evolveHealPct);
     const before = Math.round(mon.stats.hp * ratio);
     mon.hp = Math.min(mon.stats.hp, Math.max(1, before) + heal);
@@ -380,7 +406,7 @@ export class Battle {
         moveKey = ms.key;
       }
     }
-    const move = MOVES[moveKey];
+    const move = effectiveMove(moveKey);
     user.vol.lastMove = moveKey;
 
     // --- two-turn moves: first action charges
@@ -508,6 +534,22 @@ export class Battle {
       moveEv.outcome = 'noEffect';
       return;
     }
+    if (foe.ability === 'WONDER_GUARD' && eff <= 1 && move.key !== 'STRUGGLE') {
+      moveEv.outcome = 'noEffect';
+      ev.push({ t: 'ability', side: foeSide, ability: 'WONDER_GUARD', text: `${foe.name}'s Wonder Guard blocked the attack!` });
+      return;
+    }
+    if (move.effect === 'COUNTER' || move.effect === 'MIRROR_COAT') {
+      const lt = user.vol.lastTaken;
+      if (!lt || this.time - lt.at > 8 || lt.physical !== (move.effect === 'COUNTER')) {
+        moveEv.outcome = 'failed';
+        return;
+      }
+    }
+    if (move.effect === 'ENDEAVOR' && foe.hp <= user.hp) {
+      moveEv.outcome = 'failed';
+      return;
+    }
 
     // number of hits
     let hits = 1;
@@ -529,6 +571,11 @@ export class Battle {
     }
     user.dealt += total;
     if (timing.atk === 'perfect') user.perfects++;
+    if (total > 0) foe.vol.lastTaken = { dmg: total, physical: move.category === 'physical', at: this.time };
+    if (move.effect === 'SMELLINGSALT' && foe.status === 'par' && !foe.fainted) {
+      foe.status = 'none';
+      ev.push({ t: 'cure', side: foeSide, status: 'par' });
+    }
 
     // contact abilities
     if (move.flags.includes('MAKES_CONTACT') && foe.ability === 'STATIC' && user.status === 'none' && this.rng.chance(0.3)) {
@@ -681,6 +728,43 @@ export class Battle {
         return this.multiBoost(side, { atk: -1, def: -1 }, ev);
       case 'OVERHEAT':
         return this.applyBoost(side, 'spa', -2, ev);
+      case 'TRANSFORM': {
+        if (foe.fainted || user.vol.transformed) return false;
+        user.vol.orig = { types: user.types, stats: user.stats, moves: user.moves, ability: user.ability };
+        user.types = [...foe.types];
+        user.stats = { ...foe.stats, hp: user.stats.hp };
+        user.moves = foe.moves.map((m) => ({ key: m.key, pp: 5, maxPp: 5 }));
+        user.ability = foe.ability;
+        user.boosts = { ...foe.boosts };
+        user.vol.transformed = foe.vol.transformed ?? foe.speciesKey;
+        ev.push({ t: 'transform', side, into: user.vol.transformed });
+        return true;
+      }
+      case 'HEAL_BELL':
+      case 'REFRESH': {
+        const team = e === 'REFRESH' ? [user] : this.sides[side].team;
+        let any = false;
+        for (const m of team) {
+          if (m.status !== 'none' && !m.fainted) {
+            if (m === user) ev.push({ t: 'cure', side, status: m.status });
+            m.status = 'none';
+            any = true;
+          }
+        }
+        return any;
+      }
+      case 'WISH': {
+        const h = this.heal(user, Math.floor(user.stats.hp / 2));
+        if (h <= 0) return false;
+        ev.push({ t: 'heal', side, amount: h, hpAfter: user.hp, cause: 'move' });
+        return true;
+      }
+      case 'ROAR': {
+        const targets = this.switchTargets(foeSide);
+        if (foe.fainted || !targets.length) return false;
+        this.doSwitch(foeSide, this.rng.pick(targets), ev, CONFIG.switchInAtb);
+        return true;
+      }
       case 'SPLASH':
         ev.push({ t: 'msg', text: 'But nothing happened!' });
         return true;
@@ -784,6 +868,11 @@ export class Battle {
         return fixed(40);
       case 'SONICBOOM':
         return fixed(20);
+      case 'COUNTER':
+      case 'MIRROR_COAT':
+        return fixed((user.vol.lastTaken?.dmg ?? 0) * 2);
+      case 'ENDEAVOR':
+        return fixed(Math.max(1, foe.hp - user.hp));
       case 'LEVEL_DAMAGE':
         return fixed(user.level);
       case 'SUPER_FANG':
@@ -794,6 +883,18 @@ export class Battle {
 
     let power = powerOverride ?? move.power;
     switch (move.effect) {
+      case 'MAGNITUDE':
+        power = this.rng.pick([10, 30, 30, 50, 50, 50, 70, 70, 70, 70, 90, 90, 90, 110, 110, 150]);
+        break;
+      case 'PRESENT':
+        power = this.rng.pick([40, 40, 80, 80, 120]);
+        break;
+      case 'SMELLINGSALT':
+        if (foe.status === 'par') power *= 2;
+        break;
+      case 'REVENGE':
+        if (user.vol.lastTaken && this.time - user.vol.lastTaken.at < 3) power *= 2;
+        break;
       case 'RETURN':
       case 'FRUSTRATION':
         power = 102;
@@ -863,8 +964,13 @@ export class Battle {
     const user = this.active(side);
     const foeSide = other(side);
     const foe = this.active(foeSide);
-    const move = MOVES[moveKey];
+    const move = effectiveMove(moveKey);
     if (move.category === 'status') return { min: 0, max: 0, eff: 1 };
+    if (move.effect === 'COUNTER' || move.effect === 'MIRROR_COAT') {
+      const lt = user.vol.lastTaken;
+      const ok = lt && this.time - lt.at <= 8 && lt.physical === (move.effect === 'COUNTER');
+      return ok ? { min: lt.dmg * 2, max: lt.dmg * 2, eff: 1 } : { min: 0, max: 0, eff: 1 };
+    }
     const saved = this.rng;
     // deterministic probe: max roll, no crit
     const probe = { next: () => 0.999, int: (_a: number, b: number) => b, chance: () => false, pick: <T,>(a: readonly T[]) => a[0], shuffle: <T,>(a: T[]) => a } as unknown as Rng;
@@ -874,6 +980,7 @@ export class Battle {
     const hitsMult = move.effect === 'MULTI_HIT' ? 3 : move.effect === 'DOUBLE_HIT' || move.effect === 'TWINEEDLE' ? 2 : move.effect === 'TRIPLE_KICK' ? 6 : 1;
     let eff = r.eff;
     if ((move.type === 'FIRE' && foe.ability === 'FLASH_FIRE') || (move.type === 'GROUND' && foe.ability === 'LEVITATE')) eff = 0;
+    if (foe.ability === 'WONDER_GUARD' && eff <= 1) eff = 0;
     if (eff === 0) return { min: 0, max: 0, eff: 0 };
     const max = r.damage * hitsMult;
     return { min: Math.floor(max * 0.85), max, eff };

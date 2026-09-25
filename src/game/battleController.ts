@@ -1,10 +1,10 @@
 import { AI_PROFILES, chooseAction, chooseReplacement, rollTiming } from '../battle/ai';
-import { Battle } from '../battle/engine';
+import { Battle, effectiveMove } from '../battle/engine';
 import { Rng } from '../battle/rng';
 import { STAT_LABEL } from '../battle/stats';
 import { other, type Action, type BattleEvent, type Side, type TimingGrade } from '../battle/types';
 import { audio } from '../audio/audio';
-import { MOVES, SPECIES } from '../data/gamedata';
+import { SPECIES } from '../data/gamedata';
 import { getLine } from '../data/roster';
 import { TYPE_COLOR } from '../data/typeColors';
 import type { PokeType } from '../data/types';
@@ -223,7 +223,7 @@ export class BattleController {
     const timing: { atk: TimingGrade; brace: TimingGrade } = { atk: 'none', brace: 'none' };
     if (action.type === 'move') {
       const key = mon.vol.charging ?? mon.vol.locked?.move ?? mon.moves[action.slot]?.key;
-      const mv = key ? MOVES[key] : undefined;
+      const mv = key ? effectiveMove(key) : undefined;
       const willAct = mon.status !== 'frz' && !(mon.status === 'slp' && mon.statusCounter > 0);
       const charging = mv && ['SOLAR_BEAM', 'SKULL_BASH', 'SKY_ATTACK', 'RAZOR_WIND', 'SEMI_INVULNERABLE'].includes(mv.effect) && !mon.vol.charging;
       if (mv && mv.category !== 'status' && willAct && !charging) {
@@ -285,7 +285,7 @@ export class BattleController {
     const hud = this.hud;
     switch (e.t) {
       case 'moveUse': {
-        const mv = MOVES[e.move];
+        const mv = effectiveMove(e.move);
         const attacker = this.sprites[e.side];
         const target = this.sprites[e.target];
         const pan = e.side === 0 ? -0.4 : 0.4;
@@ -460,6 +460,13 @@ export class BattleController {
           await this.msg(t(e.screen === 'reflect' ? 'reflectUp' : 'lightScreenUp', b.sides[e.side].name), 450);
         } else await this.msg(t('screenDown', b.sides[e.side].name, e.screen === 'reflect' ? 'Reflect' : 'Light Screen'), 400);
         return;
+      }
+      case 'transform': {
+        const s = this.sprites[e.side];
+        s.flash(0xffffff, 300, 1);
+        await s.load(SPECIES[e.into].dex);
+        audio.playSfx('evolveBurst', { volume: 0.5, pitch: 1.4 });
+        return this.msg(t('transformed', this.name(e.side), SPECIES[e.into].name), 500);
       }
       case 'seeded':
         return this.msg(t('seeded', this.name(e.side)), 400);
