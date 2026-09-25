@@ -20,7 +20,7 @@ export async function playEvolutionFx(vfx: Vfx, sprite: PokemonSprite, side: Sid
   const cyan = 0x9ae8ff;
 
   stage.director.move(evolveShot(side), 0.8);
-  const tint = stage.setTint(0x6070b0, 0.45, 600);
+  const tint = stage.setTint(0x5060a0, 0.35, 600);
   sprite.setOutline(2, cyan);
 
   // 1) gather
@@ -31,7 +31,7 @@ export async function playEvolutionFx(vfx: Vfx, sprite: PokemonSprite, side: Sid
   const gather = vfx.spiral(feet, { color: [gold, cyan], tex: 'spark', ms: 2200, rate: 120, radius: 1.6, rise: 1.4, size: [0.15, 0.3] });
   vfx.burst(center, { count: 90, tex: 'glow', color: [cyan, gold], speed: 0.1, jitter: 4, attract: { to: center, strength: 14 }, life: [1.2, 1.8], size: [0.12, 0.25], fadeIn: 0.3 });
   await Promise.all([sil, tint]);
-  const pillar = vfx.prim.pillar(feet, { color: cyan, radius: 1.3, height: 9, ms: 2600, intensity: 1.6 });
+  const pillar = vfx.prim.pillar(feet, { color: cyan, radius: 0.75, height: 9, ms: 2600, intensity: 0.55 });
 
   // 2) flicker old <-> new, accelerating
   let interval = 260;

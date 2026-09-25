@@ -175,8 +175,8 @@ export interface MoteOpts {
   /** spacing of trail particles */
   step?: number;
   e?: (t: number) => number;
-  /** emit trail particles at p (dir = travel direction, k = mote progress 0..1, i = mote index) */
-  emit: (p: THREE.Vector3, dir: THREE.Vector3, k: number, i: number) => void;
+  /** emit trail particles at p (dir = travel direction, k = mote progress 0..1, i = mote index, head = current mote position) */
+  emit: (p: THREE.Vector3, dir: THREE.Vector3, k: number, i: number, head: boolean) => void;
   onArrive?: (p: THREE.Vector3, i: number) => void;
 }
 
@@ -219,8 +219,8 @@ export function motes(c: MoteOpts & { ctx: MoveFxContext }): Promise<void> {
       const prev = last[i] ?? p.clone();
       const dv = p.clone().sub(prev);
       const dir = dv.lengthSq() > 1e-8 ? dv.normalize() : new THREE.Vector3(1, 0, 0);
-      if (last[i]) emitAlong(prev, p, c.step ?? 0.15, (q, f) => c.emit(q, dir, k, i));
-      else c.emit(p, dir, k, i);
+      if (last[i]) emitAlong(prev, p, c.step ?? 0.15, (q, f) => c.emit(q, dir, k, i, f >= 1));
+      else c.emit(p, dir, k, i, true);
       last[i] = p;
       if (t >= 1) {
         done[i] = true;
@@ -278,7 +278,7 @@ export function strokePoints(c: MoveFxContext, center: THREE.Vector3, angle: num
 export async function clawMarks(
   c: MoveFxContext,
   at: THREE.Vector3,
-  o: { count?: number; color: number; core?: number; width?: number; len?: number; angle?: number; gap?: number; ms?: number; stagger?: number; bend?: number; intensity?: number; holdMs?: number },
+  o: { count?: number; color: number; core?: number; width?: number; len?: number; angle?: number; gap?: number; ms?: number; stagger?: number; bend?: number; intensity?: number; holdMs?: number; edge?: number },
 ) {
   const n = o.count ?? 3;
   const angle = o.angle ?? -0.95;
@@ -288,7 +288,7 @@ export async function clawMarks(
   for (let i = 0; i < n; i++) {
     const off = (i - (n - 1) / 2) * (o.gap ?? 0.38);
     const center = at.clone().addScaledVector(perp, off);
-    const r = c.vfx.prim.ribbon(strokePoints(c, center, angle, (o.len ?? 1.9) * (1 - Math.abs(off) * 0.25), o.bend ?? 0.12), {
+    const r = slashStroke(c, strokePoints(c, center, angle, (o.len ?? 1.9) * (1 - Math.abs(off) * 0.25), o.bend ?? 0.12), {
       color: o.color,
       core: o.core ?? 0xffffff,
       width: o.width ?? 0.075,
@@ -296,7 +296,8 @@ export async function clawMarks(
       length: 1,
       holdMs: o.holdMs ?? 140,
       fadeMs: 220,
-      intensity: o.intensity,
+      intensity: o.intensity ?? 1.1,
+      edge: o.edge,
       e: ease.outCubic,
     });
     last = r.arrived;
@@ -346,11 +347,11 @@ export function impactFx(
   // impact star (short, crisp) + small colored bloom, thin ring, spark spray and speed streaks
   vfx.prim.impactStar(p, { color: o.ring ?? pal.main, core: pal.core, size: 0.55 + 0.45 * s, ms: 200 + 80 * s });
   vfx.particle({ tex: 'glow', pos: p.clone(), life: 0.22, size: [0.9 * s, 1.6 * s], color: pal.main, intensity: 1.1, alpha: [0.55, 0] });
-  vfx.prim.shockwave(p, { color: o.ring ?? pal.main, radius: 1.5 * s, thickness: 0.1, ms: 260, intensity: 1.6 });
+  vfx.prim.shockwave(p, { color: o.ring ?? pal.main, radius: 1.5 * s, thickness: 0.1, ms: 260, intensity: 1.3 });
   vfx.burst(p, { count: Math.round(12 * s), tex: 'spark', color: [pal.core, pal.main], speed: [3, 8 * s], size: [0.1, 0.24], life: [0.2, 0.4], drag: 3, intensity: 1.6 });
   vfx.burst(p, { count: Math.round(8 * s), tex: 'streak', color: [pal.core, pal.main], speed: [6, 12], size: [0.4, 0.8], life: [0.1, 0.2], drag: 4, intensity: 1.3 });
   if (o.ground ?? true) {
-    vfx.prim.shockwave(c.foeFeet.clone().setY(c.foeFeet.y + 0.06), { color: pal.main, radius: 1.8 + s, facing: 'ground', ms: 420, thickness: 0.2, intensity: 1.4 });
+    vfx.prim.shockwave(c.foeFeet.clone().setY(c.foeFeet.y + 0.06), { color: pal.main, radius: 1.8 + s, facing: 'ground', ms: 420, thickness: 0.16, intensity: 0.9 });
     vfx.dust(c.foeFeet.clone().setY(c.foeFeet.y), o.dust ?? 0xa89878, Math.round(6 + 6 * s));
   }
   c.stage.shockwave(p, 0.3 + 0.45 * s, 240 + 120 * s);
@@ -375,7 +376,7 @@ export async function rush(c: MoveFxContext, o: { dist?: number; ms?: number; gh
   if (o.ghosts) {
     let n = 0;
     void during(c, ms * 0.25, () => {
-      if (n++ < (o.ghosts ?? 0)) vfx.prim.afterimage(c.attacker.mesh, { color: o.ghostColor ?? 0xffffff, opacity: 0.5, ms: 300 });
+      if (n++ < (o.ghosts ?? 0)) vfx.prim.afterimage(c.attacker.mesh, { color: o.ghostColor ?? 0xb8b0a0, opacity: 0.32, ms: 280 });
     });
   }
   await lunge;
@@ -399,4 +400,21 @@ export function pulledShot(c: MoveFxContext, who: 'user' | 'foe', k = 1.6, lift 
   const s = focusShot(side, 1.2 + lift);
   const pos = s.look.clone().add(s.pos.clone().sub(s.look).multiplyScalar(k));
   c.stage.director.move({ pos, look: s.look, fov: s.fov }, ms / 1000);
+}
+
+/**
+ * A slash / swipe stroke along `pts`: bright ribbon over a dark, wider normal-blended under-stroke so it stays
+ * readable on bright arenas. Returns the bright ribbon's handle.
+ */
+export function slashStroke(
+  c: MoveFxContext,
+  pts: THREE.Vector3[],
+  o: { color: number; core?: number; width?: number; ms?: number; length?: number; holdMs?: number; fadeMs?: number; intensity?: number; edge?: number; edgeAlpha?: number; e?: (t: number) => number },
+) {
+  const common = { ms: o.ms ?? 130, length: o.length ?? 1, holdMs: o.holdMs ?? 100, fadeMs: o.fadeMs ?? 220, e: o.e ?? ease.outCubic };
+  const under = c.vfx.prim.ribbon(pts, { ...common, color: o.edge ?? 0x1a1210, core: o.edge ?? 0x1a1210, width: (o.width ?? 0.1) * 2.2, additive: false, intensity: 1, opacity: o.edgeAlpha ?? 0.6 });
+  under.mesh.renderOrder = 4;
+  const r = c.vfx.prim.ribbon(pts, { ...common, color: o.color, core: o.core ?? 0xffffff, width: o.width ?? 0.1, intensity: o.intensity ?? 1.4 });
+  r.mesh.renderOrder = 6;
+  return r;
 }

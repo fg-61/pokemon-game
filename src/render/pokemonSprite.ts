@@ -189,7 +189,7 @@ export class PokemonSprite {
     const img = tex.image as { width: number; height: number };
     u.texel.value.set(1 / img.width, 1 / img.height);
     // back sprites are drawn a bit larger (closer to camera in the classic layout)
-    const k = PIXEL * (this.facing === 'back' ? 0.95 : 1.05);
+    const k = PIXEL * (this.facing === 'back' ? 0.95 : 1.3);
     this.width = info.frameW * k;
     this.height = info.frameH * k;
     this.applyFrame();

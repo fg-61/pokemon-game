@@ -73,15 +73,15 @@ button { font-family: inherit; cursor: pointer; }
 .select-head { width: 100%; max-width: 1280px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .select-head h2 { margin: 0; font-family: var(--font-pixel); font-size: 30px; color: var(--gold); }
 .select-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
-.select-body { width: 100%; max-width: 1280px; flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 380px; gap: 14px; }
-.roster-grid { overflow: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; align-content: start; padding: 4px; }
+.select-body { width: 100%; max-width: 1280px; flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 380px; grid-template-rows: minmax(0, 1fr); gap: 14px; }
+.roster-grid { overflow-y: auto; min-height: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); grid-auto-rows: max-content; gap: 10px; align-content: start; padding: 4px; }
 .mon-card { position: relative; padding: 10px 10px 8px; border-radius: 14px; background: linear-gradient(160deg, rgba(40, 54, 100, 0.8), rgba(18, 24, 50, 0.9)); border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s; overflow: hidden; }
 .mon-card:hover { transform: translateY(-3px); border-color: rgba(255, 255, 255, 0.35); }
 .mon-card.focus { border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(88, 225, 255, 0.25), 0 8px 26px rgba(88, 225, 255, 0.2); }
 .mon-card.picked { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(255, 211, 90, 0.3), 0 8px 26px rgba(255, 170, 40, 0.3); }
 .mon-card .pick-num { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #2a1300; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 13px; }
-.mon-card .art { height: 96px; display: flex; align-items: center; justify-content: center; }
-.mon-card .art img { max-height: 92px; max-width: 100%; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5)); }
+.mon-card .art { height: 84px; display: flex; align-items: center; justify-content: center; }
+.mon-card .art img { max-height: 84px; max-width: 100%; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5)); }
 .mon-card .name { font-weight: 700; font-size: 15px; margin-top: 4px; }
 .mon-card .role { font-size: 11px; color: var(--muted); }
 .mon-card .types { margin-top: 5px; display: flex; gap: 4px; flex-wrap: wrap; }

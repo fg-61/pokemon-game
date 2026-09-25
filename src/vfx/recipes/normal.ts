@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
-import { camBasis, clawMarks, during, hitStop, impactFx, rush, sideOf, silhouette, speedLines, strokePoints, towardCam } from './common';
+import { camBasis, clawMarks, during, hitStop, impactFx, rush, sideOf, silhouette, slashStroke, speedLines, strokePoints, towardCam } from './common';
 
 // normal-type move recipes
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const UP = V(0, 1, 0);
-const WHITE = { core: 0xffffff, main: 0xffe0a0, dark: 0x9a9070 };
+const WHITE = { core: 0xffffff, main: 0xffb848, dark: 0x9a9070 };
 const GOLD = { core: 0xffffff, main: 0xffd060, dark: 0x8a6a20 };
 
 /** Quick whiff for missed contact moves. */
@@ -58,7 +58,7 @@ registerMoveFx('SCRATCH', async (c) => {
   const { vfx } = c;
   await rush(c, { ms: 320, dist: Math.min(3.2, c.user.distanceTo(c.foe) * 0.45) });
   const at = c.aim(0.55);
-  await clawMarks(c, at, { color: 0xfff4e0, core: 0xffffff, count: 3, width: 0.07, len: 1.7, angle: -0.95, stagger: 40 });
+  await clawMarks(c, at, { color: 0xffd8a0, core: 0xffffff, count: 3, width: 0.075, len: 1.7, angle: -0.95, stagger: 40 });
   if (c.missed) whiff(c, at);
   else {
     impactFx(c, at, { strength: 0.7, pal: WHITE, ground: false });
@@ -78,7 +78,7 @@ registerMoveFx('SLASH', async (c) => {
   const at = c.aim(0.55);
   // one huge crescent, drawn diagonally
   vfx.prim.ribbon(strokePoints(c, at.clone().add(V(0, 0.18, 0)), -0.75, 2.4, 0.4, 9), { color: 0xffc860, core: 0xfff4d0, width: 0.04, ms: 140, length: 1, holdMs: 100, fadeMs: 240, e: ease.outCubic });
-  const r = vfx.prim.ribbon(strokePoints(c, at, -0.75, 3.2, 0.5, 9), { color: 0xffd890, core: 0xffffff, width: 0.085, ms: 120, length: 1, holdMs: 120, fadeMs: 260, e: ease.outCubic });
+  const r = slashStroke(c, strokePoints(c, at, -0.75, 3.2, 0.5, 9), { color: 0xffc860, core: 0xffffff, width: 0.09, ms: 120, holdMs: 120, fadeMs: 260, intensity: 1.5 });
   await r.arrived;
   if (c.missed) whiff(c, at);
   else {
@@ -108,7 +108,7 @@ registerMoveFx('SLAM', async (c) => {
     const t = i / 5;
     return towardCam(c, at, 0.6).add(side.clone().multiplyScalar(Math.cos(t * Math.PI * 0.55) * 1.4)).add(V(0, 2.2 - t * 3.2, 0));
   });
-  const r = vfx.prim.ribbon(pts, { color: 0xfff0d0, core: 0xffffff, width: 0.2, ms: 150, length: 0.8, fadeMs: 240, e: ease.inQuad });
+  const r = slashStroke(c, pts, { color: 0xffd080, core: 0xfff8e8, width: 0.17, ms: 150, length: 0.8, holdMs: 0, fadeMs: 240, intensity: 1.3, e: ease.inQuad });
   await r.arrived;
   if (c.missed) whiff(c, at);
   else {

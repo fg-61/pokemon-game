@@ -662,7 +662,7 @@ export class Primitives {
           vUv = uv;
           float y = position.y;
           float ax = abs(position.x) * 2.0;
-          float h = height * (0.85 + 0.15 * sin(position.x * width * 1.1 + time * 4.0)) * (1.0 - pow(ax, 2.5) * 0.75);
+          float h = height * (0.88 + 0.12 * sin(position.x * width * 1.1 + time * 4.0)) * (1.0 - pow(ax, 5.0) * 0.55);
           vec3 p;
           p.x = position.x * width;
           p.y = h * sin(y * 1.5708) * (1.0 - 0.18 * curl * y * y);
@@ -677,13 +677,15 @@ export class Primitives {
         float noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
           return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
         void main(){
-          float n = noise(vec2(vUv.x * 22.0, vUv.y * 5.0 - time * 3.5));
+          float n = noise(vec2(vUv.x * 26.0, vUv.y * 4.0 - time * 3.5));
           float n2 = noise(vec2(vUv.x * 40.0 + time, vUv.y * 9.0 - time * 5.0));
-          vec3 c = mix(dark, color, smoothstep(0.0, 0.75, vUv.y));
-          c += core * 0.35 * smoothstep(0.62, 0.9, n) * smoothstep(0.2, 0.8, vUv.y);
-          float foam = smoothstep(0.72, 0.9, vUv.y + (n2 - 0.5) * 0.18);
+          float band = 0.5 + 0.5 * sin(vUv.y * 38.0 - time * 9.0 + n * 3.0);
+          vec3 c = mix(dark, color, smoothstep(0.0, 0.8, vUv.y));
+          c *= 0.85 + 0.25 * band;
+          c += core * 0.4 * smoothstep(0.6, 0.85, n) * smoothstep(0.25, 0.85, vUv.y);
+          float foam = smoothstep(0.76, 0.88, vUv.y + (n2 - 0.5) * 0.16);
           c = mix(c, core, foam);
-          float a = alpha * (0.72 + 0.28 * vUv.y);
+          float a = alpha * mix(0.82, 1.0, foam);
           a *= smoothstep(0.0, 0.14, vUv.x) * smoothstep(1.0, 0.86, vUv.x);
           a *= smoothstep(1.0, 0.92, vUv.y + (n2 - 0.5) * 0.14);
           a *= smoothstep(0.0, 0.25, vH);

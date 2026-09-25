@@ -37,16 +37,17 @@ registerMoveFx('WATER_GUN', async (c) => {
   const travel = 0.3;
   const rot = screenAngle(c, mouth, to) + Math.PI / 2;
   let hit = false;
+  vfx.prim.beam(mouth, to, { color: W.main, core: W.light, width: 0.12, holdMs: 380, growMs: travel * 1000, fadeMs: 200, intensity: 1.0, noise: 0.6, wobble: 0.15 });
   await during(c, 650, (_k, dt, el) => {
     const t = el / 1000;
-    const n = Math.round(240 * dt + Math.random());
+    const n = Math.round(200 * dt + Math.random());
     for (let i = 0; i < n; i++) {
-      const d = fwd.clone().addScaledVector(side, (Math.random() - 0.5) * 0.05 + Math.sin(t * 20) * 0.015).add(new THREE.Vector3(0, (Math.random() - 0.5) * 0.05 + 0.03, 0)).normalize();
-      const s = 0.2 + Math.random() * 0.14;
+      const d = fwd.clone().addScaledVector(side, (Math.random() - 0.5) * 0.06 + Math.sin(t * 20) * 0.015).add(new THREE.Vector3(0, (Math.random() - 0.5) * 0.06 + 0.03, 0)).normalize();
+      const s = 0.26 + Math.random() * 0.18;
       vfx.particle({ tex: 'drop', pos: mouth.clone(), vel: d.multiplyScalar((len / travel) * (0.95 + Math.random() * 0.1)), acc: new THREE.Vector3(0, -2, 0), life: travel * 1.05, size: [s, s * 1.8], color: [W.light, W.main], intensity: 1.05, additive: false, alpha: [0.95, 0.5], rot: rot + (Math.random() - 0.5) * 0.3 });
     }
     const nc = Math.round(110 * dt + Math.random());
-    for (let i = 0; i < nc; i++) vfx.particle({ tex: 'glow', pos: mouth.clone(), vel: fwd.clone().multiplyScalar(len / travel), life: travel, size: [0.25, 0.4], color: W.light, intensity: 0.8, alpha: [0.7, 0.3] });
+    for (let i = 0; i < nc; i++) vfx.particle({ tex: 'smoke', pos: mouth.clone(), vel: fwd.clone().multiplyScalar(len / travel), life: travel, size: [0.3, 0.7], color: [W.foam, W.light], intensity: 1, additive: false, alpha: [0.5, 0.1], spin: 3 });
     if (Math.random() < 0.6) {
       const p = mouth.clone().lerp(to, Math.random());
       vfx.particle({ tex: 'dot', pos: p, vel: new THREE.Vector3((Math.random() - 0.5) * 2, 1 + Math.random() * 2, (Math.random() - 0.5) * 2), acc: new THREE.Vector3(0, -9, 0), life: 0.4, size: [0.08, 0.04], color: W.foam, intensity: 1.3 });
@@ -177,11 +178,11 @@ registerMoveFx('HYDRO_CANNON', async (c) => {
   const to = c.aim(0.5);
   const fwd = to.clone().sub(muzzle).normalize();
   const len = muzzle.distanceTo(to);
-  stage.flash(W.light, 0.35, 180);
+  stage.flash(W.light, 0.15, 150);
   blob.dispose();
   c.attacker.knockback(c.foe, 0.4, 500);
   const hold = 800;
-  const beam = vfx.prim.beam(muzzle, to, { color: W.main, core: W.foam, width: 0.72, holdMs: hold, noise: 0.55, wobble: 0.12, intensity: 1.5, growMs: 160 });
+  const beam = vfx.prim.beam(muzzle, to, { color: W.deep, core: W.light, width: 0.7, holdMs: hold, noise: 0.6, wobble: 0.12, intensity: 1.0, growMs: 160 });
   const sideV = sideOf(fwd);
   let ringT = 0;
   const outer = during(c, 160 + hold, (_k, dt, el) => {
@@ -203,12 +204,12 @@ registerMoveFx('HYDRO_CANNON', async (c) => {
     c.impact(0);
     c.target.flash(0xffffff, 200, 0.9);
   }
-  stage.flash(W.foam, 0.4, 260);
+  stage.flash(W.light, 0.22, 220);
   stage.shockwave(to, 1.1, 450);
   stage.chromaPulse(0.02, 400);
   vfx.shake(0.55, 900);
   pulledShot(c, 'foe', 1.8, 0.6, 700);
-  vfx.prim.blast(to, { core: W.foam, main: W.main, dark: W.dark, radius: 1.9, ms: 1100, rise: 0.4, intensity: 1.1 });
+  vfx.prim.blast(to, { core: W.light, main: W.main, dark: W.dark, radius: 1.9, ms: 1100, rise: 0.4, intensity: 0.9 });
   const spray = during(c, hold, () => {
     for (let i = 0; i < 5; i++) {
       const d = fwd.clone().negate().multiplyScalar(0.4).add(new THREE.Vector3((Math.random() - 0.5) * 2, Math.random() * 1.5, (Math.random() - 0.5) * 2)).normalize();
@@ -234,22 +235,22 @@ registerMoveFx('SURF', async (c) => {
   const ground = Math.min(c.userFeet.y, c.foeFeet.y) - 0.3;
   const start = c.userFeet.clone().setY(ground).addScaledVector(c.dir, -1.8);
   const end = c.foeFeet.clone().setY(ground).addScaledVector(c.dir, 0.4);
-  const wave = vfx.prim.wave({ color: W.main, core: W.foam, dark: W.deep, width: 8 });
+  const wave = vfx.prim.wave({ color: W.main, core: W.foam, dark: W.deep, width: 7 });
   wave.mesh.position.copy(start);
   wave.mesh.lookAt(start.clone().add(c.dir));
   const crestSpray = (amt: number) => {
-    for (let i = 0; i < Math.round(6 * amt); i++) {
+    for (let i = 0; i < Math.round(8 * amt); i++) {
       const x = Math.random() - 0.5;
       const p = wave.crest(x * 0.85);
-      vfx.particle({ tex: 'smoke', pos: p, vel: c.dir.clone().multiplyScalar(2 + Math.random() * 2).add(new THREE.Vector3(0, 1.5 + Math.random() * 1.5, 0)), acc: new THREE.Vector3(0, -5, 0), life: 0.5, size: [0.5, 1.3], color: [W.foam, W.light], intensity: 1.1, additive: false, alpha: [0.8, 0], spin: 2 });
-      if (Math.random() < 0.6) vfx.particle({ tex: 'drop', pos: p, vel: c.dir.clone().multiplyScalar(3 + Math.random() * 2).add(new THREE.Vector3(0, 2 + Math.random() * 2, 0)), acc: new THREE.Vector3(0, -12, 0), life: 0.5, size: [0.16, 0.06], color: [W.foam, W.light], intensity: 1.1, additive: false });
+      if (Math.random() < 0.35) vfx.particle({ tex: 'smoke', pos: p, vel: c.dir.clone().multiplyScalar(2 + Math.random() * 2).add(new THREE.Vector3(0, 1 + Math.random(), 0)), acc: new THREE.Vector3(0, -5, 0), life: 0.4, size: [0.3, 0.8], color: [W.foam, W.light], intensity: 1.1, additive: false, alpha: [0.7, 0], spin: 2 });
+      vfx.particle({ tex: 'drop', pos: p, vel: c.dir.clone().multiplyScalar(3 + Math.random() * 2).add(new THREE.Vector3(0, 2 + Math.random() * 2, 0)), acc: new THREE.Vector3(0, -12, 0), life: 0.5, size: [0.16, 0.06], color: [W.foam, W.light], intensity: 1.1, additive: false });
     }
   };
   // rise behind the user
   c.attacker.jump(0.9, 700);
   await during(c, 480, (k) => {
-    wave.u.height.value = 3.0 * ease.outCubic(k);
-    wave.u.curl.value = 0.25;
+    wave.u.height.value = 3.2 * ease.outCubic(k);
+    wave.u.curl.value = 0.35;
     crestSpray(0.5);
   });
   // sweep across the arena
@@ -259,13 +260,13 @@ registerMoveFx('SURF', async (c) => {
     const kk = ease.inOutQuad(k);
     const p = start.clone().lerp(end, kk);
     wave.mesh.position.copy(p);
-    wave.u.height.value = 3.0 + 0.6 * Math.sin(k * Math.PI);
-    wave.u.curl.value = 0.25 + 0.5 * k;
+    wave.u.height.value = 3.2 + 0.5 * Math.sin(k * Math.PI);
+    wave.u.curl.value = 0.35 + 0.65 * k;
     crestSpray(1);
     // churned foam along the base
     if (Math.random() < 0.8) {
       const b = wave.mesh.localToWorld(new THREE.Vector3((Math.random() - 0.5) * 7, 0.2, 0.3));
-      vfx.particle({ tex: 'smoke', pos: b, vel: c.dir.clone().multiplyScalar(2).add(new THREE.Vector3(0, 0.8, 0)), life: 0.6, size: [0.7, 1.6], color: [W.foam, W.light], additive: false, alpha: [0.6, 0], intensity: 1 });
+      vfx.particle({ tex: 'smoke', pos: b, vel: c.dir.clone().multiplyScalar(2).add(new THREE.Vector3(0, 0.8, 0)), life: 0.5, size: [0.5, 1.1], color: [W.foam, W.light], additive: false, alpha: [0.5, 0], intensity: 1 });
     }
     if (!crashed && kk > 0.82) {
       crashed = true;
@@ -283,7 +284,8 @@ registerMoveFx('SURF', async (c) => {
   splash(c, hitAt, 1.5, c.dir.clone());
   for (let i = 0; i < 40; i++) {
     const d = new THREE.Vector3((Math.random() - 0.5) * 1.4, 1, (Math.random() - 0.5) * 1.4).addScaledVector(c.dir, 0.6).normalize();
-    vfx.particle({ tex: 'smoke', pos: c.foeFeet.clone().add(new THREE.Vector3((Math.random() - 0.5) * 2, 0.5, (Math.random() - 0.5) * 2)), vel: d.multiplyScalar(4 + Math.random() * 5), acc: new THREE.Vector3(0, -9, 0), drag: 1, life: 0.8, size: [0.8, 1.8], color: [W.foam, W.light], intensity: 1.05, additive: false, alpha: [0.85, 0], spin: 2 });
+    const big = i % 3 === 0;
+    vfx.particle({ tex: big ? 'smoke' : 'drop', pos: c.foeFeet.clone().add(new THREE.Vector3((Math.random() - 0.5) * 2, 0.5, (Math.random() - 0.5) * 2)), vel: d.multiplyScalar(4 + Math.random() * 5), acc: new THREE.Vector3(0, -11, 0), drag: 1, life: 0.8, size: big ? [0.7, 1.4] : [0.3, 0.12], color: big ? [W.foam, W.light] : [W.light, W.main], intensity: 1.05, additive: false, alpha: [0.85, 0], spin: 2 });
   }
   await during(c, 420, (k) => {
     wave.u.height.value = 3.3 * (1 - ease.inQuad(k));

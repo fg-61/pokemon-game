@@ -231,11 +231,11 @@ export class BattleController {
         const human0 = !this.setup.autoPlayer;
         const foeProfile = AI_PROFILES[this.setup.trainer.difficulty];
         if (side === 0) {
-          this.vfx.shot('attacker', 0, 350);
+          this.vfx.shot('shoulder', 0, 350);
           this.hud.moveBanner(mv.name, mv.type);
           if (human0) {
-            await this.wait(380); // let the camera settle so the ring sits on the sprite
-            const p = this.screenPos(0, 0.55);
+            await this.wait(380); // let the camera settle so the ring sits on the target
+            const p = this.screenPos(1, 0.5);
             timing.atk = await this.hud.timing(p.x, p.y, 'attack');
           } else timing.atk = rollTiming(this.rng, AI_PROFILES.hard.atkTiming);
           timing.brace = rollTiming(this.rng, foeProfile.braceTiming);
