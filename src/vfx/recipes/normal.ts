@@ -638,11 +638,11 @@ function puddle(c: MoveFxContext, at: THREE.Vector3, k = 1) {
 }
 
 /** Rage aura: red flame tongues licking up around a sprite's feet (per-frame emitter). */
-function rageFlames(c: MoveFxContext, feet: THREE.Vector3, R: number, dt: number, amt = 1) {
+function rageFlames(c: MoveFxContext, feet: THREE.Vector3, R: number, dt: number, amt = 1, intensity = 1.1) {
   const n = Math.round(40 * amt * dt + Math.random() * amt);
   for (let i = 0; i < n; i++) {
     const a = Math.random() * Math.PI * 2;
-    c.vfx.particle({ tex: 'flame', pos: feet.clone().add(V(Math.cos(a) * R, 0.1 + Math.random() * 0.5, Math.sin(a) * R)), vel: V(0, 2.2 + Math.random() * 1.6, 0), life: 0.5, size: [0.6, 0.15], color: [0xff7040, 0xc80800], intensity: 1.1, alpha: [0.85, 0] });
+    c.vfx.particle({ tex: 'flame', pos: feet.clone().add(V(Math.cos(a) * R, 0.1 + Math.random() * 0.5, Math.sin(a) * R)), vel: V(0, 2.2 + Math.random() * 1.6, 0), life: 0.5, size: [0.6, 0.15], color: [0xff7040, 0xc80800], intensity, alpha: [0.85, 0] });
   }
 }
 
@@ -843,9 +843,9 @@ registerMoveFx('FOCUS_ENERGY', async (c) => {
     for (let i = 0; i < n; i++) {
       const a = Math.random() * Math.PI * 2;
       const p = feet.clone().add(V(Math.cos(a) * R, Math.random() * 0.6, Math.sin(a) * R));
-      vfx.particle({ tex: 'streak', pos: p, vel: V(0, 5 + Math.random() * 2, 0), life: 0.35, size: [1.0, 0.4], color: [FOC.core, FOC.main], intensity: 1.1, alpha: [0.8, 0], rot: screenAngle(c, p, p.clone().add(UP)) });
+      vfx.particle({ tex: 'streak', pos: p, vel: V(0, 5 + Math.random() * 2, 0), life: 0.35, size: [1.0, 0.4], color: [FOC.core, FOC.main], intensity: 0.95, alpha: [0.7, 0], rot: screenAngle(c, p, p.clone().add(UP)) });
     }
-    rageFlames(c, feet, R * 0.9, dt, 0.7 * (1 - k * 0.5));
+    rageFlames(c, feet, R * 0.9, dt, 0.5 * (1 - k * 0.5), 0.9);
     sp.setOutline(1.4 + 0.5 * Math.sin(k * 25), FOC.main);
   });
   sp.setOutline(0);
@@ -1099,14 +1099,18 @@ registerMoveFx('HARDEN', async (c) => {
   const W = Math.max(0.8, sp.width);
   const Hh = Math.max(1, sp.height);
   const ctr = towardCam(c, c.user, 0.45);
-  const bar = [ctr.clone().addScaledVector(up, -Hh * 0.4).addScaledVector(right, -Hh * 0.15), ctr.clone().addScaledVector(up, Hh * 0.4).addScaledVector(right, Hh * 0.15)];
+  const L = Math.min(Hh * 0.8, 2.4);
+  const bar = [ctr.clone().addScaledVector(up, -L * 0.5).addScaledVector(right, -L * 0.18), ctr.clone().addScaledVector(up, L * 0.5).addScaledVector(right, L * 0.18)];
   const r1 = vfx.prim.ribbon(bar, { color: 0xc8d8ff, core: 0xffffff, width: 0.06, ms: 60, length: 1, holdMs: 380, fadeMs: 120, intensity: 0.8, e: ease.linear });
   const r2 = vfx.prim.ribbon(bar, { color: 0xb0c0e0, core: 0xffffff, width: 0.025, ms: 60, length: 1, holdMs: 380, fadeMs: 120, intensity: 0.8, e: ease.linear });
-  const o1 = right.clone().multiplyScalar(-W * 0.7);
+  const o1 = right.clone().multiplyScalar(-W * 0.4);
+  const a1 = (r1.mesh.material as THREE.ShaderMaterial).uniforms.alpha;
+  const a2 = (r2.mesh.material as THREE.ShaderMaterial).uniforms.alpha;
   await during(c, 440, (k) => {
     const x = ease.inOutQuad(k);
-    r1.mesh.position.copy(o1).addScaledVector(right, W * 1.4 * x);
-    r2.mesh.position.copy(o1).addScaledVector(right, W * 1.4 * x + 0.22);
+    r1.mesh.position.copy(o1).addScaledVector(right, W * 0.8 * x);
+    r2.mesh.position.copy(o1).addScaledVector(right, W * 0.8 * x + 0.22);
+    a1.value = a2.value = Math.sin(Math.PI * Math.min(1, k * 1.05));
   });
   sp.flash(0xffffff, 250, 0.45);
   const glint = towardCam(c, sp.at(0.85).addScaledVector(right, W * 0.3), 0.5);

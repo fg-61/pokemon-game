@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
-import { during, powderCloud, powderFall } from './common';
+import { during, powderCloud, powderFall, sideOf, slashStroke, towardCam } from './common';
 
 const P = { pale: 0xf0b0ff, light: 0xd070ff, main: 0xa030d0, deep: 0x6a1a90, dark: 0x2a0838, gas: 0x5a3070, gasDark: 0x24142c };
 
@@ -134,5 +134,101 @@ registerMoveFx('SMOG', async (c) => {
   });
   stage.setTint(0xffffff, 0, 400);
   await vfx.wait(350);
+  vfx.shot('wide', c.side, 500);
+});
+
+// --------------------------------------------------------------------------------------- POISON STING
+
+registerMoveFx('POISON_STING', async (c) => {
+  const { vfx } = c;
+  vfx.shot('side', c.side, 400);
+  const from = mouthOf(c, 0.5);
+  const to = c.aim(0.5);
+  // barbs bristle with venom
+  c.attacker.setOutline(1.2, P.light);
+  vfx.burst(from, { count: 14, tex: 'spark', color: [P.pale, P.main], speed: 0.1, jitter: 0.9, attract: { to: from, strength: 14 }, life: 0.25, size: [0.08, 0.16], intensity: 1.3 });
+  vfx.particle({ tex: 'star', pos: towardCam(c, from, 0.3), life: 0.25, size: [0.15, 0.9], color: P.pale, intensity: 1.6, alpha: [1, 0], spin: 5 });
+  await vfx.wait(220);
+  c.attacker.setOutline(0);
+  const sv = sideOf(c.dir);
+  const flights: Promise<void>[] = [];
+  for (let i = 0; i < 3; i++) {
+    const off = sv.clone().multiplyScalar((i - 1) * 0.32).add(new THREE.Vector3(0, i === 1 ? 0.22 : -0.08, 0));
+    const a = from.clone().addScaledVector(off, 0.4);
+    const b = to.clone().add(off);
+    // each needle: a short venom-tipped dart racing along its path
+    const needle = slashStroke(c, [a, b], { color: P.light, core: P.pale, width: 0.05, ms: 190, length: 0.17, holdMs: 0, fadeMs: 90, intensity: 1.2, edge: P.dark, edgeAlpha: 0.7, e: ease.linear });
+    vfx.burst(a, { count: 4, tex: 'smoke', color: [P.light, P.deep], speed: [0.5, 1.2], size: [0.2, 0.35], endSize: 0.7, life: 0.35, additive: false, alpha: [0.5, 0], intensity: 1 });
+    flights.push(
+      needle.arrived.then(() => {
+        if (c.missed) {
+          vfx.burst(b, { count: 4, tex: 'spark', color: [P.pale, P.main], speed: [1, 3], size: [0.08, 0.14], life: 0.25, intensity: 1.2 });
+          return;
+        }
+        vfx.prim.impactStar(towardCam(c, b, 0.5), { color: P.main, core: P.pale, size: 0.42, ms: 170, spikes: 6 });
+        gooSplat(c, b, 0.25);
+        if (i === 0) {
+          c.impact(0);
+          c.target.flash(P.main, 350, 0.5);
+          vfx.shake(0.1, 220);
+        } else c.target.shake(0.07, 0.12);
+      }),
+    );
+    await vfx.wait(100);
+  }
+  await Promise.all(flights);
+  if (!c.missed) await bubbles(c, c.target.at(0.5), 450, 0.5, 0.6);
+  await vfx.wait(250);
+  vfx.shot('wide', c.side, 500);
+});
+
+// --------------------------------------------------------------------------------------- ACID
+
+registerMoveFx('ACID', async (c) => {
+  const { vfx, stage } = c;
+  vfx.shot('side', c.side, 400);
+  const from = mouthOf(c, 0.55);
+  const to = c.aim(0.5);
+  // gurgle...
+  c.attacker.shake(0.06, 0.3);
+  await bubbles(c, from, 300, 0.4, 0.9);
+  // ...and spit three acid globs in quick arcs
+  const sv = sideOf(c.dir);
+  const lands: Promise<void>[] = [];
+  for (let i = 0; i < 3; i++) {
+    const dest = to.clone().addScaledVector(sv, (i - 1) * 0.38).add(new THREE.Vector3(0, (Math.random() - 0.5) * 0.4, 0));
+    const blob = vfx.prim.blob({ color: P.main, radius: 0.2, emissive: 0.5, roughness: 0.15 });
+    blob.mesh.position.copy(from);
+    void vfx.trail(() => blob.mesh.position, 380, { tex: 'drop', color: [P.light, P.main], size: [0.1, 0.18], speed: 0.4, gravity: 6, life: [0.25, 0.4], rate: 40, additive: false, intensity: 1.05 });
+    lands.push(
+      blob.fly(from, dest, 380, 1.0 + i * 0.35, ease.inQuad).then(() => {
+        blob.dispose();
+        gooSplat(c, dest, 0.5);
+        vfx.prim.shockwave(dest, { color: P.light, radius: 1.0, ms: 260, thickness: 0.2, intensity: 1.2 });
+        if (c.missed) return;
+        if (i === 0) {
+          c.impact(0);
+          c.target.flash(P.main, 400, 0.6);
+          vfx.shake(0.18, 300);
+          stage.shockwave(dest, 0.35, 250);
+        } else c.target.shake(0.08, 0.15);
+      }),
+    );
+    await vfx.wait(110);
+  }
+  await Promise.all(lands);
+  // sizzle: hissing fumes and fizzing sparks eat at the hide
+  const center = c.missed ? to : c.target.at(0.5);
+  const W = c.missed ? 0.6 : Math.max(0.5, c.target.width * 0.35);
+  await Promise.all([
+    bubbles(c, center, 700, W, 0.8),
+    during(c, 700, (k) => {
+      const p = () => center.clone().add(new THREE.Vector3((Math.random() - 0.5) * 2 * W, (Math.random() - 0.5) * 1.4 * W, (Math.random() - 0.5) * W));
+      if (Math.random() < 0.7) vfx.particle({ tex: 'smoke', pos: p(), vel: new THREE.Vector3(0, 1 + Math.random(), 0), life: 0.7, size: [0.3, 1.0], color: [0xe8d0f0, 0x9a80a8], intensity: 1, additive: false, alpha: [0.5 * (1 - k * 0.5), 0], spin: 1 });
+      for (let i = 0; i < 2; i++) if (Math.random() < 0.6) vfx.particle({ tex: 'dot', pos: p(), vel: new THREE.Vector3((Math.random() - 0.5) * 2, 1 + Math.random() * 2, (Math.random() - 0.5) * 2), acc: new THREE.Vector3(0, -6, 0), life: 0.25, size: [0.1, 0.02], color: [0xffffff, P.light], intensity: 1.4 });
+      if (!c.missed && Math.random() < 0.12) c.target.flash(P.main, 120, 0.3);
+    }),
+  ]);
+  await vfx.wait(150);
   vfx.shot('wide', c.side, 500);
 });

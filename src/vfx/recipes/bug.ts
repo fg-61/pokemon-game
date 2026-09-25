@@ -1,6 +1,7 @@
 import * as THREE from 'three';
+import { ease } from '../../render/clock';
 import { registerMoveFx } from '../vfx';
-import { during, screenAngle, sideOf } from './common';
+import { during, impactFx, screenAngle, sideOf, slashStroke, speedLines, towardCam } from './common';
 
 const S = { white: 0xffffff, silver: 0xd8e2f0, steel: 0x9aa8bc, shadow: 0x6a7488, tint: 0xe8f4c0 };
 
@@ -65,4 +66,67 @@ registerMoveFx('SILVER_WIND', async (c) => {
   });
   await vfx.wait(250);
   vfx.shot('wide', c.side, 500);
+});
+
+// --------------------------------------------------------------------------------------- MEGAHORN
+
+const BUG = { core: 0xf4ffc0, main: 0x9ad020, deep: 0x5a8a10, dark: 0x22300a };
+
+registerMoveFx('MEGAHORN', async (c) => {
+  const { vfx, stage } = c;
+  const sp = c.attacker;
+  vfx.shot('attacker', c.side, 400);
+  // lower the horn: it drinks in green power
+  await vfx.tween(200, (k) => (sp.body.position.y = -0.12 * k), ease.outQuad);
+  sp.setOutline(1.8, BUG.main);
+  const tip = () => towardCam(c, sp.at(0.85).addScaledVector(c.dir, 0.35), 0.4);
+  await during(c, 520, (k) => {
+    const t = tip();
+    for (let i = 0; i < 2; i++) {
+      const d = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(1.6);
+      vfx.particle({ tex: 'spark', pos: t.clone().add(d), vel: d.clone().multiplyScalar(-2.8), life: 0.35, size: [0.22, 0.06], color: [BUG.core, BUG.main], intensity: 1.4 });
+    }
+    vfx.particle({ tex: 'glow', pos: t, life: 0.06, size: 0.4 + k * 0.8, color: BUG.main, intensity: 0.9, alpha: [0.6, 0] });
+  });
+  vfx.particle({ tex: 'star', pos: tip(), life: 0.3, size: [0.3, 1.6], color: 0xffffff, intensity: 1.6, alpha: [1, 0], spin: 6 });
+  vfx.dust(c.userFeet, 0xa89878, 10);
+  sp.shake(0.06, 0.3);
+  vfx.shot('side', c.side, 300);
+  await vfx.wait(160);
+  sp.body.position.y = 0;
+  // CHARGE
+  const dist = Math.min(4.6, c.user.distanceTo(c.foe) * 0.62);
+  const lunge = sp.lunge(c.foe, dist, 440);
+  await vfx.wait(190);
+  speedLines(c, c.user.clone().lerp(c.foe, 0.4), c.dir, { count: 16, radius: 1.1, speed: 18, color: BUG.core });
+  vfx.dust(c.userFeet, 0xa89878, 8);
+  let n = 0;
+  void during(c, 260, () => {
+    if (n++ % 2 === 0) vfx.prim.afterimage(sp.mesh, { color: BUG.main, opacity: 0.35, ms: 300 });
+    vfx.particle({ tex: 'glow', pos: tip(), life: 0.2, size: [0.8, 0.2], color: BUG.main, intensity: 1.0, alpha: [0.7, 0] });
+  });
+  await lunge;
+  sp.setOutline(0);
+  const at = c.aim(0.55);
+  if (c.missed) {
+    vfx.burst(at, { count: 10, tex: 'streak', color: [0xffffff, BUG.core], speed: [5, 8], size: [0.4, 0.8], life: 0.2, dir: c.dir, spread: 0.5, intensity: 1.2 });
+    vfx.dust(c.foeFeet.clone().addScaledVector(sideOf(c.dir), 1.4), 0xa89878, 8);
+  } else {
+    // the horn drives clean through: a spear of green light, then the blast
+    const base = towardCam(c, at, 0.6);
+    slashStroke(c, [base.clone().addScaledVector(c.dir, -2.2), base.clone().addScaledVector(c.dir, 1.9)], { color: BUG.main, core: BUG.core, width: 0.17, ms: 90, length: 0.8, holdMs: 60, fadeMs: 260, intensity: 1.2, edge: BUG.dark });
+    // hits near the camera (on the player's side) are scaled down so they don't swallow the screen
+    const z = THREE.MathUtils.clamp(at.distanceTo(stage.camera.position) / 12, 0.5, 1);
+    impactFx(c, at, { strength: 1.6, pal: { core: 0xffffff, main: BUG.main, dark: BUG.dark }, stop: true, flash: 0.25 });
+    vfx.prim.energyBlast(at, { color: BUG.main, core: BUG.core, radius: 1.8 * z, ms: 420, intensity: 0.75 });
+    for (let i = 0; i < 3; i++) vfx.prim.shockwave(at.clone().addScaledVector(c.dir, 0.3 + i * 0.55), { color: i % 2 ? BUG.core : BUG.main, radius: (1.4 + i * 0.5) * z, facing: c.dir, ms: 380, thickness: 0.2, intensity: 1.2 });
+    vfx.prim.crack(c.foeFeet, { radius: 1.6, ms: 1000, color: 0x2a2a10 });
+    vfx.prim.debris({ from: c.foeFeet.clone().setY(c.foeFeet.y + 0.2), count: 8, color: 0x6a6a48, size: 0.12, speed: 3.5, up: 4, ms: 1000 });
+    vfx.burst(at, { count: 18, tex: 'shard', color: [BUG.core, BUG.main], speed: [4, 9], size: [0.15, 0.3], life: [0.3, 0.6], gravity: 6, spin: 8, intensity: 1.3 });
+    stage.chromaPulse(0.008, 300);
+    c.impact(0);
+  }
+  await vfx.wait(250);
+  vfx.shot('wide', c.side, 600);
+  await vfx.wait(450);
 });

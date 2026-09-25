@@ -330,16 +330,16 @@ registerMoveFx('HYDRO_PUMP', async (c) => {
   const hold = 620;
   stage.flash(W.light, 0.1, 120);
   void c.attacker.knockback(c.foe, 0.3, 700);
-  const beam = vfx.prim.beam(mouth, to, { color: W.deep, core: W.light, width: 0.38, holdMs: hold, growMs: travel * 1000, fadeMs: 220, intensity: 0.9, noise: 0.7, wobble: 0.14 });
+  const beam = vfx.prim.beam(mouth, to, { color: W.deep, core: W.main, width: 0.34, holdMs: hold, growMs: travel * 1000, fadeMs: 220, intensity: 0.75, noise: 0.7, wobble: 0.14 });
   let hit = false;
   let ringT = -1e9;
   await during(c, travel * 1000 + hold, (_k, dt, el) => {
     const n = Math.round(240 * dt + Math.random());
     for (let i = 0; i < n; i++) {
       const d = fwd.clone().addScaledVector(sideV, (Math.random() - 0.5) * 0.1).add(new THREE.Vector3(0, (Math.random() - 0.5) * 0.1, 0)).normalize();
-      const s = 0.3 + Math.random() * 0.3;
-      const drop = Math.random() < 0.55;
-      vfx.particle({ tex: drop ? 'drop' : 'smoke', pos: mouth.clone(), vel: d.multiplyScalar((len / travel) * (0.9 + Math.random() * 0.2)), life: travel * 1.05, size: [s, s * 2], color: drop ? [W.light, W.main] : [W.foam, W.light], intensity: 1.05, additive: false, alpha: [0.9, 0.3], rot: drop ? rot + (Math.random() - 0.5) * 0.3 : Math.random() * 6, spin: drop ? 0 : 3 });
+      const s = 0.34 + Math.random() * 0.34;
+      const drop = Math.random() < 0.6;
+      vfx.particle({ tex: drop ? 'drop' : 'smoke', pos: mouth.clone(), vel: d.multiplyScalar((len / travel) * (0.9 + Math.random() * 0.2)), life: travel * 1.05, size: [s, s * 2], color: drop ? [W.main, W.deep] : [W.light, W.main], intensity: 1.05, additive: false, alpha: [0.95, 0.4], rot: drop ? rot + (Math.random() - 0.5) * 0.3 : Math.random() * 6, spin: drop ? 0 : 3 });
     }
     // foam flicked off the sides of the jet
     if (Math.random() < 0.7) {

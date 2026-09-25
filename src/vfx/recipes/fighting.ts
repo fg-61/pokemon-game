@@ -290,3 +290,25 @@ registerMoveFx('BULK_UP', async (c) => {
   await vfx.wait(100);
 });
 
+registerMoveFx('DOUBLE_KICK', async (c) => {
+  const { vfx } = c;
+  const s = c.side === 0 ? 1 : -1;
+  const n = Math.max(1, c.hits);
+  for (let i = 0; i < n; i++) {
+    const second = i % 2 === 1;
+    if (second) void c.attacker.jump(0.35, 260);
+    await rush(c, { ms: second ? 250 : 300, ghosts: second ? 2 : 1, ghostColor: 0xffa060, dust: !second });
+    const at = c.aim(second ? 0.62 : 0.4);
+    // 1st: a rising snap kick, 2nd: a downward roundhouse from the other leg
+    const angle = second ? (s > 0 ? -0.55 : Math.PI + 0.55) : s > 0 ? 0.95 : Math.PI - 0.95;
+    await chop(c, at, angle, { len: 2.3, width: 0.13, bend: second ? -0.4 : 0.4, ms: 100 });
+    if (c.missed) whiff(c, at);
+    else {
+      impactFx(c, at, { strength: second ? 1.0 : 0.8, pal: FIGHT, ground: second, stop: second });
+      vfx.burst(towardCam(c, at, 0.6), { count: 6, tex: 'star', color: [0xffffff, 0xffe080], speed: [2, 4], size: [0.12, 0.22], life: [0.25, 0.45], spin: 6 });
+      c.impact(i);
+    }
+    await vfx.wait(second ? 380 : 200);
+  }
+  await vfx.wait(150);
+});

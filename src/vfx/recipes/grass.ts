@@ -359,3 +359,147 @@ registerMoveFx('SOLAR_BEAM', async (c) => {
   await vfx.wait(250);
   vfx.shot('wide', c.side, 500);
 });
+
+// --------------------------------------------------------------------------------------- ABSORB
+
+registerMoveFx('ABSORB', async (c) => {
+  const { vfx } = c;
+  vfx.shot('side', c.side, 400);
+  const to = c.aim(0.5);
+  c.attacker.setOutline(1.1, G.main);
+  vfx.burst(to, { count: 16, tex: 'spark', color: [G.light, G.main], speed: 0.2, jitter: 1.4, attract: { to, strength: 20 }, life: 0.3, size: [0.1, 0.18], intensity: 1.4 });
+  await vfx.wait(260);
+  if (c.missed) {
+    vfx.burst(to, { count: 8, tex: 'glow', color: [G.light, G.main], speed: [1, 2], size: [0.18, 0.26], life: 0.35, intensity: 1.2 });
+    c.attacker.setOutline(0);
+    await vfx.wait(350);
+    vfx.shot('wide', c.side, 500);
+    return;
+  }
+  softHit(c, to, c.pal, 0.55);
+  c.impact(0);
+  c.target.flash(G.main, 300, 0.45);
+  await drain(c, { count: 8, spreadMs: 380, travelMs: 520, color: G.main, core: G.light });
+  c.attacker.setOutline(0);
+  await vfx.wait(300);
+  vfx.shot('wide', c.side, 500);
+});
+
+// --------------------------------------------------------------------------------------- STUN SPORE
+
+registerMoveFx('STUN_SPORE', async (c) => {
+  const { vfx } = c;
+  const col = { a: 0xfff0a0, b: 0xe0b020, spark: 0xffe040 };
+  const ZAP = 0xffe840;
+  vfx.shot('side', c.side, 400);
+  c.attacker.shake(0.1, 0.4);
+  vfx.burst(c.attacker.at(0.9), { count: 10, tex: 'smoke', color: [col.a, col.b], speed: [0.5, 1.5], size: [0.4, 0.8], endSize: 1.4, life: 0.6, additive: false, alpha: [0.5, 0], intensity: 1 });
+  await vfx.wait(200);
+  // the drifting spores crackle with static
+  const from = c.attacker.at(0.9);
+  const over = c.aim(1.0).add(new THREE.Vector3(0, 0.6, 0));
+  const zap = (p: THREE.Vector3, r: number) => {
+    const d = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(r);
+    vfx.prim.lightning(p, p.clone().add(d), { color: ZAP, width: 0.03, jitter: 0.15, segments: 4, ms: 80, intensity: 1.25 });
+  };
+  const crackle = during(c, 800, (k) => {
+    if (Math.random() < 0.3) zap(from.clone().lerp(over, Math.min(1, k * 1.1) * Math.random()).add(new THREE.Vector3((Math.random() - 0.5) * 0.8, (Math.random() - 0.5) * 0.8, 0)), 0.5);
+  });
+  await powderCloud(c, col, 750);
+  const fall = powderFall(c, col, 800);
+  await crackle;
+  await vfx.wait(200);
+  if (!c.missed) {
+    // paralysis: sparks jolt across the target's body
+    c.impact(0);
+    c.target.flash(ZAP, 500, 0.5);
+    c.target.shake(0.1, 0.6);
+    const R = Math.max(0.5, c.target.width * 0.45);
+    await during(c, 600, () => {
+      if (Math.random() < 0.55) {
+        const a = Math.random() * Math.PI * 2;
+        const h = 0.2 + Math.random() * 0.7;
+        const p = c.target.at(h).add(new THREE.Vector3(Math.cos(a) * R, 0, Math.sin(a) * R));
+        const q = c.target.at(Math.min(1, h + (Math.random() - 0.3) * 0.4)).add(new THREE.Vector3(Math.cos(a + 1.3) * R, 0, Math.sin(a + 1.3) * R));
+        vfx.prim.lightning(p, q, { color: ZAP, width: 0.04, jitter: 0.2, segments: 5, ms: 90, intensity: 1.3 });
+        vfx.particle({ tex: 'spark', pos: p, life: 0.12, size: [0.35, 0.1], color: [0xffffff, ZAP], intensity: 1.4 });
+      }
+    });
+  }
+  await fall;
+  vfx.shot('wide', c.side, 500);
+});
+
+// --------------------------------------------------------------------------------------- PETAL DANCE
+
+const PK = { light: 0xffd4e6, main: 0xff7eb0, deep: 0xe04888 };
+
+registerMoveFx('PETAL_DANCE', async (c) => {
+  const { vfx } = c;
+  const sp = c.attacker;
+  const tilt = c.side === 0 ? 1 : -1;
+  vfx.shot('side', c.side, 400);
+  const R = Math.max(0.8, sp.width * 0.5);
+  // the dance: a whirl of petals spins up around the swaying user
+  sp.setOutline(1.3, PK.main);
+  const whirl = vfx.spiral(c.userFeet, { tex: 'leaf', color: [PK.light, PK.main], ms: 1500, rate: 55, radius: R, rise: 2.6, size: [0.3, 0.42], intensity: 1.05, additive: false });
+  const sway = during(c, 1500, (k) => (sp.mesh.rotation.z = Math.sin(k * Math.PI * 6) * 0.14 * tilt));
+  await vfx.wait(420);
+  // three flurries of petals whip across the field
+  const to = c.aim(0.5);
+  const sv = sideOf(c.dir);
+  let arrivals = 0;
+  let hit = false;
+  const flurry = (w: number) => {
+    const n = 12;
+    const spin = Array.from({ length: n }, () => (Math.random() < 0.5 ? -1 : 1) * (10 + Math.random() * 10));
+    const dests = Array.from({ length: n }, () => to.clone().addScaledVector(sv, (Math.random() - 0.5) * 0.9).add(new THREE.Vector3(0, (Math.random() - 0.5) * 0.9, 0)));
+    return motes({
+      ctx: c,
+      count: n,
+      spreadMs: 260,
+      travelMs: 400,
+      from: () => c.attacker.at(0.55).add(new THREE.Vector3(0, 0.2, 0)),
+      to: (i) => dests[i],
+      jitter: 0.8,
+      arc: 1.6,
+      up: 0.6 + w * 0.3,
+      wiggle: 0.22,
+      step: 0.22,
+      emit: (p, _d, _k, i, head) => {
+        if (head) vfx.particle({ tex: 'leaf', pos: p, life: 0.045, size: 0.58, color: i % 3 ? PK.main : PK.light, intensity: 1.05, additive: false, alpha: [1, 1], rot: c.stage.clock.time * spin[i] });
+        else vfx.particle({ tex: 'glow', pos: p, life: 0.14, size: [0.2, 0.02], color: PK.light, intensity: 0.8, alpha: [0.5, 0] });
+      },
+      onArrive: (p) => {
+        arrivals++;
+        vfx.burst(p, { count: 2, tex: 'leaf', color: [PK.light, PK.main], speed: [1.5, 3], size: [0.2, 0.3], life: 0.6, spin: 10, gravity: 3, additive: false, intensity: 1.05 });
+        if (c.missed) return;
+        vfx.prim.slash(p, { color: PK.main, core: PK.light, size: 0.5 + Math.random() * 0.3, angle: Math.random() * Math.PI * 2, ms: 200, intensity: 1.0 });
+        if (!hit && arrivals >= 4) {
+          hit = true;
+          c.impact(0);
+          c.target.flash(PK.light, 250, 0.5);
+          vfx.shake(0.15, 300);
+        } else if (Math.random() < 0.3) c.target.shake(0.08, 0.15);
+      },
+    });
+  };
+  await Promise.all([flurry(0), vfx.wait(330).then(() => flurry(1)), vfx.wait(660).then(() => flurry(2))]);
+  // finale: the petal storm engulfs the target, then bursts
+  const center = c.missed ? to : c.target.at(0.5);
+  const Rt = c.missed ? 0.8 : Math.max(0.7, c.target.width * 0.5);
+  await during(c, 420, () => {
+    for (let i = 0; i < 5; i++) {
+      const a = Math.random() * Math.PI * 2;
+      vfx.particle({ tex: 'leaf', pos: center.clone().add(new THREE.Vector3(Math.cos(a) * Rt, (Math.random() - 0.5) * 1.6, Math.sin(a) * Rt)), vel: new THREE.Vector3(0, 0.8, 0), swirl: { center, speed: 7 }, life: 0.5, size: [0.46, 0.28], color: [PK.light, PK.main], intensity: 1.05, additive: false, spin: 8 });
+    }
+    if (Math.random() < 0.4) vfx.particle({ tex: 'glow', pos: center.clone(), life: 0.2, size: Rt * 2.6, color: PK.main, intensity: 0.5, alpha: [0.4, 0] });
+  });
+  if (!c.missed) softHit(c, center, { core: 0xffffff, main: PK.main }, 0.9);
+  vfx.burst(center, { count: 24, tex: 'leaf', color: [PK.light, PK.main], speed: [3, 6], size: [0.25, 0.38], life: [0.6, 0.9], spin: 10, gravity: 3, drag: 1.5, additive: false, intensity: 1.05 });
+  await Promise.all([whirl, sway]);
+  sp.mesh.rotation.z = 0;
+  sp.setOutline(0);
+  await vfx.wait(250);
+  vfx.shot('wide', c.side, 500);
+});
