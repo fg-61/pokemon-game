@@ -101,20 +101,19 @@ registerMoveFx('THUNDER', async (c) => {
   await gather;
   const ground = c.missed ? to : c.foeFeet.clone().setY(c.foeFeet.y + 0.4);
   for (let i = 0; i < 2; i++) {
-    vfx.prim.lightning(cloudC.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.8, 0, 0)), ground, { color: E.main, width: 0.17, jitter: 0.9, segments: 22, ms: 480, intensity: 1.25 });
+    vfx.prim.lightning(cloudC.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.8, 0, 0)), ground, { color: E.main, width: 0.14, jitter: 0.9, segments: 22, ms: 420, intensity: 0.95 });
     await vfx.wait(70);
   }
-  vfx.prim.lightning(cloudC, ground, { color: E.white, width: 0.07, jitter: 0.6, segments: 20, ms: 380, intensity: 1.2 });
+  vfx.prim.lightning(cloudC, ground, { color: E.white, width: 0.05, jitter: 0.6, segments: 20, ms: 340, intensity: 0.9 });
   stage.flash(0xffffff, 0.3, 200);
   stage.chromaPulse(0.008, 250);
   vfx.shake(0.5, 550);
   if (!c.missed) {
     c.impact(0);
-    softHit(c, to, c.pal, 1.8);
+    softHit(c, to, c.pal, 1.3);
   }
   vfx.prim.shockwave(c.foeFeet.clone().setY(c.foeFeet.y + 0.06), { color: E.main, radius: 4, facing: 'ground', ms: 600, intensity: 1.24 });
   vfx.burst(ground, { count: 50, tex: 'spark', color: [E.white, E.main], speed: [3, 10], life: [0.3, 0.7], dir: up, spread: 1.3, gravity: 8, size: [0.1, 0.26], intensity: 1.4 });
-  vfx.prim.pillar(c.foeFeet.clone(), { color: E.main, radius: 0.9, height: 6, ms: 500, intensity: 1.2 });
   if (!c.missed) await electrocute(c, c.target, 550);
   else await vfx.wait(500);
   // cloud clears

@@ -308,10 +308,10 @@ export class Vfx {
 
   /** Standard hit spark: star flash + ring + sparks. strength 0..1.5 */
   hitSpark(pos: THREE.Vector3, pal: Palette, strength = 1) {
-    this.particle({ tex: 'star', pos: pos.clone(), life: 0.18, size: [1.4 * strength, 2.2 * strength], color: pal.core, intensity: 3, alpha: [1, 0] });
-    this.particle({ tex: 'glow', pos: pos.clone(), life: 0.3, size: [2.4 * strength, 3.2 * strength], color: pal.main, intensity: 2, alpha: [0.8, 0] });
-    this.burst(pos, { count: Math.round(14 * strength), tex: 'spark', color: [pal.core, pal.main], speed: [3, 7 * strength], size: [0.15, 0.35], life: [0.2, 0.45], drag: 3 });
-    this.prim.shockwave(pos, { color: pal.main, radius: 1.3 * strength, ms: 300, thickness: 0.25 });
+    this.particle({ tex: 'star', pos: pos.clone(), life: 0.18, size: [1.4 * strength, 2.2 * strength], color: pal.core, intensity: 1.3, alpha: [0.9, 0] });
+    this.particle({ tex: 'glow', pos: pos.clone(), life: 0.3, size: [2.4 * strength, 3.2 * strength], color: pal.main, intensity: 1.0, alpha: [0.6, 0] });
+    this.burst(pos, { count: Math.round(14 * strength), tex: 'spark', color: [pal.core, pal.main], speed: [3, 7 * strength], size: [0.15, 0.35], life: [0.2, 0.45], drag: 3, intensity: 1.3 });
+    this.prim.shockwave(pos, { color: pal.main, radius: 1.3 * strength, ms: 300, thickness: 0.25, intensity: 1.2 });
   }
 
   /** Ground-level dust puff at feet. */
