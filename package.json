@@ -1,0 +1,30 @@
+{
+  "name": "pokemon-battle-arena",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "3D Pokemon battle game (Three.js) built on FireRed data - strategy + action hybrid with in-battle evolution",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "data:extract": "node tools/extract-firered.mjs",
+    "assets:fetch": "node tools/fetch-assets.mjs",
+    "roster:validate": "tsx tools/validate-roster.ts",
+    "sim": "tsx tools/sim.ts"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "@types/three": "^0.186.0",
+    "sharp": "^0.35.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}
