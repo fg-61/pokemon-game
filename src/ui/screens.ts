@@ -6,6 +6,7 @@ import { ROSTER, type RosterLine } from '../data/roster';
 import { TYPE_COLOR } from '../data/typeColors';
 import type { PokeType } from '../data/types';
 import type { BattleOutcome } from '../game/battleController';
+import { loadRecords } from '../game/records';
 import { saveSettings, settings } from '../game/settings';
 import { assetUrl } from '../render/pokemonSprite';
 import { clear, h } from './dom';
@@ -69,6 +70,12 @@ export function openHelp(parent: HTMLElement) {
 
 // ------------------------------------------------------------------ title
 
+function recordsLine(): HTMLElement[] {
+  const r = loadRecords();
+  if (!r.battlesWon) return [];
+  return [h('div', { class: 'records' }, `🏆 ${t('championWins')}: ${r.championWins}`, h('span', null, ` · ${t('wins')}: ${r.battlesWon} · ${t('bestStreak')}: ${r.bestStreak}`))];
+}
+
 export function titleScreen(parent: HTMLElement, onPick: (mode: 'gauntlet' | 'quick') => void) {
   const root = h('div', { class: 'screen title-screen' });
   const render = () => {
@@ -84,6 +91,7 @@ export function titleScreen(parent: HTMLElement, onPick: (mode: 'gauntlet' | 'qu
     root.append(
       h('div', { class: 'logo' }, h('h1', null, 'EVO CLASH'), h('h2', null, 'POKéMON BATTLE ARENA'), h('p', null, t('subtitle'))),
       menu,
+      ...recordsLine(),
       h(
         'div',
         { class: 'lang-toggle' },

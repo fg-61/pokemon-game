@@ -10,6 +10,7 @@ import type { Difficulty } from './battle/ai';
 import { MOVES, SPECIES } from './data/gamedata';
 import { ROSTER } from './data/roster';
 import { BattleController, type BattleOutcome } from './game/battleController';
+import { recordBattle } from './game/records';
 import { settings } from './game/settings';
 import { gauntlet, randomTrainer, type Trainer } from './game/trainers';
 import { Arena, ENEMY_POS, PLAYER_POS, THEMES } from './render/arena';
@@ -159,6 +160,7 @@ async function runGauntlet(lines: string[]) {
     const out = await playBattle(lines, ladder[i], { i: i + 1, n: ladder.length });
     if (out.quit) return showTitle();
     const last = i === ladder.length - 1;
+    recordBattle(out.won, out.won && last);
     resultsScreen(ui, {
       outcome: out,
       champion: out.won && last,
@@ -178,6 +180,7 @@ async function runQuick(lines: string[]) {
   const trainer = randomTrainer(settings.difficulty);
   const out = await playBattle(lines, trainer);
   if (out.quit) return showTitle();
+  recordBattle(out.won);
   resultsScreen(ui, { outcome: out, hasNext: false, onNext: showTitle, onRetry: () => runQuick(lines), onTitle: showTitle });
 }
 

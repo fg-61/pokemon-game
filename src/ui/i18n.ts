@@ -149,6 +149,9 @@ const STR = {
     allRegions: 'All regions',
     featured: 'Featured',
     legendary: 'Legendary',
+    championWins: 'Champion titles',
+    wins: 'Wins',
+    bestStreak: 'Best streak',
   },
   tr: {
     subtitle: 'FireRed verileriyle güçlendirilmiş savaş oyunu',
@@ -297,6 +300,9 @@ const STR = {
     allRegions: 'Tüm bölgeler',
     featured: 'Öne çıkanlar',
     legendary: 'Efsanevi',
+    championWins: 'Şampiyonluk',
+    wins: 'Galibiyet',
+    bestStreak: 'En iyi seri',
   },
 } as const;
 
