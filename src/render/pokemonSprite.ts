@@ -90,6 +90,9 @@ const FS = /* glsl */ `
     vec2 px = floor(vUv / texel * rect.zw);
     if (hash(px) < dissolve) discard;
     vec3 col = c.rgb * light;
+    // a touch of saturation/contrast so pixel art pops against the lit 3D scene
+    float l = dot(col, vec3(0.299, 0.587, 0.114));
+    col = clamp(mix(vec3(l), col, 1.18) * 1.04 - 0.01, 0.0, 1.0);
     col = mix(col, statusColor, statusAmt);
     col = mix(col, silColor, silhouette);
     col = mix(col, flashColor, flashAmt);
