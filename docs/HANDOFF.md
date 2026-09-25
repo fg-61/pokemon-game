@@ -34,8 +34,9 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
       (Eevee, Tyrogue, Wurmple, Nincada/Shedinja...) is its own line; levels auto-tuned (`tools/tune-levels.ts`,
       60k-battle sim: rms 1.7%); engine: Hidden Power, Counter/Mirror Coat, Transform, Wonder Guard, Roar, Heal Bell,
       Magnitude, Present, Endeavor...; team select search + type/region filters; type-themed gauntlet.
-- [~] VFX for the ~74 moves the generated movesets introduced (`src/vfx/recipes/elemental2.ts`, `physical2.ts`);
-      moves without a recipe still use the generic type-colored animation.
+- [x] VFX: every one of the 179 moves used by the roster has a dedicated recipe (`src/vfx/recipes/*.ts`,
+      incl. `elemental2.ts` / `physical2.ts` for the generated-roster moves). Check coverage after roster changes with
+      the snippet in `.claude/skills/add-pokemon` (step 4).
 - [x] Fixes: camera kept orbiting in battle (title scene leak); pale sprites (Neutral tone mapping); redesigned HUD cards.
 - [ ] Phase 3: weather, held items, local 2-player versus, unlockables (see ROADMAP).
 
@@ -43,7 +44,8 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
 - Generated movesets are heuristic (`tools/gen-roster.ts`): to hand-tune a line, move it into `CURATED` in
   `src/data/roster.ts` and re-run `npm run roster:generate && npm run levels:tune`.
 - Assets for all 386 species are ~66 MB in `public/assets` (artwork is the biggest part).
-- Surf's wave and Aurora Beam's rainbow are the weakest VFX (see `src/vfx/recipes/water.ts`, `ice.ts`).
+- Weakest VFX: Surf's wave, Aurora Beam's rainbow, Psycho Boost from side 1 (hazy), Shock Wave's arc (curves
+  towards the camera rather than sideways). Magnitude's visuals don't scale with the rolled power.
 - Bright arenas + bloom wash additive effects to white above intensity ~1.2 — prefer `softHit` (common.ts)
   and intensities 0.6–1.2 in new recipes.
 - The timing ring (QTE) uses real time; it could not be screenshotted in the software-rendered test browser,
