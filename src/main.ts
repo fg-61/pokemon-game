@@ -17,6 +17,7 @@ import { PokemonSprite } from './render/pokemonSprite';
 import { wideShot } from './render/shots';
 import { Stage } from './render/stage';
 import { resultsScreen, teamSelect, titleScreen } from './ui/screens';
+import { t } from './ui/i18n';
 import { playMoveFx } from './vfx/playMove';
 import { registeredMoveFx, Vfx } from './vfx/vfx';
 import type { Side } from './battle/types';
@@ -119,7 +120,7 @@ function showTitle() {
   titleScreen(ui, (mode) => {
     audio.playMusic('select');
     teamSelect(ui, {
-      title: mode === 'gauntlet' ? 'Gauntlet' : 'Quick Battle',
+      title: mode === 'gauntlet' ? t('gauntlet') : t('quick'),
       onBack: showTitle,
       onDone: (lines) => {
         title?.dispose();
