@@ -43,7 +43,8 @@ Every battle starts with base forms (evolution progress resets between battles).
 (FireRed: ×2 — reduced because timing adds variance), Flash Fire ×1.5, STAB ×1.5, type chart, random 85–100%,
 then timing multipliers. Physical/special split **by type** (Gen 3). Abilities implemented: Blaze/Torrent/Overgrow/
 Swarm, Static, Levitate, Guts, Huge Power, Thick Fat, Flash Fire, Intimidate, Rock Head, Synchronize, Inner Focus,
-Early Bird, Shed Skin, Clear Body, White Smoke, Keen Eye, Hyper Cutter, Insomnia, Vital Spirit, Limber, Own Tempo.
+Early Bird, Shed Skin, Clear Body, White Smoke, Keen Eye, Hyper Cutter, Insomnia, Vital Spirit, Limber, Own Tempo,
+Water Absorb, Volt Absorb, Poison Point. Per-line `evoRate` scales evolution energy (Magikarp).
 
 ## Deviations from FireRed (all in `src/battle/config.ts`)
 | rule | FireRed | Evo Clash | why |
@@ -55,11 +56,12 @@ Early Bird, Shed Skin, Clear Body, White Smoke, Keen Eye, Hyper Cutter, Insomnia
 | level | trainer-defined | per-line level (43–62) | balance different evolution lines |
 
 ## Balance
-`npm run sim` (AI vs AI, random 3v3). Current: every line 47–53% win rate over 3000 battles, ~70 s ATB time,
+`npm run sim` (AI vs AI, random 3v3). Current: every line 47–53% win rate over 5000 battles, ~73 s ATB time,
 3-stage lines reach final form in 30–50% of battles. Per-line levels are the main knob (FireRed-style).
 
-## Roster (phase 1 — 13 lines, 35 species, all 17 types)
-Bulbasaur, Charmander, Squirtle, Pidgey, Pikachu, Abra, Machop, Geodude, Seel, Gastly, Scyther, Dratini, Houndour.
+## Roster (19 lines, 51 species, all 17 types)
+Phase 1: Bulbasaur, Charmander, Squirtle, Pidgey, Pikachu, Abra, Machop, Geodude, Seel, Gastly, Scyther, Dratini, Houndour.
+Phase 2: Magikarp (evoRate ×2.4 → Gyarados), Nidoran♂, Oddish, Poliwag (Belly Drum), Onix → Steelix, Larvitar → Tyranitar.
 Each stage has a curated FireRed-legal moveset (stage 1 ~35–70 power, stage 2 ~60–95, final = signature moves,
 including the FRLG-exclusive tutor moves Frenzy Plant / Blast Burn / Hydro Cannon).
 

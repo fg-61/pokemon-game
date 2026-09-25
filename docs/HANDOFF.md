@@ -28,7 +28,8 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
 - [x] Phase 1: 13 lines / 35 species, ATB engine + timing rings + in-battle evolution, AI, balance sim,
       4 arenas, VFX for all roster moves, evolution cinematic, gauntlet + quick battle, TR/EN UI, audio.
 - [x] Claude skills (`.claude/skills`) and agents (`.claude/agents`).
-- [~] Phase 2: roster expansion — Magikarp, Nidoran♂, Oddish, Poliwag, Onix, Larvitar lines (see git log).
+- [x] Phase 2a: Magikarp, Nidoran♂, Oddish, Poliwag, Onix, Larvitar lines — 19 lines / 51 species, balanced 47–53%,
+      engine: Splash, Belly Drum, Water/Volt Absorb, Poison Point, per-line `evoRate`, 1–4 move sets.
 - [ ] Phase 2: Eevee branches (Vaporeon / Jolteon / Flareon as separate roster lines), Hoenn starters, Bagon, Beldum.
 - [ ] Phase 3: weather, held items, local 2-player versus, unlockables (see ROADMAP).
 

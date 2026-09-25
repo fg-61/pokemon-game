@@ -55,7 +55,8 @@ for (const line of ROSTER) {
     if (!existsSync(`public/assets/pokemon/${sp.dex}/sprite.json`)) err(`no sprite assets for ${sp.name} (#${sp.dex}) — run npm run assets:fetch`);
     const legal = learnable(stage.species);
     const parts: string[] = [];
-    if (new Set(stage.moves).size !== 4) err(`${sp.name}: duplicate moves`);
+    if (stage.moves.length < 1 || stage.moves.length > 4) err(`${sp.name}: needs 1-4 moves`);
+    if (new Set(stage.moves).size !== stage.moves.length) err(`${sp.name}: duplicate moves`);
     for (const mk of stage.moves) {
       const mv = MOVES[mk];
       if (!mv) {

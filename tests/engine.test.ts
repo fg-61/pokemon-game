@@ -159,3 +159,42 @@ describe('move effects', () => {
     expect(bt.active(0).lineId).toBe('pidgey');
   });
 });
+
+describe('phase 2 rules', () => {
+  const useMove = (bt: Battle, side: 0 | 1, key: string) => {
+    bt.active(side).moves[0] = { key, pp: 10, maxPp: 10 };
+    return bt.act(side, { type: 'move', slot: 0 });
+  };
+
+  it('Splash does nothing', () => {
+    const bt = new Battle(team(['magikarp']), team(['squirtle']), 1);
+    const hp = bt.active(1).hp;
+    const ev = useMove(bt, 0, 'SPLASH');
+    expect(ev.some((e) => e.t === 'msg' && e.text.includes('nothing'))).toBe(true);
+    expect(bt.active(1).hp).toBe(hp);
+  });
+
+  it('Belly Drum trades half HP for +6 Attack', () => {
+    const bt = new Battle(team(['poliwag']), team(['squirtle']), 1);
+    const m = bt.active(0);
+    useMove(bt, 0, 'BELLY_DRUM');
+    expect(m.boosts.atk).toBe(6);
+    expect(m.hp).toBe(m.stats.hp - Math.floor(m.stats.hp / 2));
+  });
+
+  it('Water Absorb heals instead of taking water damage', () => {
+    const bt = new Battle(team(['squirtle']), team(['poliwag']), 1);
+    bt.active(1).hp = 10;
+    const ev = useMove(bt, 0, 'WATER_GUN');
+    const use = ev.find((e) => e.t === 'moveUse');
+    if (use?.t === 'moveUse' && use.outcome !== 'miss') expect(bt.active(1).hp).toBeGreaterThan(10);
+  });
+
+  it('Magikarp gains evolution energy faster', () => {
+    const a = new Battle(team(['magikarp']), team(['squirtle']), 1);
+    const b = new Battle(team(['charmander']), team(['squirtle']), 1);
+    a.tick(5);
+    b.tick(5);
+    expect(a.active(0).evo).toBeGreaterThan(b.active(0).evo * 2);
+  });
+});

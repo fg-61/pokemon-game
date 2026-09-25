@@ -54,7 +54,7 @@ export const SUPPORTED_EFFECTS = new Set<string>([
   'SLEEP', 'POISON', 'TOXIC', 'PARALYZE', 'WILL_O_WISP', 'CONFUSE', 'LEECH_SEED', 'PROTECT', 'REFLECT', 'LIGHT_SCREEN',
   'RESTORE_HP', 'SOFTBOILED', 'SYNTHESIS', 'MORNING_SUN', 'MOONLIGHT', 'REST', 'HAZE', 'FOCUS_ENERGY',
   'CALM_MIND', 'BULK_UP', 'DRAGON_DANCE', 'COSMIC_POWER', 'DEFENSE_CURL', 'TICKLE', 'SWAGGER', 'FLATTER',
-  'ATTACK_UP', 'ATTACK_UP_2', 'DEFENSE_UP', 'DEFENSE_UP_2', 'SPEED_UP', 'SPEED_UP_2', 'SPECIAL_ATTACK_UP',
+  'SPLASH', 'BELLY_DRUM', 'ATTACK_UP', 'ATTACK_UP_2', 'DEFENSE_UP', 'DEFENSE_UP_2', 'SPEED_UP', 'SPEED_UP_2', 'SPECIAL_ATTACK_UP',
   'SPECIAL_ATTACK_UP_2', 'SPECIAL_DEFENSE_UP', 'SPECIAL_DEFENSE_UP_2', 'EVASION_UP', 'ATTACK_DOWN', 'ATTACK_DOWN_2',
   'DEFENSE_DOWN', 'DEFENSE_DOWN_2', 'SPEED_DOWN', 'SPEED_DOWN_2', 'SPECIAL_DEFENSE_DOWN_2', 'ACCURACY_DOWN',
   'EVASION_DOWN', 'ATTACK_UP_HIT', 'DEFENSE_UP_HIT', 'SPECIAL_ATTACK_UP_HIT', 'ATTACK_DOWN_HIT', 'DEFENSE_DOWN_HIT',
@@ -497,6 +497,13 @@ export class Battle {
       }
       return;
     }
+    if ((moveType === 'WATER' && foe.ability === 'WATER_ABSORB') || (moveType === 'ELECTRIC' && foe.ability === 'VOLT_ABSORB')) {
+      moveEv.outcome = 'noEffect';
+      const h = this.heal(foe, Math.floor(foe.stats.hp / 4));
+      ev.push({ t: 'ability', side: foeSide, ability: foe.ability, text: `${foe.name}'s ${prettyAbility(foe.ability)} restored its HP!` });
+      if (h > 0) ev.push({ t: 'heal', side: foeSide, amount: h, hpAfter: foe.hp, cause: 'ability' });
+      return;
+    }
     if (eff === 0) {
       moveEv.outcome = 'noEffect';
       return;
@@ -528,6 +535,13 @@ export class Battle {
       if (!user.types.includes('ELECTRIC')) {
         ev.push({ t: 'ability', side: foeSide, ability: 'STATIC', text: `${foe.name}'s Static paralyzed ${user.name}!` });
         this.setStatus(side, 'par', ev);
+      }
+    }
+
+    if (move.flags.includes('MAKES_CONTACT') && foe.ability === 'POISON_POINT' && user.status === 'none' && !user.fainted && this.rng.chance(0.3)) {
+      if (!user.types.includes('POISON') && !user.types.includes('STEEL')) {
+        ev.push({ t: 'ability', side: foeSide, ability: 'POISON_POINT', text: `${foe.name}'s Poison Point poisoned ${user.name}!` });
+        this.setStatus(side, 'psn', ev);
       }
     }
 
@@ -667,6 +681,18 @@ export class Battle {
         return this.multiBoost(side, { atk: -1, def: -1 }, ev);
       case 'OVERHEAT':
         return this.applyBoost(side, 'spa', -2, ev);
+      case 'SPLASH':
+        ev.push({ t: 'msg', text: 'But nothing happened!' });
+        return true;
+      case 'BELLY_DRUM': {
+        const cost = Math.floor(user.stats.hp / 2);
+        if (user.hp <= cost || user.boosts.atk >= 6) return false;
+        this.applyDamage(user, cost);
+        ev.push({ t: 'damage', side, amount: cost, hpAfter: user.hp, cause: 'recoil' });
+        user.boosts.atk = 6;
+        ev.push({ t: 'boost', side, stat: 'atk', delta: 6, capped: false });
+        return true;
+      }
       case 'HAZE':
         for (const s of [0, 1] as Side[]) {
           const mm = this.active(s);
@@ -867,7 +893,7 @@ export class Battle {
   }
 
   private evoMult(mon: BattleMon): number {
-    return mon.stage >= 1 ? CONFIG.evo.secondStageMult : 1;
+    return (mon.stage >= 1 ? CONFIG.evo.secondStageMult : 1) * (getLine(mon.lineId).evoRate ?? 1);
   }
 
   private gainEvo(mon: BattleMon, amount: number, ev: BattleEvent[], side: Side, flat = false) {

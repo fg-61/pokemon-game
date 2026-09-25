@@ -13,11 +13,11 @@ export interface Trainer {
 
 /** Gauntlet ladder: 5 trainers, escalating AI. Teams are partly themed, partly random. */
 const LADDER: { title: string; name: string; difficulty: Difficulty; pool: string[]; theme: string; boss?: boolean }[] = [
-  { title: 'Youngster', name: 'Kaan', difficulty: 'easy', pool: ['pidgey', 'pikachu', 'geodude', 'machop'], theme: 'meadow' },
-  { title: 'Hiker', name: 'Mert', difficulty: 'normal', pool: ['geodude', 'machop', 'seel', 'squirtle', 'houndour'], theme: 'snow' },
-  { title: 'Psychic', name: 'Selin', difficulty: 'normal', pool: ['abra', 'gastly', 'bulbasaur', 'seel', 'scyther'], theme: 'night' },
-  { title: 'Ace Trainer', name: 'Arda', difficulty: 'hard', pool: ['charmander', 'scyther', 'dratini', 'houndour', 'squirtle', 'abra'], theme: 'volcano' },
-  { title: 'Champion', name: 'Ece', difficulty: 'hard', pool: ['dratini', 'charmander', 'gastly', 'machop', 'bulbasaur', 'squirtle', 'abra'], theme: 'night', boss: true },
+  { title: 'Youngster', name: 'Kaan', difficulty: 'easy', pool: ['pidgey', 'pikachu', 'geodude', 'machop', 'magikarp', 'oddish'], theme: 'meadow' },
+  { title: 'Hiker', name: 'Mert', difficulty: 'normal', pool: ['geodude', 'machop', 'onix', 'larvitar', 'seel', 'squirtle'], theme: 'snow' },
+  { title: 'Psychic', name: 'Selin', difficulty: 'normal', pool: ['abra', 'gastly', 'oddish', 'poliwag', 'bulbasaur', 'scyther'], theme: 'night' },
+  { title: 'Ace Trainer', name: 'Arda', difficulty: 'hard', pool: ['charmander', 'scyther', 'nidoran', 'houndour', 'magikarp', 'abra', 'poliwag'], theme: 'volcano' },
+  { title: 'Champion', name: 'Ece', difficulty: 'hard', pool: ['dratini', 'larvitar', 'charmander', 'gastly', 'nidoran', 'squirtle', 'abra'], theme: 'night', boss: true },
 ];
 
 export function gauntlet(seed: number, avoid: string[] = []): Trainer[] {

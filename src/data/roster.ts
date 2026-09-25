@@ -9,7 +9,7 @@
  */
 export interface RosterStage {
   species: string; // key into SPECIES
-  moves: [string, string, string, string];
+  moves: string[]; // 1-4 moves (Magikarp only has 3 legal moves in FireRed)
 }
 
 export interface RosterLine {
@@ -17,6 +17,8 @@ export interface RosterLine {
   role: string; // short playstyle tag shown in team select
   blurb: string; // one-line strategy hint
   level: number;
+  /** evolution-energy gain multiplier (default 1). Magikarp needs to become Gyarados quickly. */
+  evoRate?: number;
   stages: RosterStage[];
 }
 
@@ -25,7 +27,7 @@ export const ROSTER: RosterLine[] = [
     id: 'bulbasaur',
     role: 'Controller',
     blurb: 'Seeds, sleep and drain wear foes down; Frenzy Plant finishes them.',
-    level: 46,
+    level: 43,
     stages: [
       { species: 'BULBASAUR', moves: ['RAZOR_LEAF', 'TACKLE', 'LEECH_SEED', 'POISON_POWDER'] },
       { species: 'IVYSAUR', moves: ['RAZOR_LEAF', 'SLUDGE_BOMB', 'LEECH_SEED', 'SLEEP_POWDER'] },
@@ -58,7 +60,7 @@ export const ROSTER: RosterLine[] = [
     id: 'pidgey',
     role: 'Speedster',
     blurb: 'Fast gauge, never-miss Aerial Ace and Agility to act even faster.',
-    level: 62,
+    level: 61,
     stages: [
       { species: 'PIDGEY', moves: ['GUST', 'QUICK_ATTACK', 'TACKLE', 'SAND_ATTACK'] },
       { species: 'PIDGEOTTO', moves: ['WING_ATTACK', 'QUICK_ATTACK', 'STEEL_WING', 'FEATHER_DANCE'] },
@@ -79,7 +81,7 @@ export const ROSTER: RosterLine[] = [
     id: 'abra',
     role: 'Glass Cannon',
     blurb: 'Enormous Sp. Atk, paper-thin. Elemental punches are special in Gen 3!',
-    level: 43,
+    level: 42,
     stages: [
       { species: 'ABRA', moves: ['PSYCHIC', 'THUNDER_PUNCH', 'THUNDER_WAVE', 'REFLECT'] },
       { species: 'KADABRA', moves: ['PSYCHIC', 'ICE_PUNCH', 'RECOVER', 'REFLECT'] },
@@ -90,7 +92,7 @@ export const ROSTER: RosterLine[] = [
     id: 'machop',
     role: 'Bruiser',
     blurb: 'Guts turns status into power. Dynamic Punch always confuses.',
-    level: 49,
+    level: 48,
     stages: [
       { species: 'MACHOP', moves: ['KARATE_CHOP', 'ROCK_TOMB', 'LOW_KICK', 'BULK_UP'] },
       { species: 'MACHOKE', moves: ['VITAL_THROW', 'ROCK_SLIDE', 'BRICK_BREAK', 'BULK_UP'] },
@@ -101,7 +103,7 @@ export const ROSTER: RosterLine[] = [
     id: 'geodude',
     role: 'Wall Breaker',
     blurb: 'Rock Head means no recoil. Golem can Explode as a last resort.',
-    level: 58,
+    level: 60,
     stages: [
       { species: 'GEODUDE', moves: ['ROCK_THROW', 'DIG', 'ROCK_SMASH', 'DEFENSE_CURL'] },
       { species: 'GRAVELER', moves: ['ROCK_BLAST', 'DIG', 'BRICK_BREAK', 'DEFENSE_CURL'] },
@@ -122,7 +124,7 @@ export const ROSTER: RosterLine[] = [
     id: 'gastly',
     role: 'Trickster',
     blurb: 'Levitate + Normal/Fighting immunity. Hypnosis into Dream Eater.',
-    level: 51,
+    level: 49,
     stages: [
       { species: 'GASTLY', moves: ['NIGHT_SHADE', 'LICK', 'HYPNOSIS', 'CONFUSE_RAY'] },
       { species: 'HAUNTER', moves: ['NIGHT_SHADE', 'DREAM_EATER', 'HYPNOSIS', 'CONFUSE_RAY'] },
@@ -133,7 +135,7 @@ export const ROSTER: RosterLine[] = [
     id: 'scyther',
     role: 'Duelist',
     blurb: 'Strong from turn one. Evolving trades speed for Steel armor.',
-    level: 44,
+    level: 42,
     stages: [
       { species: 'SCYTHER', moves: ['SILVER_WIND', 'WING_ATTACK', 'QUICK_ATTACK', 'SWORDS_DANCE'] },
       { species: 'SCIZOR', moves: ['STEEL_WING', 'SILVER_WIND', 'QUICK_ATTACK', 'SWORDS_DANCE'] },
@@ -143,7 +145,7 @@ export const ROSTER: RosterLine[] = [
     id: 'dratini',
     role: 'Late Bloomer',
     blurb: 'Two evolutions to Dragonite — the strongest finisher in the roster.',
-    level: 48,
+    level: 47,
     stages: [
       { species: 'DRATINI', moves: ['TWISTER', 'DRAGON_RAGE', 'SLAM', 'THUNDER_WAVE'] },
       { species: 'DRAGONAIR', moves: ['DRAGON_BREATH', 'ICE_BEAM', 'THUNDER_WAVE', 'AGILITY'] },
@@ -158,6 +160,71 @@ export const ROSTER: RosterLine[] = [
     stages: [
       { species: 'HOUNDOUR', moves: ['EMBER', 'BITE', 'SMOG', 'HOWL'] },
       { species: 'HOUNDOOM', moves: ['FLAMETHROWER', 'CRUNCH', 'SOLAR_BEAM', 'WILL_O_WISP'] },
+    ],
+  },
+  {
+    id: 'magikarp',
+    role: 'Underdog',
+    blurb: 'Useless... until it isn\'t. Evolves very fast into a rampaging Gyarados.',
+    level: 49,
+    evoRate: 2.4,
+    stages: [
+      { species: 'MAGIKARP', moves: ['SPLASH', 'TACKLE', 'FLAIL'] },
+      { species: 'GYARADOS', moves: ['HYDRO_PUMP', 'THRASH', 'EARTHQUAKE', 'DRAGON_DANCE'] },
+    ],
+  },
+  {
+    id: 'nidoran',
+    role: 'Coverage King',
+    blurb: 'Poison Point punishes contact. Nidoking hits almost everything super-effectively.',
+    level: 54,
+    stages: [
+      { species: 'NIDORAN_M', moves: ['HORN_ATTACK', 'DOUBLE_KICK', 'POISON_STING', 'FOCUS_ENERGY'] },
+      { species: 'NIDORINO', moves: ['SLUDGE_BOMB', 'HORN_ATTACK', 'DOUBLE_KICK', 'DIG'] },
+      { species: 'NIDOKING', moves: ['EARTHQUAKE', 'MEGAHORN', 'SLUDGE_BOMB', 'THUNDERBOLT'] },
+    ],
+  },
+  {
+    id: 'oddish',
+    role: 'Status Spreader',
+    blurb: 'Stun, poison, sleep — then Petal Dance through the chaos.',
+    level: 50,
+    stages: [
+      { species: 'ODDISH', moves: ['ABSORB', 'ACID', 'STUN_SPORE', 'POISON_POWDER'] },
+      { species: 'GLOOM', moves: ['GIGA_DRAIN', 'ACID', 'SLEEP_POWDER', 'MOONLIGHT'] },
+      { species: 'VILEPLUME', moves: ['PETAL_DANCE', 'SLUDGE_BOMB', 'STUN_SPORE', 'MOONLIGHT'] },
+    ],
+  },
+  {
+    id: 'poliwag',
+    role: 'Gambler',
+    blurb: 'Water Absorb eats water moves. Belly Drum: half your HP for maximum Attack.',
+    level: 50,
+    stages: [
+      { species: 'POLIWAG', moves: ['WATER_GUN', 'DOUBLE_SLAP', 'HYPNOSIS', 'BUBBLE'] },
+      { species: 'POLIWHIRL', moves: ['WATER_PULSE', 'BODY_SLAM', 'HYPNOSIS', 'BELLY_DRUM'] },
+      { species: 'POLIWRATH', moves: ['SURF', 'BRICK_BREAK', 'HYPNOSIS', 'BELLY_DRUM'] },
+    ],
+  },
+  {
+    id: 'onix',
+    role: 'Iron Wall',
+    blurb: 'Colossal Defense. Evolving into Steelix adds Steel armor and real power.',
+    level: 53,
+    stages: [
+      { species: 'ONIX', moves: ['ROCK_THROW', 'DRAGON_BREATH', 'SCREECH', 'HARDEN'] },
+      { species: 'STEELIX', moves: ['IRON_TAIL', 'EARTHQUAKE', 'CRUNCH', 'ROCK_SLIDE'] },
+    ],
+  },
+  {
+    id: 'larvitar',
+    role: 'Pseudo-Legend',
+    blurb: 'A slow start, then Tyranitar: the heaviest hitter in Kanto and Johto.',
+    level: 52,
+    stages: [
+      { species: 'LARVITAR', moves: ['BITE', 'ROCK_SLIDE', 'DIG', 'SCREECH'] },
+      { species: 'PUPITAR', moves: ['ROCK_SLIDE', 'CRUNCH', 'DIG', 'SCARY_FACE'] },
+      { species: 'TYRANITAR', moves: ['EARTHQUAKE', 'ROCK_SLIDE', 'CRUNCH', 'DRAGON_DANCE'] },
     ],
   },
 ];

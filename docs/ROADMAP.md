@@ -8,6 +8,9 @@
 - Claude skills (add-pokemon, move-vfx, balance-sim, firered-data, playtest) and agents.
 
 ## Phase 2 — roster expansion (use the `add-pokemon` skill)
+Done: Magikarp→Gyarados, Nidoran♂→Nidoking, Oddish→Vileplume, Poliwag→Poliwrath, Onix→Steelix,
+Larvitar→Tyranitar (19 lines / 51 species).
+
 Suggested next lines (all FireRed species, mostly 3 stages, fill role gaps):
 - Oddish → Gloom → Vileplume (Grass/Poison support), Poliwag → Poliwhirl → Poliwrath (Water/Fighting),
   Nidoran♂ → Nidorino → Nidoking (coverage monster), Magikarp → Gyarados (joke → monster, Intimidate),
