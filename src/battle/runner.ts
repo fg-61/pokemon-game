@@ -17,6 +17,7 @@ export function autoBattle(b: Battle, profiles: [AIProfile, AIProfile], seed = 1
   const res: SimResult = { winner: 0, time: 0, actions: 0, evolutions: [] };
   const queue: Side[] = [];
   const dt = 1 / 30;
+  b.start();
   while (b.winner === null && b.time < maxTime) {
     for (const s of b.tick(dt)) queue.push(s);
     while (queue.length && b.winner === null) {

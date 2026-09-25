@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { WeatherKind } from '../battle/types';
 import type { Stage } from './stage';
 
 export const PLAYER_POS = new THREE.Vector3(-2.7, 0, 2.3);
@@ -421,6 +422,56 @@ export class Platform {
   }
 }
 
+/**
+ * How each weather re-grades a theme (Arena.setWeather). Colors are transformed relative to the theme
+ * (desaturate by `sat`, scale by `mul`, multiply by `tint`), so dark themes stay dark and bright ones stay bright.
+ */
+interface WeatherLook {
+  sat: number;
+  mul: number;
+  tint: [number, number, number];
+  /** 0..1 pull of the sky colors towards the (graded) fog color: haze */
+  haze: number;
+  fogDensity: number;
+  sunIntensity: number;
+  hemiIntensity: number;
+  /** sun light color target and how far the theme's sun color is pulled to it */
+  sunColor: number;
+  sunColorAmt: number;
+  /** multiplier on the sky shader's sun disk / glow */
+  sunGlow: number;
+  /** cloud coverage target (null = keep the theme's) and cloud brightness */
+  clouds: number | null;
+  cloudMul: number;
+  /** multiplier on the theme's ambient motes (pollen, fireflies...) */
+  ambient: number;
+  /** linear color added to dark sky / fog / hemi colors (lets harsh sunlight warm up night themes) */
+  lift?: [number, number, number];
+}
+
+const WEATHER_LOOK: Record<WeatherKind, WeatherLook> = {
+  sun: { sat: 1.12, mul: 1.06, tint: [1.12, 1.0, 0.78], haze: 0, fogDensity: 0.75, sunIntensity: 1.45, hemiIntensity: 1.12, sunColor: 0xffc878, sunColorAmt: 0.6, sunGlow: 1.9, clouds: null, cloudMul: 1.05, ambient: 1, lift: [0.1, 0.055, 0.008] },
+  rain: { sat: 0.35, mul: 0.6, tint: [0.9, 0.97, 1.12], haze: 0.3, fogDensity: 1.9, sunIntensity: 0.35, hemiIntensity: 0.8, sunColor: 0x9fb0d0, sunColorAmt: 0.7, sunGlow: 0.08, clouds: 0.97, cloudMul: 0.62, ambient: 0.2 },
+  sand: { sat: 0.45, mul: 0.92, tint: [1.28, 1.02, 0.66], haze: 0.62, fogDensity: 3.2, sunIntensity: 0.62, hemiIntensity: 0.95, sunColor: 0xffc080, sunColorAmt: 0.6, sunGlow: 0.45, clouds: null, cloudMul: 0.9, ambient: 0.15 },
+  hail: { sat: 0.4, mul: 0.9, tint: [0.92, 1.0, 1.16], haze: 0.3, fogDensity: 1.7, sunIntensity: 0.55, hemiIntensity: 1.0, sunColor: 0xd8e8ff, sunColorAmt: 0.7, sunGlow: 0.3, clouds: 0.9, cloudMul: 0.85, ambient: 0.45 },
+};
+
+function gradeColor(out: THREE.Color, base: THREE.Color, l: WeatherLook) {
+  const lum = base.r * 0.299 + base.g * 0.587 + base.b * 0.114;
+  out.setRGB(lum + (base.r - lum) * l.sat, lum + (base.g - lum) * l.sat, lum + (base.b - lum) * l.sat);
+  out.r = Math.max(0, out.r * l.mul * l.tint[0]);
+  out.g = Math.max(0, out.g * l.mul * l.tint[1]);
+  out.b = Math.max(0, out.b * l.mul * l.tint[2]);
+  if (l.lift) {
+    // only dark colors are lifted (night skies), bright ones are left alone
+    const k = Math.max(0, 1 - lum * 2.5);
+    out.r += l.lift[0] * k;
+    out.g += l.lift[1] * k;
+    out.b += l.lift[2] * k;
+  }
+  return out;
+}
+
 export class Arena {
   readonly group = new THREE.Group();
   readonly playerPlatform: Platform;
@@ -430,12 +481,20 @@ export class Arena {
   private ambient: THREE.Points;
   private ambientVel: Float32Array;
   private disposeFns: (() => void)[] = [];
+  // weather lighting (setWeather): references to the lights / fog and per-kind blend weights
+  private hemi!: THREE.HemisphereLight;
+  private sun!: THREE.DirectionalLight;
+  private fog!: THREE.FogExp2;
+  private background!: THREE.Color;
+  private weatherW: Partial<Record<WeatherKind, number>> = {};
 
   constructor(private stage: Stage, theme: ArenaTheme) {
     this.theme = theme;
     const scene = stage.scene;
-    scene.fog = new THREE.FogExp2(theme.fog, theme.fogDensity);
-    scene.background = new THREE.Color(theme.fog);
+    this.fog = new THREE.FogExp2(theme.fog, theme.fogDensity);
+    this.background = new THREE.Color(theme.fog);
+    scene.fog = this.fog;
+    scene.background = this.background;
 
     // sky dome
     this.sky = new THREE.ShaderMaterial({
@@ -464,7 +523,9 @@ export class Arena {
     // lights
     const hemi = new THREE.HemisphereLight(theme.hemiSky, theme.hemiGround, theme.hemiIntensity);
     this.group.add(hemi);
+    this.hemi = hemi;
     const sun = new THREE.DirectionalLight(theme.sunColor, theme.sunIntensity);
+    this.sun = sun;
     sun.position.set(theme.sunDir[0] * 30, Math.max(8, theme.sunDir[1] * 30), theme.sunDir[2] * 30);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
@@ -634,6 +695,56 @@ export class Arena {
       if (p[i + 1] > 12) p[i + 1] = 0;
     }
     attr.needsUpdate = true;
+  }
+
+  /**
+   * Weather lighting: blends the theme towards a weather look (sun: warm golden and brighter; rain: dark blue-grey,
+   * overcast, denser fog; sand: brown haze; hail: cold bluish-white). `k` (0..1) is that kind's blend weight, so
+   * WeatherFx can fade it and cross-fade two kinds by setting both. `setWeather(null, 0)` restores the theme.
+   */
+  setWeather(kind: WeatherKind | null, k: number) {
+    if (kind === null) this.weatherW = {};
+    else this.weatherW[kind] = THREE.MathUtils.clamp(k, 0, 1);
+    const th = this.theme;
+    const entries = (Object.keys(this.weatherW) as WeatherKind[]).map((w) => [w, this.weatherW[w] ?? 0] as const).filter(([, v]) => v > 0);
+    const total = entries.reduce((a, [, v]) => a + v, 0);
+    const norm = total > 1 ? 1 / total : 1;
+    const tmp = new THREE.Color();
+    const fogT = new THREE.Color();
+    // base + sum(w * (target - base)) for colors and scalars
+    const blendColor = (out: THREE.Color, base: number, target: (l: WeatherLook, b: THREE.Color) => THREE.Color) => {
+      const b = new THREE.Color(base);
+      out.copy(b);
+      for (const [w, v] of entries) {
+        const t = target(WEATHER_LOOK[w], b);
+        out.r += (t.r - b.r) * v * norm;
+        out.g += (t.g - b.g) * v * norm;
+        out.b += (t.b - b.b) * v * norm;
+      }
+      return out;
+    };
+    const blend = (base: number, target: (l: WeatherLook) => number) => entries.reduce((a, [w, v]) => a + (target(WEATHER_LOOK[w]) - base) * v * norm, base);
+    const graded = (l: WeatherLook, b: THREE.Color) => gradeColor(tmp, b, l);
+    const hazed = (l: WeatherLook, b: THREE.Color) => {
+      gradeColor(fogT, new THREE.Color(th.fog), l);
+      return gradeColor(tmp, b, l).lerp(fogT, l.haze);
+    };
+    const u = this.sky.uniforms;
+    blendColor(u.top.value as THREE.Color, th.skyTop, hazed);
+    blendColor(u.horizon.value as THREE.Color, th.skyHorizon, hazed);
+    blendColor(u.bottom.value as THREE.Color, th.skyBottom, hazed);
+    blendColor(u.cloudColor.value as THREE.Color, th.cloudColor, (l, b) => gradeColor(tmp, b, l).multiplyScalar(l.cloudMul));
+    blendColor(u.sunColor.value as THREE.Color, th.sunColor, (l, b) => tmp.copy(b).lerp(new THREE.Color(l.sunColor), l.sunColorAmt).multiplyScalar(l.sunGlow));
+    u.clouds.value = blend(th.clouds, (l) => l.clouds ?? th.clouds);
+    blendColor(this.fog.color, th.fog, graded);
+    this.background.copy(this.fog.color);
+    this.fog.density = blend(th.fogDensity, (l) => th.fogDensity * l.fogDensity);
+    blendColor(this.hemi.color, th.hemiSky, graded);
+    blendColor(this.hemi.groundColor, th.hemiGround, graded);
+    this.hemi.intensity = blend(th.hemiIntensity, (l) => th.hemiIntensity * l.hemiIntensity);
+    blendColor(this.sun.color, th.sunColor, (l, b) => tmp.copy(b).lerp(new THREE.Color(l.sunColor), l.sunColorAmt));
+    this.sun.intensity = blend(th.sunIntensity, (l) => th.sunIntensity * l.sunIntensity);
+    (this.ambient.material as THREE.PointsMaterial).opacity = blend(0.85, (l) => 0.85 * l.ambient);
   }
 
   dispose() {

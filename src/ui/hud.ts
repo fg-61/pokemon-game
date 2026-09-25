@@ -1,5 +1,5 @@
 import type { Battle } from '../battle/engine';
-import type { Action, BattleMon, Side, StatusCond, TimingGrade } from '../battle/types';
+import type { Action, BattleMon, Side, StatusCond, TimingGrade, WeatherKind } from '../battle/types';
 import { CONFIG } from '../battle/config';
 import { SPECIES } from '../data/gamedata';
 import { effectiveMove } from '../battle/engine';
@@ -164,13 +164,18 @@ export class Hud {
   private msgEl = h('div', { class: 'msg' });
   private cmdEl = h('div', { class: 'cmd off interactive' });
   private topEl = h('div', { class: 'top-center' });
+  private weatherEl = h('div', { class: 'weather-chip hidden' });
+  private weatherKind: WeatherKind | null = null;
+  /** weather as presented so far (the engine can be a few events ahead) */
+  private shownWeather: WeatherKind | null = null;
+  private weatherMax = 1;
   private overlay = h('div', { class: 'overlay' });
   private skip = false;
   private keyHandler: ((e: KeyboardEvent) => void) | null = null;
   lowHpBeep = 0;
 
   constructor(parent: HTMLElement) {
-    this.root.append(this.cards[0].el, this.cards[1].el, this.topEl, h('div', { class: 'msgbox' }, this.msgEl, this.cmdEl), this.overlay);
+    this.root.append(this.cards[0].el, this.cards[1].el, this.topEl, this.weatherEl, h('div', { class: 'msgbox' }, this.msgEl, this.cmdEl), this.overlay);
     parent.appendChild(this.root);
     this.msgEl.addEventListener('pointerdown', () => (this.skip = true));
   }
@@ -502,6 +507,34 @@ export class Hud {
       const st = b.sides[side];
       this.cards[side].update(dt, m.fainted ? 0 : m.atb, m.evo, b.canEvolve(m));
       this.cards[side].setScreens(st.reflect, st.lightScreen);
+    }
+    this.updateWeather(b);
+  }
+
+  /** Called by the controller when a weather event is presented (null = cleared). */
+  setWeather(kind: WeatherKind | null) {
+    this.shownWeather = kind;
+  }
+
+  /** Weather chip under the top bar: icon, name and a bar for the time left. */
+  private updateWeather(b: Battle) {
+    const kind = this.shownWeather;
+    if (kind !== this.weatherKind) {
+      this.weatherKind = kind;
+      this.weatherMax = Math.max(1, b.weather?.kind === kind ? b.weather.left : 1);
+      clear(this.weatherEl);
+      this.weatherEl.classList.toggle('hidden', !kind);
+      if (kind) {
+        const name = { sun: t('weatherNameSun'), rain: t('weatherNameRain'), sand: t('weatherNameSand'), hail: t('weatherNameHail') }[kind];
+        const icon = { sun: '☀️', rain: '🌧️', sand: '🌪️', hail: '🌨️' }[kind];
+        this.weatherEl.className = `weather-chip ${kind}`;
+        this.weatherEl.append(h('span', { class: 'icon' }, icon), h('b', null, name), h('div', { class: 'bar' }, h('i')));
+      }
+    }
+    if (kind && b.weather?.kind === kind) {
+      const bar = this.weatherEl.querySelector('.bar i') as HTMLElement | null;
+      if (bar) bar.style.width = `${Math.max(0, Math.min(100, (b.weather.left / this.weatherMax) * 100))}%`;
+      this.weatherEl.classList.toggle('negated', b.weatherNow() === null);
     }
   }
 

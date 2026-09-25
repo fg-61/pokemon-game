@@ -118,6 +118,18 @@ describe('move effects', () => {
     expect(seen.size).toBeGreaterThan(2);
   });
 
+  it('a Pokemon put to sleep mid-Fly comes back down (no longer semi-invulnerable)', () => {
+    const bt = setup('pidgey', 'squirtle');
+    useMove(bt, 0, 'FLY');
+    expect(bt.active(0).vol.semiInvulnerable).toBe(true);
+    bt.active(0).status = 'slp';
+    bt.active(0).statusCounter = 2;
+    const ev = bt.act(0, { type: 'move', slot: 0 });
+    expect(ev.some((e) => e.t === 'blocked' && e.reason === 'slp')).toBe(true);
+    expect(bt.active(0).vol.semiInvulnerable).toBe(false);
+    expect(bt.active(0).vol.charging).toBeNull();
+  });
+
   it('Protect blocks the next attack', () => {
     const bt = setup('squirtle', 'machop', 3);
     useMove(bt, 0, 'PROTECT');

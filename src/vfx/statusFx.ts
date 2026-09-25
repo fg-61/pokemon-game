@@ -88,6 +88,33 @@ export async function residualFx(vfx: Vfx, s: PokemonSprite, cause: string, othe
     }
   } else if (cause === 'confusion') {
     vfx.hitSpark(c, { core: 0xffffff, main: 0xc8c8c8, dark: 0x666666 }, 0.8);
+  } else if (cause === 'sand') {
+    // a gust of sand whips across the sprite (same wind direction as the ambient sandstorm)
+    const wind = new THREE.Vector3(0.9, 0, 0.42).normalize();
+    s.flash(0xd8b070, 300, 0.45);
+    for (let i = 0; i < 44; i++) {
+      const p = c.clone().addScaledVector(wind, -1.4 - Math.random() * 1.2).add(new THREE.Vector3(0, (Math.random() - 0.5) * s.height * 0.9, (Math.random() - 0.5) * 0.6));
+      vfx.particle({ tex: 'dot', pos: p, vel: wind.clone().multiplyScalar(7 + Math.random() * 4), life: 0.5, size: 0.08 + Math.random() * 0.07, color: Math.random() < 0.5 ? 0xecd8a8 : 0x86684a, alpha: [1, 0.5], additive: false });
+    }
+    for (let i = 0; i < 8; i++) {
+      const p = c.clone().addScaledVector(wind, -0.6 - Math.random() * 1.6).add(new THREE.Vector3(0, (Math.random() - 0.5) * s.height * 0.8, 0.2));
+      vfx.particle({ tex: 'smoke', pos: p, vel: wind.clone().multiplyScalar(4 + Math.random() * 2), life: 0.7, size: [1, 2.2], color: [0xc8a472, 0x86684a], alpha: [0.75, 0], fadeIn: 0.3, spin: (Math.random() - 0.5) * 2, additive: false });
+    }
+    vfx.burst(c, { count: 10, tex: 'rock', color: [0xd8b070, 0x8a6038], speed: [1.5, 3.5], dir: wind, spread: 0.8, gravity: 8, life: [0.3, 0.5], size: [0.08, 0.14], spin: 8, additive: false, intensity: 1 });
+  } else if (cause === 'hail') {
+    // a few hailstones drop onto the sprite and shatter
+    s.flash(0xc8f0ff, 300, 0.5);
+    const top = s.at(1.05);
+    for (let i = 0; i < 4; i++) {
+      const hit = top.clone().add(new THREE.Vector3((Math.random() - 0.5) * s.width * 0.6, -Math.random() * 0.3, 0.1));
+      const from = hit.clone().add(new THREE.Vector3(0.25, 3, 0.12));
+      vfx.particle({ tex: 'dot', pos: from, vel: hit.clone().sub(from).divideScalar(0.18), life: 0.18, size: 0.2, color: 0xf6fbff, alpha: [1, 1], additive: false, intensity: 1.05 });
+      void vfx.wait(180).then(() => {
+        vfx.burst(hit, { count: 6, tex: 'shard', color: [0xffffff, 0x9ae8ff], speed: [1.5, 3.5], dir: up, spread: 1.4, gravity: 9, life: [0.25, 0.4], size: [0.1, 0.16], spin: 10, intensity: 1.3 });
+        vfx.particle({ tex: 'glow', pos: hit, life: 0.18, size: [0.6, 1], color: 0x9ae8ff, intensity: 1, alpha: [0.6, 0] });
+      });
+      await vfx.wait(70);
+    }
   } else {
     vfx.hitSpark(c, { core: 0xffffff, main: 0xffb0a0, dark: 0x663322 }, 0.6);
   }

@@ -2,7 +2,7 @@ import { MOVES, typeMultiplier } from '../data/gamedata';
 import type { PokeType } from '../data/types';
 import type { Battle } from './engine';
 import type { Rng } from './rng';
-import { other, type Action, type Side, type TimingGrade } from './types';
+import { other, type Action, type BattleMon, type Side, type TimingGrade, type WeatherKind } from './types';
 
 export type Difficulty = 'easy' | 'normal' | 'hard';
 
@@ -47,12 +47,14 @@ export function scoreActions(b: Battle, side: Side, profile: AIProfile): Scored[
     if (mv.category !== 'status') {
       const est = b.estimateDamage(side, slot.key);
       const avg = (est.min + est.max) / 2;
-      const acc = mv.accuracy === 0 || mv.effect === 'ALWAYS_HIT' ? 1 : mv.accuracy / 100;
+      const w = b.weatherNow();
+      const accPct = mv.effect === 'THUNDER' && w === 'rain' ? 0 : mv.effect === 'THUNDER' && w === 'sun' ? 50 : mv.accuracy;
+      const acc = accPct === 0 || mv.effect === 'ALWAYS_HIT' ? 1 : accPct / 100;
       s = Math.min(avg, foe.hp) / foe.stats.hp;
       if (avg >= foe.hp) s += 0.35; // finishing blow
       s *= acc;
       if (mv.effect === 'RECHARGE') s *= avg >= foe.hp ? 1 : 0.6;
-      if (['SOLAR_BEAM', 'SKULL_BASH', 'SKY_ATTACK', 'RAZOR_WIND'].includes(mv.effect)) s *= 0.7;
+      if (['SOLAR_BEAM', 'SKULL_BASH', 'SKY_ATTACK', 'RAZOR_WIND'].includes(mv.effect) && !(mv.effect === 'SOLAR_BEAM' && w === 'sun')) s *= 0.7;
       if ((mv.effect === 'RECOIL' || mv.effect === 'DOUBLE_EDGE') && me.ability !== 'ROCK_HEAD') s *= 0.9;
       if (mv.effect === 'ABSORB') s *= 1 + (1 - myHpFrac) * 0.4;
       if (mv.effect === 'SUPERPOWER' || mv.effect === 'OVERHEAT') s *= 0.9;
@@ -128,6 +130,14 @@ function statusMoveValue(b: Battle, side: Side, key: string, myHp: number, foeHp
       return Object.values(foe.boosts).reduce((a, v) => a + Math.max(0, v), 0) * 0.15;
     case 'FOCUS_ENERGY':
       return me.vol.focusEnergy ? 0 : 0.15;
+    case 'SUNNY_DAY':
+      return weatherValue(b, side, 'sun', myHp);
+    case 'RAIN_DANCE':
+      return weatherValue(b, side, 'rain', myHp);
+    case 'SANDSTORM':
+      return weatherValue(b, side, 'sand', myHp);
+    case 'HAIL':
+      return weatherValue(b, side, 'hail', myHp);
   }
   // stat boosts: worth more early (full HP) and with little boosting so far
   const up = /(ATTACK|DEFENSE|SPEED|SPECIAL_ATTACK|SPECIAL_DEFENSE|EVASION)_UP(_2)?$|CALM_MIND|BULK_UP|DRAGON_DANCE|COSMIC_POWER|DEFENSE_CURL/.test(e);
@@ -140,6 +150,37 @@ function statusMoveValue(b: Battle, side: Side, key: string, myHp: number, foeHp
     return Math.max(0, 0.18 + total * 0.06);
   }
   return 0.05;
+}
+
+/** How much a side gains from setting `kind` (its moves / abilities vs the foe's), ~0..0.6. */
+function weatherValue(b: Battle, side: Side, kind: WeatherKind, myHp: number): number {
+  if (b.weather?.kind === kind && b.weather.left > 6) return 0;
+  const me = b.active(side);
+  const foe = b.active(other(side));
+  const moveTypes = (m: BattleMon) => new Set(m.moves.map((x) => MOVES[x.key]).filter((x) => x.category !== 'status' || x.effect === 'SOLAR_BEAM').map((x) => x.type));
+  const has = (m: BattleMon, effect: string) => m.moves.some((x) => MOVES[x.key].effect === effect);
+  const mine = moveTypes(me);
+  const theirs = moveTypes(foe);
+  const immune = (m: BattleMon) => (kind === 'sand' ? m.types.some((t) => t === 'ROCK' || t === 'GROUND' || t === 'STEEL') || m.ability === 'SAND_VEIL' : m.types.includes('ICE'));
+  let v = 0;
+  if (kind === 'sun' || kind === 'rain') {
+    const good = kind === 'sun' ? 'FIRE' : 'WATER';
+    const bad = kind === 'sun' ? 'WATER' : 'FIRE';
+    if (mine.has(good)) v += 0.18;
+    if (mine.has(bad)) v -= 0.15;
+    if (theirs.has(bad)) v += 0.1;
+    if (theirs.has(good)) v -= 0.12;
+    if (me.ability === (kind === 'sun' ? 'CHLOROPHYLL' : 'SWIFT_SWIM')) v += 0.25;
+    if (kind === 'sun' && (has(me, 'SOLAR_BEAM') || has(me, 'SYNTHESIS') || has(me, 'MORNING_SUN') || has(me, 'MOONLIGHT'))) v += 0.12;
+    if (kind === 'rain' && (has(me, 'THUNDER') || me.ability === 'RAIN_DISH')) v += 0.12;
+    if (me.ability === 'FORECAST' || has(me, 'WEATHER_BALL')) v += 0.1;
+  } else {
+    if (immune(me) && !immune(foe)) v += 0.25;
+    else if (!immune(me) && immune(foe)) v -= 0.2;
+    else v += 0.03;
+    if (me.ability === 'FORECAST' || has(me, 'WEATHER_BALL')) v += 0.08;
+  }
+  return Math.max(0, Math.min(0.6, v)) * (0.5 + 0.5 * myHp);
 }
 
 function foeMoveTypes(b: Battle, side: Side): PokeType[] {

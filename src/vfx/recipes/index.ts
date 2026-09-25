@@ -18,5 +18,7 @@ import './steel';
 import './water';
 import './elemental2';
 import './physical2';
+import './weather';
+import './signature';
 
 export { defaultChargeRecipe, defaultRecipe } from './defaults';

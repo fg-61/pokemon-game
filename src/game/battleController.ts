@@ -17,6 +17,7 @@ import { Hud, iconUrl } from '../ui/hud';
 import { statName, t } from '../ui/i18n';
 import { playEvolutionFx } from '../vfx/evolution';
 import { playMoveFx } from '../vfx/playMove';
+import { WeatherFx } from '../vfx/weather';
 import { boostFx, healFx, residualFx, returnFx, sendOutFx, statusFx } from '../vfx/statusFx';
 import type { Vfx } from '../vfx/vfx';
 import { settings } from './settings';
@@ -49,6 +50,9 @@ const TWO_TURN_MSG: Record<string, 'solarCharge' | 'digCharge' | 'flyCharge' | '
   SKULL_BASH: 'skullCharge',
 };
 
+const WEATHER_START = { sun: 'weatherSun', rain: 'weatherRain', sand: 'weatherSand', hail: 'weatherHail' } as const;
+const WEATHER_END = { sun: 'weatherEndSun', rain: 'weatherEndRain', sand: 'weatherEndSand', hail: 'weatherEndHail' } as const;
+
 /** Magnitude's rolled base power → the "Magnitude N!" number FireRed announces. */
 const MAGNITUDE_LEVEL: Record<number, number> = { 10: 4, 30: 5, 50: 6, 70: 7, 90: 8, 110: 9, 150: 10 };
 
@@ -56,6 +60,7 @@ export class BattleController {
   readonly battle: Battle;
   private hud: Hud;
   private arena: Arena;
+  private weatherFx: WeatherFx;
   private sprites: [PokemonSprite, PokemonSprite];
   private rng: Rng;
   private offUpdate: () => void;
@@ -79,6 +84,7 @@ export class BattleController {
     );
     const theme = THEMES.find((x) => x.id === setup.trainer.theme) ?? THEMES[0];
     this.arena = new Arena(stage, theme);
+    this.weatherFx = new WeatherFx(stage, vfx, this.arena);
     this.sprites = [new PokemonSprite(stage, 'back'), new PokemonSprite(stage, 'front')];
     this.sprites[0].group.position.copy(PLAYER_POS).setY(Arena.FLOOR);
     this.sprites[1].group.position.copy(ENEMY_POS).setY(Arena.FLOOR);
@@ -127,7 +133,7 @@ export class BattleController {
 
   async run(): Promise<BattleOutcome> {
     const b = this.battle;
-    audio.playMusic(this.setup.trainer.boss ? 'boss' : 'battle');
+    audio.playMusic(this.setup.trainer.music ?? (this.setup.trainer.boss ? 'boss' : 'battle'));
     this.stage.director.orbit = 0; // never inherit the title screen's slow orbit
     this.stage.director.cut(introShot());
     this.stage.director.move(wideShot(), 3.2, ease.inOutCubic);
@@ -145,6 +151,7 @@ export class BattleController {
     await this.msg(t('wants', this.setup.trainer.name), 500);
     await this.sendOut(1, true);
     await this.sendOut(0, true);
+    await this.present(b.start()); // lead abilities (Drought, Drizzle, Sand Stream, Intimidate)
 
     const queue: Side[] = [];
     let menu: ReturnType<Hud['command']> | null = null;
@@ -273,11 +280,20 @@ export class BattleController {
       await this.presentOne(events[i]);
     }
     // keep HUD numbers in sync after the batch
+    const waits: Promise<unknown>[] = [];
     for (const side of [0, 1] as Side[]) {
       const m = this.battle.active(side);
       this.hud.cards[side].setTeam(this.battle.sides[side].team);
       if (!m.fainted) this.hud.cards[side].setHp(m.hp, m.stats.hp);
+      // Fly / Dig hide the sprite on their first turn; if the strike never comes (sleep, paralysis, confusion)
+      // the Pokemon lands back on its platform
+      const sp = this.sprites[side];
+      if (!m.fainted && !m.vol.semiInvulnerable && !sp.group.visible) {
+        sp.body.position.set(0, 0, 0);
+        waits.push(sp.enter());
+      }
     }
+    await Promise.all(waits);
     this.lowHpCheck();
   }
 
@@ -357,7 +373,7 @@ export class BattleController {
         hud.cards[e.side].setHp(e.hpAfter);
         const p = this.screenPos(e.side, 0.7);
         hud.damageNumber(p.x, p.y, e.amount, 'nve');
-        const key = { recoil: 'recoil', psn: 'poisonHurt', brn: 'burnHurt', leech: 'leechHurt', confusion: 'hurtItself', crash: 'crash' }[e.cause] as 'recoil';
+        const key = { recoil: 'recoil', psn: 'poisonHurt', brn: 'burnHurt', leech: 'leechHurt', confusion: 'hurtItself', crash: 'crash', sand: 'sandHurt', hail: 'hailHurt' }[e.cause] as 'recoil';
         await Promise.all([fx, this.msg(t(key, this.name(e.side)), 450)]);
         return;
       }
@@ -483,6 +499,15 @@ export class BattleController {
         hud.abilityPop(e.side, e.text);
         await this.wait(500);
         return;
+      case 'weather':
+        if (e.source === 'end') {
+          this.weatherFx.set(null);
+          hud.setWeather(null);
+          return this.msg(t(WEATHER_END[e.kind]), 450);
+        }
+        this.weatherFx.set(e.kind);
+        hud.setWeather(e.kind);
+        return this.msg(t(WEATHER_START[e.kind]), 550);
       case 'msg':
         return this.msg(e.text, 450);
       case 'evoGain': {
@@ -616,6 +641,7 @@ export class BattleController {
     this.offUpdate();
     this.hud.destroy();
     this.sprites.forEach((s) => s.destroy());
+    this.weatherFx.dispose();
     this.arena.dispose();
     this.vfx.clear();
     this.stage.setTint(0xffffff, 0, 0);

@@ -36,6 +36,22 @@ export const CONFIG = {
   /** Accuracy multiplier on a perfect charge. */
   perfectAccuracy: 1.1,
 
+  weather: {
+    /** seconds Sunny Day / Rain Dance / Sandstorm / Hail last (Gen 3: 5 turns) */
+    moveSeconds: 20,
+    /** Drought / Drizzle / Sand Stream weather (Gen 3: until replaced) */
+    abilitySeconds: 45,
+    /** Fire in sun / Water in rain */
+    boost: 1.5,
+    /** Water in sun / Fire in rain; Solar Beam in rain, sand or hail */
+    weaken: 0.5,
+    /** sand / hail damage per action of the Pokemon (fraction of max HP) */
+    chip: 1 / 16,
+    /** Synthesis / Morning Sun / Moonlight heal: sun, other weather (clear = 1/2) */
+    healSun: 2 / 3,
+    healOther: 1 / 4,
+  },
+
   evo: {
     max: 100,
     perDealtPct: 0.6, // energy per 1% of target max HP dealt

@@ -350,3 +350,15 @@ svg.badge.earned { filter: drop-shadow(0 0 5px rgba(255, 230, 150, 0.55)); }
 .confetti i { position: absolute; top: -20px; width: 9px; height: 14px; border-radius: 2px; animation: confettiFall linear infinite; opacity: 0.9; }
 @keyframes confettiFall { from { transform: translateY(-20px) rotate(0deg); } to { transform: translateY(110vh) rotate(720deg); } }
 @media (max-width: 1000px) { .gym-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .elite { grid-template-columns: 1fr; } .elite > .btn { grid-row: auto; grid-column: auto; } }
+
+/* ------------------------------------------------------------------ weather chip */
+.weather-chip { position: absolute; top: 52px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 4px 10px 6px; border-radius: 999px; background: rgba(8, 12, 28, 0.72); border: 1px solid var(--line); font-size: 12px; font-weight: 800; letter-spacing: 0.02em; animation: popIn 0.35s cubic-bezier(0.2, 1.3, 0.4, 1) both; }
+.weather-chip.hidden { display: none; }
+.weather-chip .icon { font-size: 15px; }
+.weather-chip .bar { position: absolute; left: 12px; right: 12px; bottom: 2px; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.weather-chip .bar i { display: block; height: 100%; width: 100%; background: currentColor; transition: width 0.2s linear; }
+.weather-chip.sun { color: #ffcf5a; border-color: rgba(255, 200, 80, 0.5); }
+.weather-chip.rain { color: #7cc4ff; border-color: rgba(120, 190, 255, 0.5); }
+.weather-chip.sand { color: #e0b878; border-color: rgba(224, 184, 120, 0.5); }
+.weather-chip.hail { color: #d8f4ff; border-color: rgba(210, 240, 255, 0.5); }
+.weather-chip.negated { opacity: 0.45; text-decoration: line-through; }

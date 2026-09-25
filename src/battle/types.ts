@@ -85,6 +85,14 @@ export interface HitResult {
   power?: number;
 }
 
+export type WeatherKind = 'sun' | 'rain' | 'sand' | 'hail';
+
+export interface WeatherState {
+  kind: WeatherKind;
+  /** seconds left (move weather; ability weather lasts CONFIG.weather.abilitySeconds) */
+  left: number;
+}
+
 export type BattleEvent =
   | {
       t: 'moveUse';
@@ -94,8 +102,10 @@ export type BattleEvent =
       hits: HitResult[];
       target: Side;
     }
-  | { t: 'damage'; side: Side; amount: number; hpAfter: number; cause: 'recoil' | 'psn' | 'brn' | 'leech' | 'confusion' | 'crash' }
+  | { t: 'damage'; side: Side; amount: number; hpAfter: number; cause: 'recoil' | 'psn' | 'brn' | 'leech' | 'confusion' | 'crash' | 'sand' | 'hail' }
   | { t: 'heal'; side: Side; amount: number; hpAfter: number; cause: 'drain' | 'move' | 'leech' | 'evolve' | 'ability' }
+  /** weather `kind` starts (source move / ability; `side` = who caused it) or stops (source 'end') */
+  | { t: 'weather'; kind: WeatherKind; source: 'move' | 'ability' | 'end'; side?: Side }
   | { t: 'status'; side: Side; status: StatusCond }
   | { t: 'cure'; side: Side; status: StatusCond | 'confusion' }
   | { t: 'blocked'; side: Side; reason: 'par' | 'slp' | 'frz' | 'recharge' }

@@ -15,6 +15,8 @@ import {
   type SideState,
   type StatusCond,
   type TimingGrade,
+  type WeatherKind,
+  type WeatherState,
 } from './types';
 
 export interface TeamSpec {
@@ -42,6 +44,15 @@ const STAT_KEY: Record<string, BoostStat> = {
   EVASION: 'eva',
 };
 const PINCH_ABILITY: Record<string, PokeType> = { BLAZE: 'FIRE', TORRENT: 'WATER', OVERGROW: 'GRASS', SWARM: 'BUG' };
+/** Weather moves and abilities (Gen 3). */
+const WEATHER_MOVE: Record<string, WeatherKind> = { SUNNY_DAY: 'sun', RAIN_DANCE: 'rain', SANDSTORM: 'sand', HAIL: 'hail' };
+const WEATHER_ABILITY: Record<string, { kind: WeatherKind; text: string }> = {
+  DROUGHT: { kind: 'sun', text: "{0}'s Drought intensified the sun's rays!" },
+  DRIZZLE: { kind: 'rain', text: "{0}'s Drizzle made it rain!" },
+  SAND_STREAM: { kind: 'sand', text: "{0}'s Sand Stream whipped up a sandstorm!" },
+};
+/** Weather Ball's type in each weather. */
+const WEATHER_TYPE: Record<WeatherKind, PokeType> = { sun: 'FIRE', rain: 'WATER', sand: 'ROCK', hail: 'ICE' };
 
 /** Move effects the engine resolves. Anything else is treated as a plain hit (damaging) or fails (status). */
 export const SUPPORTED_EFFECTS = new Set<string>([
@@ -63,6 +74,7 @@ export const SUPPORTED_EFFECTS = new Set<string>([
   'DEFENSE_DOWN', 'DEFENSE_DOWN_2', 'SPEED_DOWN', 'SPEED_DOWN_2', 'SPECIAL_DEFENSE_DOWN_2', 'ACCURACY_DOWN',
   'EVASION_DOWN', 'ATTACK_UP_HIT', 'DEFENSE_UP_HIT', 'SPECIAL_ATTACK_UP_HIT', 'ATTACK_DOWN_HIT', 'DEFENSE_DOWN_HIT',
   'SPEED_DOWN_HIT', 'SPECIAL_ATTACK_DOWN_HIT', 'SPECIAL_DEFENSE_DOWN_HIT', 'ACCURACY_DOWN_HIT', 'EVASION_DOWN_HIT',
+  'SUNNY_DAY', 'RAIN_DANCE', 'SANDSTORM', 'HAIL',
 ]);
 
 let uidCounter = 0;
@@ -139,6 +151,8 @@ export class Battle {
   rng: Rng;
   time = 0;
   winner: Side | null = null;
+  /** current weather (null = clear skies); see weatherNow() for the effective weather */
+  weather: WeatherState | null = null;
   /** Gauge is frozen for a side while it waits for a forced replacement. */
   private readySignaled: [boolean, boolean] = [false, false];
 
@@ -167,7 +181,26 @@ export class Battle {
   effectiveSpeed(mon: BattleMon): number {
     let spe = mon.stats.spe * stageMultiplier(mon.boosts.spe);
     if (mon.status === 'par') spe *= 0.25;
+    const w = this.weatherNow();
+    if ((w === 'rain' && mon.ability === 'SWIFT_SWIM') || (w === 'sun' && mon.ability === 'CHLOROPHYLL')) spe *= 2;
     return spe;
+  }
+
+  /** The weather in effect: none when expired or while a Cloud Nine / Air Lock Pokemon is out. */
+  weatherNow(): WeatherKind | null {
+    if (!this.weather || this.weather.left <= 0) return null;
+    for (const side of [0, 1] as Side[]) {
+      const m = this.active(side);
+      if (!m.fainted && (m.ability === 'CLOUD_NINE' || m.ability === 'AIR_LOCK')) return null;
+    }
+    return this.weather.kind;
+  }
+
+  /** A move as it behaves in the current weather (Weather Ball changes type and doubles power). */
+  moveInWeather(move: MoveData): MoveData {
+    const w = this.weatherNow();
+    if (move.effect === 'WEATHER_BALL' && w) return { ...move, type: WEATHER_TYPE[w], power: move.power * 2, category: WEATHER_TYPE[w] === 'ROCK' ? 'physical' : 'special' };
+    return move;
   }
 
   /** Gauge units per second. */
@@ -212,6 +245,17 @@ export class Battle {
     return !m.fainted && m.atb >= 1 && this.winner === null;
   }
 
+  /**
+   * Entry abilities of the two leads (Drought, Drizzle, Sand Stream, Intimidate...), faster Pokemon first as in Gen 3
+   * (so with two weather setters the slower one's weather stays). Call once before the first tick.
+   */
+  start(): BattleEvent[] {
+    const ev: BattleEvent[] = [];
+    const order: Side[] = this.effectiveSpeed(this.active(1)) > this.effectiveSpeed(this.active(0)) ? [1, 0] : [0, 1];
+    for (const side of order) this.entryAbility(side, ev);
+    return ev;
+  }
+
   // ---------------------------------------------------------------- time
 
   /**
@@ -221,6 +265,7 @@ export class Battle {
   tick(dt: number): Side[] {
     if (this.winner !== null) return [];
     this.time += dt;
+    if (this.weather) this.weather.left = Math.max(0, this.weather.left - dt);
     const ready: Side[] = [];
     for (const side of [0, 1] as Side[]) {
       const st = this.sides[side];
@@ -249,6 +294,7 @@ export class Battle {
     const mon = this.active(side);
     this.readySignaled[side] = false;
     mon.atb = 0;
+    this.expireWeather(ev);
 
     if (action.type === 'switch') {
       this.doSwitch(side, action.index, ev, CONFIG.switchInAtb);
@@ -265,6 +311,7 @@ export class Battle {
   /** Replace a fainted active Pokemon. */
   replace(side: Side, index: number): BattleEvent[] {
     const ev: BattleEvent[] = [];
+    this.expireWeather(ev);
     this.readySignaled[side] = false;
     this.doSwitch(side, index, ev, CONFIG.replaceAtb);
     const m = this.active(side);
@@ -290,12 +337,56 @@ export class Battle {
     inc.atb = atb;
     inc.vol = freshVolatile();
     ev.push({ t: 'switchIn', side, index });
+    this.entryAbility(side, ev);
+  }
+
+  /** Abilities that trigger when a Pokemon comes out (or evolves into them). */
+  private entryAbility(side: Side, ev: BattleEvent[]) {
+    const inc = this.active(side);
+    if (inc.fainted) return;
     if (inc.ability === 'INTIMIDATE') {
       const foe = this.active(other(side));
       if (!foe.fainted) {
         ev.push({ t: 'ability', side, ability: 'INTIMIDATE', text: `${inc.name}'s Intimidate cuts ${foe.name}'s Attack!` });
         this.applyBoost(other(side), 'atk', -1, ev);
       }
+    }
+    const wa = WEATHER_ABILITY[inc.ability];
+    if (wa) {
+      ev.push({ t: 'ability', side, ability: inc.ability, text: wa.text.replace('{0}', inc.name) });
+      this.setWeather(wa.kind, 'ability', side, ev);
+    }
+    this.forecast(ev);
+  }
+
+  // ---------------------------------------------------------------- weather
+
+  /** Start `kind`. Moves fail if that weather is already up; abilities refresh it. */
+  private setWeather(kind: WeatherKind, source: 'move' | 'ability', side: Side, ev: BattleEvent[]): boolean {
+    if (source === 'move' && this.weather?.kind === kind && this.weather.left > 0) return false;
+    this.weather = { kind, left: source === 'move' ? CONFIG.weather.moveSeconds : CONFIG.weather.abilitySeconds };
+    ev.push({ t: 'weather', kind, source, side });
+    this.forecast(ev);
+    return true;
+  }
+
+  private expireWeather(ev: BattleEvent[]) {
+    if (!this.weather || this.weather.left > 0) return;
+    const kind = this.weather.kind;
+    this.weather = null;
+    ev.push({ t: 'weather', kind, source: 'end' });
+    this.forecast(ev);
+  }
+
+  /** Castform's Forecast: its type follows the weather. */
+  private forecast(ev: BattleEvent[]) {
+    const w = this.weatherNow();
+    const type: PokeType = w === 'sun' ? 'FIRE' : w === 'rain' ? 'WATER' : w === 'hail' ? 'ICE' : 'NORMAL';
+    for (const side of [0, 1] as Side[]) {
+      const m = this.active(side);
+      if (m.fainted || m.ability !== 'FORECAST' || (m.types.length === 1 && m.types[0] === type)) continue;
+      m.types = [type];
+      ev.push({ t: 'ability', side, ability: 'FORECAST', text: `${m.name} transformed!` });
     }
   }
 
@@ -337,6 +428,8 @@ export class Battle {
     ev.push({ t: 'heal', side, amount: mon.hp - before, hpAfter: mon.hp, cause: 'evolve' });
     if (cured !== 'none') ev.push({ t: 'cure', side, status: cured });
     ev.push({ t: 'evoGain', side, evo: 0 });
+    // evolving into Tyranitar (Sand Stream) etc. triggers the new ability right away
+    if (WEATHER_ABILITY[mon.ability]) this.entryAbility(side, ev);
   }
 
   // ---------------------------------------------------------------- moves
@@ -346,11 +439,16 @@ export class Battle {
     const foeSide = other(side);
 
     // --- can the Pokemon act at all?
+    // a Pokemon that can't act loses a two-turn move it was charging (and comes back from Fly / Dig)
+    const cancelCharge = () => {
+      user.vol.charging = null;
+      user.vol.locked = null;
+      user.vol.semiInvulnerable = false;
+    };
     if (user.status === 'slp') {
       if (user.statusCounter > 0) {
         user.statusCounter--;
-        user.vol.charging = null;
-        user.vol.locked = null;
+        cancelCharge();
         ev.push({ t: 'blocked', side, reason: 'slp' });
         return;
       }
@@ -362,6 +460,7 @@ export class Battle {
         user.status = 'none';
         ev.push({ t: 'thaw', side });
       } else {
+        cancelCharge();
         ev.push({ t: 'blocked', side, reason: 'frz' });
         return;
       }
@@ -376,15 +475,13 @@ export class Battle {
           const dmg = this.confusionDamage(user);
           this.applyDamage(user, dmg);
           ev.push({ t: 'damage', side, amount: dmg, hpAfter: user.hp, cause: 'confusion' });
-          user.vol.locked = null;
-          user.vol.charging = null;
+          cancelCharge();
           return;
         }
       }
     }
     if (user.status === 'par' && this.rng.chance(0.25)) {
-      user.vol.charging = null;
-      user.vol.locked = null;
+      cancelCharge();
       ev.push({ t: 'blocked', side, reason: 'par' });
       return;
     }
@@ -413,7 +510,7 @@ export class Battle {
     user.vol.lastMove = moveKey;
 
     // --- two-turn moves: first action charges
-    if (TWO_TURN.has(move.effect) && !charging) {
+    if (TWO_TURN.has(move.effect) && !charging && !(move.effect === 'SOLAR_BEAM' && this.weatherNow() === 'sun')) {
       user.vol.charging = moveKey;
       if (move.effect === 'SEMI_INVULNERABLE') user.vol.semiInvulnerable = true;
       ev.push({ t: 'moveUse', side, move: moveKey, outcome: 'charging', hits: [], target: foeSide });
@@ -449,7 +546,10 @@ export class Battle {
   private accuracyCheck(user: BattleMon, target: BattleMon, move: MoveData, timing: Timing): boolean {
     if (move.accuracy === 0 || move.effect === 'ALWAYS_HIT' || move.effect === 'VITAL_THROW') return true;
     if (target.vol.semiInvulnerable) return false;
-    let acc = (move.accuracy / 100) * accuracyMultiplier(user.boosts.acc - target.boosts.eva);
+    const w = this.weatherNow();
+    if (move.effect === 'THUNDER' && w === 'rain') return true;
+    let acc = ((move.effect === 'THUNDER' && w === 'sun' ? 50 : move.accuracy) / 100) * accuracyMultiplier(user.boosts.acc - target.boosts.eva);
+    if (w === 'sand' && target.ability === 'SAND_VEIL') acc *= 0.8;
     if (timing.atk === 'perfect') acc *= CONFIG.perfectAccuracy;
     return this.rng.next() < acc;
   }
@@ -478,7 +578,8 @@ export class Battle {
     if (this.hasNextStage(user)) this.gainEvo(user, timing.atk === 'perfect' ? CONFIG.evo.perfect : 2, ev, side);
   }
 
-  private useDamagingMove(side: Side, move: MoveData, timing: Timing, ev: BattleEvent[]) {
+  private useDamagingMove(side: Side, rawMove: MoveData, timing: Timing, ev: BattleEvent[]) {
+    const move = this.moveInWeather(rawMove);
     const foeSide = other(side);
     const user = this.active(side);
     const foe = this.active(foeSide);
@@ -771,6 +872,11 @@ export class Battle {
       case 'SPLASH':
         ev.push({ t: 'msg', text: 'But nothing happened!' });
         return true;
+      case 'SUNNY_DAY':
+      case 'RAIN_DANCE':
+      case 'SANDSTORM':
+      case 'HAIL':
+        return this.setWeather(WEATHER_MOVE[e], 'move', side, ev);
       case 'BELLY_DRUM': {
         const cost = Math.floor(user.stats.hp / 2);
         if (user.hp <= cost || user.boosts.atk >= 6) return false;
@@ -794,7 +900,9 @@ export class Battle {
       case 'SYNTHESIS':
       case 'MORNING_SUN':
       case 'MOONLIGHT': {
-        const h = this.heal(user, Math.floor(user.stats.hp / 2));
+        const w = e === 'RESTORE_HP' || e === 'SOFTBOILED' ? null : this.weatherNow();
+        const frac = w === 'sun' ? CONFIG.weather.healSun : w ? CONFIG.weather.healOther : 1 / 2;
+        const h = this.heal(user, Math.floor(user.stats.hp * frac));
         if (h <= 0) return false;
         ev.push({ t: 'heal', side, amount: h, hpAfter: user.hp, cause: 'move' });
         return true;
@@ -919,6 +1027,8 @@ export class Battle {
         break;
       }
     }
+    const w = this.weatherNow();
+    if (move.effect === 'SOLAR_BEAM' && w && w !== 'sun') power = Math.floor(power * CONFIG.weather.weaken);
     const rolled = power;
     const pinch = PINCH_ABILITY[user.ability];
     if (pinch === moveType && user.hp <= user.stats.hp / 3) power = Math.floor(power * 1.5);
@@ -950,6 +1060,8 @@ export class Battle {
     dmg += 2;
     if (crit) dmg = Math.floor(dmg * CONFIG.critMultiplier);
     if (moveType === 'FIRE' && user.vol.flashFire) dmg = Math.floor(dmg * 1.5);
+    if ((w === 'sun' && moveType === 'FIRE') || (w === 'rain' && moveType === 'WATER')) dmg = Math.floor(dmg * CONFIG.weather.boost);
+    else if ((w === 'sun' && moveType === 'WATER') || (w === 'rain' && moveType === 'FIRE')) dmg = Math.floor(dmg * CONFIG.weather.weaken);
     if (user.types.includes(moveType)) dmg = Math.floor(dmg * 1.5);
     dmg = Math.floor(dmg * eff);
     dmg = Math.floor((dmg * this.rng.int(85, 100)) / 100);
@@ -968,7 +1080,7 @@ export class Battle {
     const user = this.active(side);
     const foeSide = other(side);
     const foe = this.active(foeSide);
-    const move = effectiveMove(moveKey);
+    const move = this.moveInWeather(effectiveMove(moveKey));
     if (move.category === 'status') return { min: 0, max: 0, eff: 1 };
     if (move.effect === 'COUNTER' || move.effect === 'MIRROR_COAT') {
       const lt = user.vol.lastTaken;
@@ -1101,6 +1213,20 @@ export class Battle {
         const h = this.heal(foe, d);
         if (h > 0) ev.push({ t: 'heal', side: foeSide, amount: h, hpAfter: foe.hp, cause: 'leech' });
       }
+    }
+    const w = this.weatherNow();
+    if (!mon.fainted && w === 'sand' && !mon.types.some((t) => t === 'ROCK' || t === 'GROUND' || t === 'STEEL') && mon.ability !== 'SAND_VEIL') {
+      const d = Math.max(1, Math.floor(mon.stats.hp * CONFIG.weather.chip));
+      this.applyDamage(mon, d);
+      ev.push({ t: 'damage', side, amount: d, hpAfter: mon.hp, cause: 'sand' });
+    } else if (!mon.fainted && w === 'hail' && !mon.types.includes('ICE')) {
+      const d = Math.max(1, Math.floor(mon.stats.hp * CONFIG.weather.chip));
+      this.applyDamage(mon, d);
+      ev.push({ t: 'damage', side, amount: d, hpAfter: mon.hp, cause: 'hail' });
+    }
+    if (!mon.fainted && w === 'rain' && mon.ability === 'RAIN_DISH') {
+      const h = this.heal(mon, Math.max(1, Math.floor(mon.stats.hp / 16)));
+      if (h > 0) ev.push({ t: 'heal', side, amount: h, hpAfter: mon.hp, cause: 'ability' });
     }
     if (!mon.fainted && mon.ability === 'SHED_SKIN' && mon.status !== 'none' && this.rng.chance(0.3)) {
       const s = mon.status;

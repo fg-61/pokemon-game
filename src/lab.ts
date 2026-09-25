@@ -3,6 +3,7 @@
  * and screenshotted. URL params: ?move=FLAMETHROWER&side=0&miss=0&theme=meadow&auto=1&a=6&b=9
  * window.__lab.play(moveKey, side, missed, phase?, power?) returns a promise resolved when the recipe finished
  * (power = the engine's rolled base power, e.g. 10..150 for Magnitude).
+ * window.__lab.weather(kind | null) shows ambient weather ('sun' | 'rain' | 'sand' | 'hail'); also ?weather=rain.
  */
 import { Arena, ENEMY_POS, PLAYER_POS, THEMES } from './render/arena';
 import { PokemonSprite } from './render/pokemonSprite';
@@ -14,7 +15,8 @@ import { SPECIES } from './data/gamedata';
 import { playMoveFx } from './vfx/playMove';
 import { getMoveFx, Vfx } from './vfx/vfx';
 import { playEvolutionFx } from './vfx/evolution';
-import type { Side } from './battle/types';
+import type { Side, WeatherKind } from './battle/types';
+import { WeatherFx } from './vfx/weather';
 
 const qs = new URLSearchParams(location.search);
 const stage = new Stage(document.getElementById('app')!);
@@ -50,10 +52,23 @@ for (const t of THEMES) {
   themeSel.appendChild(o);
 }
 themeSel.value = arena.theme.id;
+let weatherFx = new WeatherFx(stage, vfx, arena);
 themeSel.onchange = () => {
+  const kind = weatherFx.kind;
+  weatherFx.dispose();
   arena.dispose();
   arena = new Arena(stage, THEMES.find((t) => t.id === themeSel.value)!);
+  weatherFx = new WeatherFx(stage, vfx, arena);
+  weatherFx.set(kind);
 };
+const weatherSel = document.getElementById('weather') as HTMLSelectElement;
+function weather(kind: WeatherKind | null) {
+  weatherFx.set(kind);
+  weatherSel.value = kind ?? '';
+}
+weatherSel.onchange = () => weather((weatherSel.value || null) as WeatherKind | null);
+/** weather moves hand over to the ambient weather when their animation ends (like the battle controller) */
+const WEATHER_MOVES: Record<string, WeatherKind> = { SUNNY_DAY: 'sun', RAIN_DANCE: 'rain', SANDSTORM: 'sand', HAIL: 'hail' };
 const log = document.getElementById('log')!;
 
 let busy = false;
@@ -88,6 +103,7 @@ async function play(moveKey: string, side: Side, missed: boolean, phase: 'charge
     },
   });
   log.textContent += `\ndone in ${Math.round(performance.now() - t0)}ms`;
+  if (WEATHER_MOVES[moveKey]) weather(WEATHER_MOVES[moveKey]);
   stage.director.move(wideShot(), 0.5);
   busy = false;
 }
@@ -106,5 +122,6 @@ addEventListener('keydown', (e) => {
 });
 setInterval(() => (document.getElementById('fps')!.textContent = `${stage.fps.toFixed(0)} fps, particles ${vfx.add.active + vfx.norm.active}`), 500);
 
-(window as unknown as { __lab: unknown }).__lab = { play, stage, vfx, ready, a, b };
+(window as unknown as { __lab: unknown }).__lab = { play, weather, stage, vfx, ready, a, b };
+if (qs.get('weather')) weather(qs.get('weather') as WeatherKind);
 if (qs.get('auto')) ready.then(() => play(sel.value, Number(qs.get('side') ?? 0) as Side, qs.get('miss') === '1'));

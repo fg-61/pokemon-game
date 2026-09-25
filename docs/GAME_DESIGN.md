@@ -14,8 +14,8 @@ members of their real FireRed party (`src/data/generated/trainers.json`); a won 
 rematches allowed). Eight badges open the Pokémon League: Lorelei, Bruno, Agatha, Lance and the Champion (the rival,
 "Blue", who takes the starter that beats yours) back to back with one team — a loss restarts from Lorelei; winning
 enters the Hall of Fame. Difficulty = the trainer's AI profile + a level bonus on its lines, tuned with
-`yarn sim --league` (random teams, normal AI): ~93% vs Brock falling to ~60% vs Giovanni, 62-73% per Elite Four
-member, ~59% vs the Champion.
+`yarn sim --league` (random teams, normal AI): ~89% vs Brock falling to ~60% vs Giovanni, 62-68% per Elite Four
+member, ~62% vs the Champion.
 Every battle starts with base forms (evolution progress resets between battles).
 
 ## Battle system: hybrid ATB
@@ -53,6 +53,21 @@ then timing multipliers. Physical/special split **by type** (Gen 3). Abilities i
 Swarm, Static, Levitate, Guts, Huge Power, Thick Fat, Flash Fire, Intimidate, Rock Head, Synchronize, Inner Focus,
 Early Bird, Shed Skin, Clear Body, White Smoke, Keen Eye, Hyper Cutter, Insomnia, Vital Spirit, Limber, Own Tempo,
 Water Absorb, Volt Absorb, Poison Point, Wonder Guard (Shedinja keeps exactly 1 HP). Per-line `evoRate` scales evolution energy (Magikarp).
+
+## Weather (Gen 3 rules on the timeline)
+- **Sunny Day / Rain Dance / Sandstorm / Hail** set the weather for `CONFIG.weather.moveSeconds` (20 s ≈ 5 turns);
+  **Drought** (Groudon), **Drizzle** (Kyogre) and **Sand Stream** (Tyranitar) set it on entry — including the lead at
+  battle start and a Larvitar line evolving into Tyranitar mid-battle — for `abilitySeconds` (45 s). A new weather
+  replaces the old; the same weather move fails while it is up. The HUD chip shows the weather and its time left.
+- Sun: Fire ×1.5, Water ×0.5, Solar Beam fires without charging, Thunder 50% accurate, Synthesis / Morning Sun /
+  Moonlight heal 2/3 (1/4 in other weather). Rain: Water ×1.5, Fire ×0.5, Thunder never misses. Solar Beam's power
+  halves in rain, sand and hail. Weather Ball doubles its power and becomes Fire / Water / Rock / Ice.
+- Sand hurts non Rock / Ground / Steel (and non Sand Veil) Pokémon for 1/16 of max HP after each of their actions; hail
+  hurts non Ice types. Sand Veil: accuracy against it ×0.8 in sand. Swift Swim / Chlorophyll double Speed in rain /
+  sun, Rain Dish heals 1/16 in rain, Cloud Nine / Air Lock (Rayquaza) cancel weather while out, Castform's Forecast
+  turns it Fire / Water / Ice.
+- The AI values weather moves by their synergy with its own moves and abilities vs the foe's
+  (`weatherValue` in `src/battle/ai.ts`); damage estimates already include the weather.
 
 ## Deviations from FireRed (all in `src/battle/config.ts`)
 | rule | FireRed | Evo Clash | why |
