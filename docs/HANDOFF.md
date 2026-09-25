@@ -63,8 +63,8 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
   Flail/Eruption/Low Kick now receive their real power in `c.power` but their recipes don't use it yet.
 - Bright arenas + bloom wash additive effects to white above intensity ~1.2 — prefer `softHit` (common.ts)
   and intensities 0.6–1.2 in new recipes.
-- The timing ring (QTE) uses real time; it could not be screenshotted in the software-rendered test browser,
-  so verify its look in a real browser after UI changes.
+- The timing ring (QTE) uses real time. Verified on a local GPU browser (attack ring around the target, red brace
+  ring around your Pokémon); the over-shoulder command shot puts big back sprites under the player's HUD card.
 - Screenshots: always use `vite.nohmr.config.ts` (port 5174) + `?fixed=1` + `tools/shoot.mjs --game` (the clock is
   held at every `--at` time, so captures are exact on fast and slow machines). On a local Mac `shoot.mjs` drives the
   installed Google Chrome on the GPU (~7 s per capture run); in the cloud sandbox it falls back to software WebGL
