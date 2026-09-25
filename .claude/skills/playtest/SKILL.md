@@ -6,12 +6,12 @@ description: Run Evo Clash and see a change working — dev server, automated AI
 # Playtest Evo Clash
 
 ## Run it
-- `npm run dev` → http://localhost:5173 (game), http://localhost:5173/lab.html (VFX Lab).
-- `npm run build && npm run preview` for the production bundle.
+- `yarn dev` → http://localhost:5173 (game), http://localhost:5173/lab.html (VFX Lab).
+- `yarn build && yarn preview` for the production bundle.
 
 ## Headless verification (this container / CI)
 Headless Chromium renders WebGL in software (a few fps). Two things make captures reliable:
-1. A dev server **without HMR** so edits don't reload the page: `npx vite --config vite.nohmr.config.ts` (port 5174).
+1. A dev server **without HMR** so edits don't reload the page: `yarn vite --config vite.nohmr.config.ts` (port 5174).
 2. `?fixed=1` in the URL (every rendered frame advances the game clock by 1/30 s) + `--game` in `tools/shoot.mjs`
    (capture times are game-clock ms).
 
@@ -40,4 +40,4 @@ Look at the PNGs with the Read tool. Anything under `Console:` in the output is 
 With Playwright you can press keys: `1`-`4` moves, `s` switch, `e` evolve, `Space` timing ring.
 
 ## Before calling a change done
-`npm run typecheck && npm test && npm run roster:validate`, then at least one headless battle capture.
+`yarn typecheck && yarn test && yarn roster:validate`, then at least one headless battle capture.

@@ -21,6 +21,6 @@ Notes:
 ## Regenerate
 
 ```sh
-npm run data:extract                                  # clones into .cache/pokefirered if needed
-node tools/extract-firered.mjs --src ../pokefirered   # or use an existing checkout
+yarn data:extract                                    # clones into .cache/pokefirered if needed
+node tools/extract-firered.mjs --src ../pokefirered  # or use an existing checkout
 ```

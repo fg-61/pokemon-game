@@ -5,7 +5,7 @@
  *
  * Usage:
  *   node tools/fetch-assets.mjs [--ids 1-9,16,25-26] [--force] [--out public/assets/pokemon]
- *   npm run assets:fetch -- --ids 25 --force
+ *   yarn assets:fetch --ids 25 --force
  *
  *   --ids    comma list of dex numbers / ranges. Default: every number in
  *            src/data/roster-dex.json (`lines` = array of arrays of dex numbers).
@@ -45,7 +45,7 @@
  *   - Uses Node's global fetch (Node >= 22). Node's fetch ignores HTTPS_PROXY
  *     unless NODE_USE_ENV_PROXY=1 is set (Node >= 22.21 / 24). When HTTPS_PROXY
  *     is set and NODE_USE_ENV_PROXY is not, this script re-executes itself with
- *     NODE_USE_ENV_PROXY=1, so `npm run assets:fetch` works behind a proxy as-is.
+ *     NODE_USE_ENV_PROXY=1, so `yarn assets:fetch` works behind a proxy as-is.
  *   - A TLS-intercepting proxy needs its CA trusted via NODE_EXTRA_CA_CERTS
  *     (e.g. NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt in the Claude Code
  *     sandbox, where it is already set). TLS verification is never disabled.

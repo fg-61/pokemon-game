@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "description": "3D Pokemon battle game (Three.js) built on FireRed data - strategy + action hybrid with in-battle evolution",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

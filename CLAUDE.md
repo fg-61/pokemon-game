@@ -10,15 +10,17 @@ Start with `docs/HANDOFF.md` (status checklist, known issues, resume steps), the
 Update the HANDOFF status section at the end of every session.
 
 ## Commands
-- `npm run dev` — game at :5173, VFX Lab at :5173/lab.html
-- `npm run typecheck` · `npm test` (vitest) · `npm run build`
-- `npm run roster:validate` — movesets legal in FireRed + effects implemented + assets present
-- `npm run sim [-- --n 3000 | --duel | --ai hard]` — headless AI-vs-AI balance simulator
-- `npm run roster:generate` — regenerate the 196 auto lines (src/data/roster.generated.ts) + roster-dex.json
-- `npm run levels:tune [-- --iters 4 --n 60000]` — auto-balance per-line levels into src/data/levels.json
-- `npm run data:extract` — regenerate src/data/generated from pret/pokefirered
-- `npm run assets:fetch [-- --ids 1-9]` — sprites/cries for roster-dex.json
-- Headless screenshots: `npx vite --config vite.nohmr.config.ts` (port 5174, no HMR) +
+Package manager: **yarn 1 (classic)** — `yarn install`; pass flags straight after the script (`yarn sim --n 3000`,
+no `--`). Don't add a `package-lock.json`.
+- `yarn dev` — game at :5173, VFX Lab at :5173/lab.html
+- `yarn typecheck` · `yarn test` (vitest) · `yarn build`
+- `yarn roster:validate` — movesets legal in FireRed + effects implemented + assets present
+- `yarn sim [--n 3000 | --duel | --ai hard]` — headless AI-vs-AI balance simulator
+- `yarn roster:generate` — regenerate the 196 auto lines (src/data/roster.generated.ts) + roster-dex.json
+- `yarn levels:tune [--iters 4 --n 60000]` — auto-balance per-line levels into src/data/levels.json
+- `yarn data:extract` — regenerate src/data/generated from pret/pokefirered
+- `yarn assets:fetch [--ids 1-9]` — sprites/cries for roster-dex.json
+- Headless screenshots: `yarn vite --config vite.nohmr.config.ts` (port 5174, no HMR) +
   `node tools/shoot.mjs --url "http://localhost:5174/?quick=1&auto=1&fixed=1" --game --at 3000,9000 --out tests/screenshots/x`
 
 ## Layout
@@ -41,6 +43,6 @@ Update the HANDOFF status section at the end of every session.
   Every balance number goes in `CONFIG`.
 - Presentation is event-driven: `Battle.act()` returns `BattleEvent[]`; `BattleController.present()` animates them.
   Move recipes call `c.impact(i)` at each hit; the controller applies HP/damage numbers there.
-- Movesets must pass `npm run roster:validate`; new Pokémon follow `.claude/skills/add-pokemon`.
+- Movesets must pass `yarn roster:validate`; new Pokémon follow `.claude/skills/add-pokemon`.
 - UI strings go through `t()` in `src/ui/i18n.ts` (both `tr` and `en`). Pokémon/move names stay English (FireRed).
 - Don't commit ROMs or copyrighted music. Assets are fetched from PokeAPI with attribution.

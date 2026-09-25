@@ -38,7 +38,7 @@ local Claude Code'da devam etmek için hazır talimat.
   durum etkileri, yetenekler, değiştirme.
 - Aksiyon: saldırı zamanlama halkası (MÜKEMMEL = +%20 hasar), savunma halkası (-%35'e kadar hasar).
 - Savaşta evrim: EVO göstergesi dolunca evrimleş → yeni statlar, yeni hareketler, evrim sineması.
-- Denge: AI-vs-AI simülatörü (`npm run sim`), hat başına seviye ile dengeleme.
+- Denge: AI-vs-AI simülatörü (`yarn sim`), hat başına seviye ile dengeleme.
 - Görsel: 4 arena teması, bloom + renk/flash/chroma post-process, kamera yönetmeni, hareket başına VFX tarifleri,
   VFX Lab (`lab.html`).
 - Ses: orijinal prosedürel chiptune müzik, tipe özel SFX, gerçek cry'lar.
@@ -139,9 +139,9 @@ Bu dosya (`docs/CONVERSATION.md`) hazırlandı.
 ```bash
 git clone -b claude/pokemon-fire-red-game-pzxo98 https://github.com/fg-61/pokemon-game
 cd pokemon-game
-npm install
-npm run typecheck && npm test && npm run roster:validate
-npm run dev          # http://localhost:5173  (VFX Lab: /lab.html)
+yarn install
+yarn typecheck && yarn test && yarn roster:validate
+yarn dev          # http://localhost:5173  (VFX Lab: /lab.html)
 claude
 ```
 İlk mesaj olarak şunu yazabilirsin:

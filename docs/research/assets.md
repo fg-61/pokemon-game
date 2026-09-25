@@ -1,6 +1,6 @@
 # Pokémon asset sources and spritesheet format
 
-Notes for `tools/fetch-assets.mjs` (`npm run assets:fetch`). All sources are the
+Notes for `tools/fetch-assets.mjs` (`yarn assets:fetch`). All sources are the
 [PokeAPI sprites](https://github.com/PokeAPI/sprites) and [PokeAPI cries](https://github.com/PokeAPI/cries)
 repositories, fetched from `raw.githubusercontent.com`. Attribution: `public/assets/ATTRIBUTION.md`.
 

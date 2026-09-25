@@ -1,5 +1,5 @@
 /**
- * Balance knobs for the hybrid ATB battle system. Tuned with `npm run sim`
+ * Balance knobs for the hybrid ATB battle system. Tuned with `yarn sim`
  * (see .claude/skills/balance-sim). Keep every "magic number" of the rules here.
  */
 export const CONFIG = {

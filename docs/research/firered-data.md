@@ -4,7 +4,7 @@ Research notes for the battle game. Everything here was checked against
 [pret/pokefirered](https://github.com/pret/pokefirered) at commit
 `c75f352304d529f6ba92d4f74b9cf8b5c3810788` (Aug 2026). Paths are relative to
 the decomp root. The extracted JSON is described in
-`src/data/generated/README.md`; regenerate it with `npm run data:extract`.
+`src/data/generated/README.md`; regenerate it with `yarn data:extract`.
 
 ## Extracted data
 

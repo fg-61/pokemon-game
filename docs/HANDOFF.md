@@ -8,10 +8,10 @@ The original session's requests and decisions are in `docs/CONVERSATION.md`.
 ```bash
 git clone -b claude/pokemon-fire-red-game-pzxo98 https://github.com/fg-61/pokemon-game
 cd pokemon-game
-npm install
-npm run typecheck && npm test && npm run roster:validate   # sanity check
-npm run dev                                                 # http://localhost:5173 , VFX Lab: /lab.html
-claude                                                      # start Claude Code in the repo
+yarn install
+yarn typecheck && yarn test && yarn roster:validate  # sanity check
+yarn dev                                             # http://localhost:5173 , VFX Lab: /lab.html
+claude                                               # start Claude Code in the repo
 ```
 Good first prompts for the new session:
 - "Read docs/HANDOFF.md and continue with the next unchecked item."
@@ -43,7 +43,7 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
 
 ## Known issues / polish backlog
 - Generated movesets are heuristic (`tools/gen-roster.ts`): to hand-tune a line, move it into `CURATED` in
-  `src/data/roster.ts` and re-run `npm run roster:generate && npm run levels:tune`.
+  `src/data/roster.ts` and re-run `yarn roster:generate && yarn levels:tune`.
 - Assets for all 386 species are ~66 MB in `public/assets` (artwork is the biggest part).
 - Weakest VFX: Surf's wave, Aurora Beam's rainbow, Psycho Boost from side 1 (hazy), Shock Wave's arc (curves
   towards the camera rather than sideways). Magnitude's visuals don't scale with the rolled power.
@@ -57,6 +57,6 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
 
 ## Conventions to keep
 - Game rules only in `src/battle` (deterministic, tested, simulated). Balance numbers only in `CONFIG`.
-- Every roster change: `npm run roster:validate` + `npm run sim -- --n 3000` (all lines 45–55%).
+- Every roster change: `yarn roster:validate` + `yarn sim --n 3000` (all lines 45–55%).
 - UI strings through `t()` with both `tr` and `en`.
 - Commit messages end with the Co-Authored-By trailer used in git log.

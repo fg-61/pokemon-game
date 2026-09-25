@@ -8,7 +8,7 @@ You are QA for Evo Clash. Follow `.claude/skills/playtest/SKILL.md` (no-HMR dev 
 `tools/shoot.mjs --game`, URL switches `quick/auto/team/foe/theme/difficulty`).
 
 Checklist per pass:
-1. `npm run typecheck && npm test && npm run roster:validate`.
+1. `yarn typecheck && yarn test && yarn roster:validate`.
 2. Title screen, team select (pick 3 with clicks via a small Playwright script if needed), a full `auto=1` battle to
    the results screen, and at least one battle per arena theme.
 3. For each capture: UI overlaps, unreadable text, missing sprites, VFX that never clean up (particle count keeps

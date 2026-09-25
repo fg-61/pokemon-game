@@ -1,11 +1,11 @@
 /**
  * Playable roster. Each line lists its evolution stages; every stage has a curated 4-move set.
  * All moves are legal for that species in FireRed (level-up / TM / HM / tutor / egg, or inherited
- * from a pre-evolution) — enforced by `npm run roster:validate`.
+ * from a pre-evolution) — enforced by `yarn roster:validate`.
  *
  * Design rule: stage 1 moves ~35-70 power, stage 2 ~60-95, final stage gets its signature nukes.
  * `level` is the per-line balance knob (FireRed itself balances trainers with levels);
- * it's tuned with `npm run sim`.
+ * it's tuned with `yarn sim`.
  */
 import levelsJson from './levels.json';
 import { GENERATED } from './roster.generated';

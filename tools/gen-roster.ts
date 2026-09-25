@@ -1,7 +1,7 @@
 /**
  * Generates roster lines for every FireRed species that is not in a hand-curated line.
  *
- *   npm run roster:generate      -> writes src/data/roster.generated.ts and src/data/roster-dex.json
+ *   yarn roster:generate      -> writes src/data/roster.generated.ts and src/data/roster-dex.json
  *
  * Lines = every root→leaf path of the evolution graph (branching families such as Eevee or Tyrogue become
  * one line per branch). Each stage gets 1-4 moves that are learnable in FireRed (level-up / TM-HM / tutor /

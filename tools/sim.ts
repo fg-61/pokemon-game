@@ -1,9 +1,9 @@
 /**
  * Balance simulator: AI-vs-AI battles across the roster.
- *   npm run sim                 -> random 3v3 teams, per-line win rates + evolution stats
- *   npm run sim -- --n 4000     -> more battles
- *   npm run sim -- --duel       -> 1v1 round-robin matrix (line vs line)
- *   npm run sim -- --ai hard    -> AI profile used by both sides (easy|normal|hard)
+ *   yarn sim            -> random 3v3 teams, per-line win rates + evolution stats
+ *   yarn sim --n 4000   -> more battles
+ *   yarn sim --duel     -> 1v1 round-robin matrix (line vs line)
+ *   yarn sim --ai hard  -> AI profile used by both sides (easy|normal|hard)
  * Healthy targets: every line's 3v3 win rate within 42-58%, avg battle 60-150 s of ATB time,
  * most lines evolving at least once per battle they survive long enough in.
  */

@@ -6,7 +6,7 @@ tools: Read, Write, Edit, Bash, Glob, Grep
 
 You maintain the asset pipeline of Evo Clash.
 
-- Tool: `tools/fetch-assets.mjs` (Node + sharp). `npm run assets:fetch` fetches everything listed in
+- Tool: `tools/fetch-assets.mjs` (Node + sharp). `yarn assets:fetch` fetches everything listed in
   `src/data/roster-dex.json`; `node tools/fetch-assets.mjs --ids 129-130 [--force]` for specific dex numbers.
 - Sources (PokeAPI sprites/cries repos on raw.githubusercontent.com): Showdown animated GIFs (fallback BW animated,
   then static), FRLG static sprites, gen 8 icons, official artwork (downscaled), legacy cries.

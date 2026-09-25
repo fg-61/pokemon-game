@@ -19,9 +19,9 @@ Typed access: `src/data/gamedata.ts` (`SPECIES`, `MOVES`, `TYPECHART`, `speciesB
 
 ## Regenerate
 ```
-npm run data:extract                         # clones pret/pokefirered into .cache/ if needed
+yarn data:extract                            # clones pret/pokefirered into .cache/ if needed
 node tools/extract-firered.mjs --src <path>  # or use an existing clone
-npm test                                     # tests/gamedata.test.ts spot-checks known values
+yarn test                                    # tests/gamedata.test.ts spot-checks known values
 ```
 To add a field: extend the parser in `tools/extract-firered.mjs`, the interface in `src/data/types.ts`, and a test.
 

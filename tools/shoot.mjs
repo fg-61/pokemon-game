@@ -2,7 +2,7 @@
  * Headless screenshot helper (Playwright + the preinstalled Chromium).
  *   node tools/shoot.mjs --url "http://localhost:5173/lab.html?move=THUNDERBOLT&auto=1" --at 400,900,1500 --out tests/screenshots/thunderbolt
  * Options:
- *   --url       page to open (dev server must be running: npm run dev)
+ *   --url       page to open (dev server must be running: yarn dev)
  *   --at        comma separated ms offsets after load (+ --wait) at which to capture
  *   --wait      ms to wait after the load event before the timeline starts (default 1500)
  *   --eval      JS to evaluate after the wait (e.g. "window.__lab.play('SURF',0,false)")

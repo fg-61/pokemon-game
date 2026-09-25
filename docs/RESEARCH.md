@@ -18,7 +18,7 @@ The PokeAPI sprites/cries repositories cover every species we need (details: `do
   → converted to jitter-free spritesheets.
 - Original FireRed/LeafGreen front/back sprites (used in team select and results for the retro touch).
 - Menu icons, official artwork, and the legacy cries.
-`npm run assets:fetch -- --ids 1-386` fetches everything; phase 1 ships the 35 roster species (~5 MB).
+`yarn assets:fetch --ids 1-386` fetches everything; phase 1 ships the 35 roster species (~5 MB).
 
 ## Engine choice
 | option | pros | cons |

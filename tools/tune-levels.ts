@@ -1,9 +1,9 @@
 /**
  * Auto-balances per-line levels with the AI-vs-AI simulator and writes src/data/levels.json.
  *
- *   npm run levels:tune                         # 6 iterations x 24000 battles, 4 worker processes
- *   npm run levels:tune -- --iters 3 --n 12000  # quicker pass after small changes
- *   npm run levels:tune -- --only onix,larvitar # only adjust these lines (others stay fixed)
+ *   yarn levels:tune                       # 6 iterations x 24000 battles, 4 worker processes
+ *   yarn levels:tune --iters 3 --n 12000   # quicker pass after small changes
+ *   yarn levels:tune --only onix,larvitar  # only adjust these lines (others stay fixed)
  *
  * Each iteration plays random 3v3 battles across the whole roster, then moves every line's level by
  * round((0.5 - winRate) * 25), clamped to ±3 and to [20, 80]. Lines within 47-53% are left alone.

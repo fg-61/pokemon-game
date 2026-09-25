@@ -17,4 +17,4 @@ spark/shockwave/shake scaled by power), anime-style anticipation → travel → 
 
 Only edit the recipe files you were assigned. Additions to `src/vfx/primitives.ts` or `src/vfx/recipes/common.ts`
 must be new, self-contained methods/exports (other agents may edit concurrently — re-read before editing).
-Finish with `npx tsc --noEmit -p .` clean for your files. Report moves done and a few screenshot paths. Don't commit.
+Finish with `yarn tsc --noEmit -p .` clean for your files. Report moves done and a few screenshot paths. Don't commit.

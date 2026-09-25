@@ -4,7 +4,7 @@
  *  - every move is learnable in FireRed by that species or one of its pre-evolutions
  *  - every move effect is resolved by the battle engine
  *  - sprite assets exist for every species
- * Usage: npm run roster:validate
+ * Usage: yarn roster:validate
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { MOVES, SPECIES } from '../src/data/gamedata';
@@ -53,7 +53,7 @@ for (const line of ROSTER) {
       if (sp.prevo !== prev) err(`${sp.name} does not evolve from ${prev} (prevo=${sp.prevo})`);
     }
     if (!rosterDex.has(sp.dex)) err(`${sp.name} (#${sp.dex}) missing from src/data/roster-dex.json`);
-    if (!existsSync(`public/assets/pokemon/${sp.dex}/sprite.json`)) err(`no sprite assets for ${sp.name} (#${sp.dex}) — run npm run assets:fetch`);
+    if (!existsSync(`public/assets/pokemon/${sp.dex}/sprite.json`)) err(`no sprite assets for ${sp.name} (#${sp.dex}) — run yarn assets:fetch`);
     const legal = learnable(stage.species);
     const parts: string[] = [];
     if (stage.moves.length < 1 || stage.moves.length > 4) err(`${sp.name}: needs 1-4 moves`);

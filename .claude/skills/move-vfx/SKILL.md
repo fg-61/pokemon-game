@@ -29,7 +29,7 @@ description: Create or polish a move's battle VFX recipe (particles, beams, shoc
 
 ## Iterate with the VFX Lab
 Start a no-HMR dev server (so edits don't reload the page mid-capture):
-`npx vite --config vite.nohmr.config.ts` (port 5174). Then:
+`yarn vite --config vite.nohmr.config.ts` (port 5174). Then:
 ```
 node tools/shoot.mjs --url "http://localhost:5174/lab.html?fixed=1&a=6&b=9" --size 960x540 --game --wait 2500 \
   --eval "window.__lab.play('FLAMETHROWER',0,false)" --at 300,700,1100 --out tests/screenshots/flamethrower
@@ -38,4 +38,4 @@ node tools/shoot.mjs --url "http://localhost:5174/lab.html?fixed=1&a=6&b=9" --si
   `--at` is in game-time ms.
 - `window.__lab.play(move, side, missed, phase)`; `a`/`b` = dex numbers of player/foe sprites; `theme=` meadow|volcano|night|snow.
 - View PNGs with the Read tool. Fix anything printed under `Console:`.
-- In a real browser: `npm run dev` → http://localhost:5173/lab.html (Space replays; ★ marks moves with a recipe).
+- In a real browser: `yarn dev` → http://localhost:5173/lab.html (Space replays; ★ marks moves with a recipe).

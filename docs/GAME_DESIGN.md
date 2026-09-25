@@ -56,7 +56,7 @@ Water Absorb, Volt Absorb, Poison Point, Wonder Guard (Shedinja keeps exactly 1 
 | level | trainer-defined | per-line level (43–62) | balance different evolution lines |
 
 ## Balance
-`npm run sim` (AI vs AI, random 3v3). Current (215 lines): rms deviation 1.7% from 50% over 60 000 battles, ~73 s ATB time,
+`yarn sim` (AI vs AI, random 3v3). Current (215 lines): rms deviation 1.7% from 50% over 60 000 battles, ~73 s ATB time,
 3-stage lines reach final form in 30–50% of battles. Per-line levels are the main knob (FireRed-style).
 
 ## Roster (215 lines, all 386 FireRed species)
