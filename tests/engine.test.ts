@@ -83,3 +83,79 @@ describe('battle engine', () => {
     }
   });
 });
+
+describe('move effects', () => {
+  const setup = (a: string, b: string, seed = 11) => new Battle(team([a]), team([b]), seed);
+  const useMove = (bt: Battle, side: 0 | 1, key: string, timing = { atk: 'none' as const, brace: 'none' as const }) => {
+    const m = bt.active(side);
+    m.moves[0] = { key, pp: 10, maxPp: 10 };
+    return bt.act(side, { type: 'move', slot: 0 }, timing);
+  };
+
+  it('Explosion faints the user', () => {
+    const bt = setup('geodude', 'squirtle');
+    const ev = useMove(bt, 0, 'EXPLOSION');
+    expect(bt.active(0).fainted).toBe(true);
+    expect(ev.some((e) => e.t === 'faint' && e.side === 0)).toBe(true);
+  });
+
+  it('Giga Drain heals the user', () => {
+    const bt = setup('bulbasaur', 'squirtle');
+    bt.active(0).hp = 10;
+    const ev = useMove(bt, 0, 'GIGA_DRAIN');
+    const use = ev.find((e) => e.t === 'moveUse');
+    if (use?.t === 'moveUse' && use.outcome === 'hit') expect(ev.some((e) => e.t === 'heal' && e.cause === 'drain')).toBe(true);
+  });
+
+  it('Protect blocks the next attack', () => {
+    const bt = setup('squirtle', 'machop', 3);
+    useMove(bt, 0, 'PROTECT');
+    expect(bt.active(0).vol.protect).toBeGreaterThan(0);
+    const ev = useMove(bt, 1, 'KARATE_CHOP');
+    const use = ev.find((e) => e.t === 'moveUse');
+    expect(use?.t === 'moveUse' && use.outcome).toBe('protected');
+  });
+
+  it('Hyper Beam leaves the user with a negative gauge (recharge)', () => {
+    for (let seed = 0; seed < 10; seed++) {
+      const bt = setup('dratini', 'squirtle', seed);
+      const ev = useMove(bt, 0, 'HYPER_BEAM');
+      const use = ev.find((e) => e.t === 'moveUse');
+      if (use?.t === 'moveUse' && use.outcome === 'hit') {
+        expect(bt.active(0).atb).toBeLessThan(0);
+        return;
+      }
+    }
+  });
+
+  it('Quick Attack refunds gauge (priority)', () => {
+    const bt = setup('pidgey', 'geodude');
+    useMove(bt, 0, 'QUICK_ATTACK');
+    expect(bt.active(0).atb).toBeCloseTo(CONFIG.priorityAtb);
+  });
+
+  it('Solar Beam charges first, then strikes', () => {
+    const bt = setup('houndour', 'squirtle');
+    bt.active(0).moves[0] = { key: 'SOLAR_BEAM', pp: 10, maxPp: 10 };
+    const ev1 = bt.act(0, { type: 'move', slot: 0 });
+    expect(ev1.find((e) => e.t === 'moveUse' && e.outcome === 'charging')).toBeTruthy();
+    expect(bt.forcedAction(0)).toEqual({ type: 'move', slot: 0 });
+    const ev2 = bt.act(0, bt.forcedAction(0)!);
+    expect(ev2.find((e) => e.t === 'moveUse' && e.outcome !== 'charging')).toBeTruthy();
+  });
+
+  it('Thunder Wave cannot paralyze Ground types', () => {
+    const bt = setup('pikachu', 'geodude');
+    useMove(bt, 0, 'THUNDER_WAVE');
+    expect(bt.active(1).status).toBe('none');
+  });
+
+  it('switching resets stat stages', () => {
+    const bt = new Battle(team(['machop', 'pidgey']), team(['squirtle']), 5);
+    useMove(bt, 0, 'BULK_UP');
+    expect(bt.active(0).boosts.atk).toBe(1);
+    bt.act(0, { type: 'switch', index: 1 });
+    expect(bt.sides[0].team[0].boosts.atk).toBe(0);
+    expect(bt.active(0).lineId).toBe('pidgey');
+  });
+});

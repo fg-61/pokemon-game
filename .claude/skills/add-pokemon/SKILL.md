@@ -1,0 +1,50 @@
+---
+name: add-pokemon
+description: Add a new Pokémon evolution line to the playable roster of Evo Clash (assets, FireRed-legal movesets, VFX coverage, balance level). Use when asked to add/expand Pokémon, "yeni pokemon ekle", or grow the roster in a later phase.
+---
+
+# Add a Pokémon line to the roster
+
+All 386 FireRed species and all 354 moves are already in `src/data/generated/*.json`. Adding a line is about
+assets + a curated moveset + balance. Work through these steps in order; each has a check.
+
+## 1. Pick the line
+- Look it up: `node -e 'const S=require("./src/data/generated/species.json"); console.log(S.MAGIKARP)'`
+  (keys are FireRed constants without `SPECIES_`: `NIDORAN_M`, `MR_MIME`, `HO_OH`).
+- Every stage must evolve from the previous one (`prevo`). Branching lines (Eevee, Oddish→Gloom→Vileplume/Bellossom,
+  Poliwhirl, Slowpoke, Tyrogue, Wurmple) need one branch chosen per roster line (make two lines if both are wanted).
+- Prefer 2–3 stage lines; single-stage Pokémon can't evolve in battle (they still work: EVO gauge shows MAX).
+
+## 2. Assets
+1. Add the dex numbers as a new array to `lines` in `src/data/roster-dex.json`.
+2. `npm run assets:fetch` (only fetches what's missing; `--ids 129-130` for specific ones).
+3. Check `public/assets/pokemon/<dex>/` has `front.png back.png sprite.json frlg-front.png icon.png artwork.png cry.ogg`.
+
+## 3. Moveset (src/data/roster.ts)
+Add a `RosterLine` with `id` (lowercase base species), `role`, `blurb`, `level: 50`, and 4 moves per stage.
+Design rules that keep the game balanced and readable:
+- Stage 1: ~35–70 power moves + one utility move. Stage 2: ~60–95. Final: signature/ultimate moves (80–150).
+- Each stage: at least one STAB move, one coverage or utility move. Avoid two near-identical moves.
+- Gen 3 rule: physical/special is decided by TYPE (Fire/Water/Grass/Electric/Ice/Psychic/Dragon/Dark = special).
+  Pick moves that match the stage's better attacking stat (e.g. Shadow Ball is *physical* in Gen 3).
+- Moves must be learnable in FireRed (level-up, TM/HM, tutor, egg, or inherited from a pre-evolution).
+- Prefer effects listed in `SUPPORTED_EFFECTS` (`src/battle/engine.ts`). New effect? Implement it in
+  `Battle.applyMoveEffect` / `calcDamage` + a vitest in `tests/engine.test.ts`.
+
+Check: `npm run roster:validate` → 0 errors (warnings = unimplemented effects).
+
+## 4. VFX
+List moves without a dedicated recipe:
+```
+npx tsx -e "import './src/vfx/recipes'; " 2>/dev/null; grep -rhoE "registerMoveFx\(\s*\[?'[A-Z_]+'" src/vfx/recipes | sort
+```
+Moves without one fall back to a generic type-colored animation (fine), but new signature moves deserve a recipe —
+use the `move-vfx` skill (or the `vfx-artist` agent).
+
+## 5. Balance
+Run `npm run sim -- --n 3000`. The new line's 3v3 win rate should land in 45–55%. Adjust its `level` in
+`roster.ts` (±1 level ≈ ±2–3% win rate) and re-run; see the `balance-sim` skill.
+
+## 6. Verify in the game
+- `npm run typecheck && npm test`
+- Playtest (see `playtest` skill): `?quick=1&auto=1&fixed=1&team=<newline>,pikachu,gastly` and look at the screenshots.

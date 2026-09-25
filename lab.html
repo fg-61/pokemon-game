@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VFX Lab</title>
+    <link rel="icon" href="data:," />
+    <style>
+      html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: system-ui, sans-serif; }
+      #app { position: fixed; inset: 0; }
+      #panel { position: fixed; top: 8px; left: 8px; background: rgba(0,0,0,.6); color: #fff; padding: 8px; border-radius: 8px; font-size: 13px; z-index: 5; max-width: 340px; }
+      #panel select, #panel button { font-size: 13px; margin: 2px; }
+      #log { margin-top: 6px; white-space: pre-line; opacity: .85; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="panel">
+      <b>VFX Lab</b> — <span id="fps"></span><br />
+      <select id="move"></select>
+      <select id="side"><option value="0">player → foe</option><option value="1">foe → player</option></select>
+      <label><input type="checkbox" id="miss" /> miss</label>
+      <button id="play">Play (space)</button><br />
+      <select id="theme"></select>
+      <button id="evo">Evolve fx</button>
+      <div id="log"></div>
+    </div>
+    <script type="module" src="/src/lab.ts"></script>
+  </body>
+</html>

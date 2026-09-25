@@ -1,7 +1,17 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   base: './',
   server: { host: true, port: 5173 },
-  build: { target: 'es2022', chunkSizeWarningLimit: 2000 },
+  build: {
+    target: 'es2022',
+    chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      input: {
+        main: resolve(import.meta.dirname, 'index.html'),
+        lab: resolve(import.meta.dirname, 'lab.html'),
+      },
+    },
+  },
 });
