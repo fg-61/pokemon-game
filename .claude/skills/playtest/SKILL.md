@@ -9,11 +9,12 @@ description: Run Evo Clash and see a change working — dev server, automated AI
 - `yarn dev` → http://localhost:5173 (game), http://localhost:5173/lab.html (VFX Lab).
 - `yarn build && yarn preview` for the production bundle.
 
-## Headless verification (this container / CI)
-Headless Chromium renders WebGL in software (a few fps). Two things make captures reliable:
+## Headless verification
+`tools/shoot.mjs` uses the installed Google Chrome on the GPU on a local machine, or the sandbox Chromium with
+software WebGL (a few fps) in the cloud (`CHROMIUM_PATH` overrides). Two things make captures reliable:
 1. A dev server **without HMR** so edits don't reload the page: `yarn vite --config vite.nohmr.config.ts` (port 5174).
 2. `?fixed=1` in the URL (every rendered frame advances the game clock by 1/30 s) + `--game` in `tools/shoot.mjs`
-   (capture times are game-clock ms).
+   (capture times are game-clock ms; the clock is held via `window.__stage.holdAt` while each shot is taken).
 
 ### URL switches
 | param | effect |
@@ -37,6 +38,7 @@ Look at the PNGs with the Read tool. Anything under `Console:` in the output is 
 
 ### Interacting
 `window.__battle` is the running `BattleController` (`.battle` = engine state), `window.__stage` the renderer.
+Battle text is in `.msg` (poll it with Playwright to check messages such as "Magnitude 7!"; the UI defaults to TR).
 With Playwright you can press keys: `1`-`4` moves, `s` switch, `e` evolve, `Space` timing ring.
 
 ## Before calling a change done

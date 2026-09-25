@@ -175,6 +175,8 @@ export class Stage {
   fps = 60;
   /** When set, every rendered frame advances the game clock by exactly this many seconds (deterministic captures). */
   fixedDt: number | null = null;
+  /** Capture hook (tools/shoot.mjs --game): the game clock stops once it reaches this time (seconds). */
+  holdAt: number | null = null;
 
   constructor(container: HTMLElement) {
     const q = new URLSearchParams(location.search);
@@ -216,9 +218,10 @@ export class Stage {
 
     const loop = () => {
       const now = performance.now();
-      const realDt = this.fixedDt ?? Math.min(0.05, (now - this.last) / 1000);
+      const held = this.holdAt !== null && this.clock.time >= this.holdAt;
+      const realDt = held ? 0 : (this.fixedDt ?? Math.min(0.05, (now - this.last) / 1000));
       this.last = now;
-      this.fps = this.fps * 0.95 + (1 / Math.max(0.001, realDt)) * 0.05;
+      if (realDt > 0) this.fps = this.fps * 0.95 + (1 / Math.max(0.001, realDt)) * 0.05;
       const dt = this.clock.advance(realDt);
       this.frame(dt, realDt);
       requestAnimationFrame(loop);
