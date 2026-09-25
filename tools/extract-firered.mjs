@@ -494,6 +494,46 @@ function extractSpecies(moves) {
 // ---------------------------------------------------------------------------
 
 /** JSON with nesting expanded only where a value does not fit on one line. */
+// ---------------------------------------------------------------------------
+// Kanto League trainers (gym leaders, Elite Four, Champion)
+// ---------------------------------------------------------------------------
+
+/** The trainers the League mode uses, in FireRed's order. */
+const LEAGUE_TRAINERS = [
+  'LEADER_BROCK', 'LEADER_MISTY', 'LEADER_LT_SURGE', 'LEADER_ERIKA', 'LEADER_KOGA', 'LEADER_SABRINA', 'LEADER_BLAINE', 'LEADER_GIOVANNI',
+  'ELITE_FOUR_LORELEI', 'ELITE_FOUR_BRUNO', 'ELITE_FOUR_AGATHA', 'ELITE_FOUR_LANCE',
+  'CHAMPION_FIRST_SQUIRTLE', 'CHAMPION_FIRST_BULBASAUR', 'CHAMPION_FIRST_CHARMANDER',
+];
+
+function extractTrainers() {
+  const trainers = designated(arrayBody(read('src/data/trainers.h'), 'gTrainers'));
+  const partiesText = read('src/data/trainer_parties.h');
+  // TRAINER_PIC_X -> front pic file stem, via the sprite table and the INCBIN paths
+  const picSymbol = new Map([...read('src/data/trainer_graphics/front_pic_tables.h').matchAll(/TRAINER_SPRITE\(\s*(\w+)\s*,\s*(\w+)/g)].map((m) => [m[1], m[2]]));
+  const picFile = new Map([...read('src/data/graphics/trainers.h').matchAll(/(gTrainerFrontPic_\w+)\[\]\s*=\s*INCBIN_U32\("graphics\/trainers\/front_pics\/(\w+)_front_pic/g)].map((m) => [m[1], m[2]]));
+  const out = {};
+  for (const key of LEAGUE_TRAINERS) {
+    const t = trainers.get(`TRAINER_${key}`);
+    if (!t) throw new Error(`trainer ${key} not found`);
+    const f = structFields(t);
+    const partyName = /\((\w+)\)/.exec(f.party)?.[1];
+    if (!partyName) throw new Error(`party of ${key} not found`);
+    const pic = picFile.get(picSymbol.get(strip('TRAINER_PIC_')(f.trainerPic)));
+    if (!pic) throw new Error(`front pic of ${key} not found`);
+    out[key] = {
+      class: strip('TRAINER_CLASS_')(f.trainerClass),
+      name: titleCase(gameString(f.trainerName)),
+      pic,
+      party: splitTopLevel(arrayBody(partiesText, partyName)).map((mon) => {
+        const m = structFields(mon);
+        const moves = m.moves ? braceList(m.moves).map(strip('MOVE_')).filter((x) => x !== 'NONE') : undefined;
+        return { species: strip('SPECIES_')(m.species), level: Number(m.lvl), ...(moves ? { moves } : {}) };
+      }),
+    };
+  }
+  return out;
+}
+
 function formatJson(value, indent = '', prefixLen = 0, width = 110) {
   if (typeof value !== 'object' || value === null) return JSON.stringify(value);
   const flat = JSON.stringify(value, null, 1).replace(/\n\s*/g, ' ').replace(/([[{]) /g, '$1').replace(/ ([\]}])/g, '$1');
@@ -549,10 +589,13 @@ function main() {
   const { chart, foresight } = extractTypeChart();
   const species = extractSpecies(moves);
 
+  const trainers = extractTrainers();
+
   mkdirSync(OUT_DIR, { recursive: true });
   write('species.json', species);
   write('moves.json', moves);
   write('typechart.json', chart);
+  write('trainers.json', trainers);
 
   const readme = `# Generated FireRed data
 
@@ -565,6 +608,7 @@ from the [pret/pokefirered](https://github.com/pret/pokefirered) decompilation
 | \`species.json\` | ${Object.keys(species).length} species (national dex 1-${Math.max(...Object.values(species).map((s) => s.dex))}), keyed by constant name without \`SPECIES_\` | \`src/data/pokemon/species_info.h\`, \`evolution.h\`, \`level_up_learnsets.h\`, \`tmhm_learnsets.h\`, \`tutor_learnsets.h\`, \`egg_moves.h\`, \`pokedex_entries.h\`, \`pokedex_text_fr.h\`, \`src/data/text/species_names.h\`, \`src/pokemon.c\` (national dex map) |
 | \`moves.json\` | ${Object.keys(moves).length} moves, keyed by constant name without \`MOVE_\` | \`src/data/battle_moves.h\`, \`src/data/text/move_names.h\`, \`src/move_descriptions.c\` |
 | \`typechart.json\` | Non-1x type matchups: \`chart[attacker][defender]\` = 0, 0.5 or 2 | \`gTypeEffectiveness\` in \`src/battle_main.c\` |
+| \`trainers.json\` | Kanto League trainers (gym leaders, Elite Four, Champion): class, name, front pic, party | \`src/data/trainers.h\`, \`trainer_parties.h\`, \`trainer_graphics/front_pic_tables.h\`, \`graphics/trainers.h\` |
 
 Types are defined in \`src/data/types.ts\`; \`src/data/gamedata.ts\` loads the JSON.
 

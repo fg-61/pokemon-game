@@ -1,0 +1,208 @@
+{
+  "LEADER_BROCK": {
+    "class": "LEADER",
+    "name": "Brock",
+    "pic": "leader_brock",
+    "party": [
+      {"species": "GEODUDE", "level": 12, "moves": ["TACKLE", "DEFENSE_CURL"]},
+      {"species": "ONIX", "level": 14, "moves": ["TACKLE", "BIND", "ROCK_TOMB"]}
+    ]
+  },
+  "LEADER_MISTY": {
+    "class": "LEADER",
+    "name": "Misty",
+    "pic": "leader_misty",
+    "party": [
+      {"species": "STARYU", "level": 18, "moves": ["TACKLE", "HARDEN", "RECOVER", "WATER_PULSE"]},
+      {"species": "STARMIE", "level": 21, "moves": ["SWIFT", "RECOVER", "RAPID_SPIN", "WATER_PULSE"]}
+    ]
+  },
+  "LEADER_LT_SURGE": {
+    "class": "LEADER",
+    "name": "Lt. Surge",
+    "pic": "leader_lt_surge",
+    "party": [
+      {"species": "VOLTORB", "level": 21, "moves": ["SONIC_BOOM", "TACKLE", "SCREECH", "SHOCK_WAVE"]},
+      {
+        "species": "PIKACHU",
+        "level": 18,
+        "moves": ["QUICK_ATTACK", "THUNDER_WAVE", "DOUBLE_TEAM", "SHOCK_WAVE"]
+      },
+      {
+        "species": "RAICHU",
+        "level": 24,
+        "moves": ["QUICK_ATTACK", "THUNDER_WAVE", "DOUBLE_TEAM", "SHOCK_WAVE"]
+      }
+    ]
+  },
+  "LEADER_ERIKA": {
+    "class": "LEADER",
+    "name": "Erika",
+    "pic": "leader_erika",
+    "party": [
+      {"species": "VICTREEBEL", "level": 29, "moves": ["STUN_SPORE", "ACID", "POISON_POWDER", "GIGA_DRAIN"]},
+      {"species": "TANGELA", "level": 24, "moves": ["POISON_POWDER", "CONSTRICT", "INGRAIN", "GIGA_DRAIN"]},
+      {"species": "VILEPLUME", "level": 29, "moves": ["SLEEP_POWDER", "ACID", "STUN_SPORE", "GIGA_DRAIN"]}
+    ]
+  },
+  "LEADER_KOGA": {
+    "class": "LEADER",
+    "name": "Koga",
+    "pic": "leader_koga",
+    "party": [
+      {"species": "KOFFING", "level": 37, "moves": ["SELF_DESTRUCT", "SLUDGE", "SMOKESCREEN", "TOXIC"]},
+      {"species": "MUK", "level": 39, "moves": ["MINIMIZE", "SLUDGE", "ACID_ARMOR", "TOXIC"]},
+      {"species": "KOFFING", "level": 37, "moves": ["SELF_DESTRUCT", "SLUDGE", "SMOKESCREEN", "TOXIC"]},
+      {"species": "WEEZING", "level": 43, "moves": ["TACKLE", "SLUDGE", "SMOKESCREEN", "TOXIC"]}
+    ]
+  },
+  "LEADER_SABRINA": {
+    "class": "LEADER",
+    "name": "Sabrina",
+    "pic": "leader_sabrina",
+    "party": [
+      {"species": "KADABRA", "level": 38, "moves": ["PSYBEAM", "REFLECT", "FUTURE_SIGHT", "CALM_MIND"]},
+      {"species": "MR_MIME", "level": 37, "moves": ["BARRIER", "PSYBEAM", "BATON_PASS", "CALM_MIND"]},
+      {"species": "VENOMOTH", "level": 38, "moves": ["PSYBEAM", "GUST", "LEECH_LIFE", "SUPERSONIC"]},
+      {"species": "ALAKAZAM", "level": 43, "moves": ["PSYCHIC", "RECOVER", "FUTURE_SIGHT", "CALM_MIND"]}
+    ]
+  },
+  "LEADER_BLAINE": {
+    "class": "LEADER",
+    "name": "Blaine",
+    "pic": "leader_blaine",
+    "party": [
+      {"species": "GROWLITHE", "level": 42, "moves": ["BITE", "ROAR", "TAKE_DOWN", "FIRE_BLAST"]},
+      {"species": "PONYTA", "level": 40, "moves": ["STOMP", "BOUNCE", "FIRE_SPIN", "FIRE_BLAST"]},
+      {"species": "RAPIDASH", "level": 42, "moves": ["STOMP", "BOUNCE", "FIRE_SPIN", "FIRE_BLAST"]},
+      {"species": "ARCANINE", "level": 47, "moves": ["BITE", "ROAR", "TAKE_DOWN", "FIRE_BLAST"]}
+    ]
+  },
+  "LEADER_GIOVANNI": {
+    "class": "LEADER",
+    "name": "Giovanni",
+    "pic": "leader_giovanni",
+    "party": [
+      {"species": "RHYHORN", "level": 45, "moves": ["TAKE_DOWN", "ROCK_BLAST", "SCARY_FACE", "EARTHQUAKE"]},
+      {"species": "DUGTRIO", "level": 42, "moves": ["SLASH", "SAND_TOMB", "MUD_SLAP", "EARTHQUAKE"]},
+      {
+        "species": "NIDOQUEEN",
+        "level": 44,
+        "moves": ["BODY_SLAM", "DOUBLE_KICK", "POISON_STING", "EARTHQUAKE"]
+      },
+      {"species": "NIDOKING", "level": 45, "moves": ["THRASH", "DOUBLE_KICK", "POISON_STING", "EARTHQUAKE"]},
+      {"species": "RHYHORN", "level": 50, "moves": ["TAKE_DOWN", "ROCK_BLAST", "SCARY_FACE", "EARTHQUAKE"]}
+    ]
+  },
+  "ELITE_FOUR_LORELEI": {
+    "class": "ELITE_FOUR",
+    "name": "Lorelei",
+    "pic": "elite_four_lorelei",
+    "party": [
+      {"species": "DEWGONG", "level": 52, "moves": ["ICE_BEAM", "SURF", "HAIL", "SAFEGUARD"]},
+      {"species": "CLOYSTER", "level": 51, "moves": ["SPIKES", "PROTECT", "HAIL", "DIVE"]},
+      {"species": "SLOWBRO", "level": 52, "moves": ["ICE_BEAM", "SURF", "AMNESIA", "YAWN"]},
+      {"species": "JYNX", "level": 54, "moves": ["ICE_PUNCH", "DOUBLE_SLAP", "LOVELY_KISS", "ATTRACT"]},
+      {"species": "LAPRAS", "level": 54, "moves": ["CONFUSE_RAY", "ICE_BEAM", "SURF", "BODY_SLAM"]}
+    ]
+  },
+  "ELITE_FOUR_BRUNO": {
+    "class": "ELITE_FOUR",
+    "name": "Bruno",
+    "pic": "elite_four_bruno",
+    "party": [
+      {"species": "ONIX", "level": 51, "moves": ["EARTHQUAKE", "ROCK_TOMB", "IRON_TAIL", "ROAR"]},
+      {"species": "HITMONCHAN", "level": 53, "moves": ["SKY_UPPERCUT", "MACH_PUNCH", "ROCK_TOMB", "COUNTER"]},
+      {"species": "HITMONLEE", "level": 53, "moves": ["MEGA_KICK", "FORESIGHT", "BRICK_BREAK", "FACADE"]},
+      {"species": "ONIX", "level": 54, "moves": ["DOUBLE_EDGE", "EARTHQUAKE", "IRON_TAIL", "SAND_TOMB"]},
+      {"species": "MACHAMP", "level": 56, "moves": ["CROSS_CHOP", "BULK_UP", "SCARY_FACE", "ROCK_TOMB"]}
+    ]
+  },
+  "ELITE_FOUR_AGATHA": {
+    "class": "ELITE_FOUR",
+    "name": "Agatha",
+    "pic": "elite_four_agatha",
+    "party": [
+      {"species": "GENGAR", "level": 54, "moves": ["SHADOW_PUNCH", "CONFUSE_RAY", "TOXIC", "DOUBLE_TEAM"]},
+      {"species": "GOLBAT", "level": 54, "moves": ["CONFUSE_RAY", "POISON_FANG", "AIR_CUTTER", "BITE"]},
+      {"species": "HAUNTER", "level": 53, "moves": ["HYPNOSIS", "DREAM_EATER", "CURSE", "MEAN_LOOK"]},
+      {"species": "ARBOK", "level": 56, "moves": ["SLUDGE_BOMB", "SCREECH", "IRON_TAIL", "BITE"]},
+      {"species": "GENGAR", "level": 58, "moves": ["SHADOW_BALL", "SLUDGE_BOMB", "HYPNOSIS", "NIGHTMARE"]}
+    ]
+  },
+  "ELITE_FOUR_LANCE": {
+    "class": "ELITE_FOUR",
+    "name": "Lance",
+    "pic": "elite_four_lance",
+    "party": [
+      {"species": "GYARADOS", "level": 56, "moves": ["HYPER_BEAM", "DRAGON_RAGE", "TWISTER", "BITE"]},
+      {"species": "DRAGONAIR", "level": 54, "moves": ["HYPER_BEAM", "SAFEGUARD", "DRAGON_RAGE", "OUTRAGE"]},
+      {"species": "DRAGONAIR", "level": 54, "moves": ["HYPER_BEAM", "SAFEGUARD", "THUNDER_WAVE", "OUTRAGE"]},
+      {
+        "species": "AERODACTYL",
+        "level": 58,
+        "moves": ["HYPER_BEAM", "ANCIENT_POWER", "WING_ATTACK", "SCARY_FACE"]
+      },
+      {"species": "DRAGONITE", "level": 60, "moves": ["HYPER_BEAM", "SAFEGUARD", "OUTRAGE", "WING_ATTACK"]}
+    ]
+  },
+  "CHAMPION_FIRST_SQUIRTLE": {
+    "class": "CHAMPION",
+    "name": "Terry",
+    "pic": "champion_rival",
+    "party": [
+      {
+        "species": "PIDGEOT",
+        "level": 59,
+        "moves": ["AERIAL_ACE", "FEATHER_DANCE", "SAND_ATTACK", "WHIRLWIND"]
+      },
+      {"species": "ALAKAZAM", "level": 57, "moves": ["PSYCHIC", "FUTURE_SIGHT", "RECOVER", "REFLECT"]},
+      {"species": "RHYDON", "level": 59, "moves": ["TAKE_DOWN", "EARTHQUAKE", "ROCK_TOMB", "SCARY_FACE"]},
+      {"species": "ARCANINE", "level": 59, "moves": ["EXTREME_SPEED", "FLAMETHROWER", "ROAR", "BITE"]},
+      {
+        "species": "EXEGGUTOR",
+        "level": 61,
+        "moves": ["GIGA_DRAIN", "EGG_BOMB", "SLEEP_POWDER", "LIGHT_SCREEN"]
+      },
+      {"species": "BLASTOISE", "level": 63, "moves": ["HYDRO_PUMP", "RAIN_DANCE", "SKULL_BASH", "BITE"]}
+    ]
+  },
+  "CHAMPION_FIRST_BULBASAUR": {
+    "class": "CHAMPION",
+    "name": "Terry",
+    "pic": "champion_rival",
+    "party": [
+      {
+        "species": "PIDGEOT",
+        "level": 59,
+        "moves": ["AERIAL_ACE", "FEATHER_DANCE", "SAND_ATTACK", "WHIRLWIND"]
+      },
+      {"species": "ALAKAZAM", "level": 57, "moves": ["PSYCHIC", "FUTURE_SIGHT", "RECOVER", "REFLECT"]},
+      {"species": "RHYDON", "level": 59, "moves": ["TAKE_DOWN", "EARTHQUAKE", "ROCK_TOMB", "SCARY_FACE"]},
+      {"species": "GYARADOS", "level": 59, "moves": ["HYDRO_PUMP", "DRAGON_RAGE", "BITE", "THRASH"]},
+      {"species": "ARCANINE", "level": 61, "moves": ["EXTREME_SPEED", "FLAMETHROWER", "ROAR", "BITE"]},
+      {"species": "VENUSAUR", "level": 63, "moves": ["SOLAR_BEAM", "SYNTHESIS", "SUNNY_DAY", "GROWTH"]}
+    ]
+  },
+  "CHAMPION_FIRST_CHARMANDER": {
+    "class": "CHAMPION",
+    "name": "Terry",
+    "pic": "champion_rival",
+    "party": [
+      {
+        "species": "PIDGEOT",
+        "level": 59,
+        "moves": ["AERIAL_ACE", "FEATHER_DANCE", "SAND_ATTACK", "WHIRLWIND"]
+      },
+      {"species": "ALAKAZAM", "level": 57, "moves": ["PSYCHIC", "FUTURE_SIGHT", "RECOVER", "REFLECT"]},
+      {"species": "RHYDON", "level": 59, "moves": ["TAKE_DOWN", "EARTHQUAKE", "ROCK_TOMB", "SCARY_FACE"]},
+      {
+        "species": "EXEGGUTOR",
+        "level": 59,
+        "moves": ["GIGA_DRAIN", "EGG_BOMB", "SLEEP_POWDER", "LIGHT_SCREEN"]
+      },
+      {"species": "GYARADOS", "level": 61, "moves": ["HYDRO_PUMP", "DRAGON_RAGE", "BITE", "THRASH"]},
+      {"species": "CHARIZARD", "level": 63, "moves": ["FIRE_BLAST", "AERIAL_ACE", "SLASH", "FIRE_SPIN"]}
+    ]
+  }
+}

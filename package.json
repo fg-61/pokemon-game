@@ -13,6 +13,7 @@
     "test": "vitest run",
     "data:extract": "node tools/extract-firered.mjs",
     "assets:fetch": "node tools/fetch-assets.mjs",
+    "assets:trainers": "node tools/fetch-trainer-pics.mjs",
     "roster:validate": "tsx tools/validate-roster.ts",
     "sim": "tsx tools/sim.ts",
     "roster:generate": "tsx tools/gen-roster.ts",

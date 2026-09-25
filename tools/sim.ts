@@ -4,6 +4,7 @@
  *   yarn sim --n 4000   -> more battles
  *   yarn sim --duel     -> 1v1 round-robin matrix (line vs line)
  *   yarn sim --ai hard  -> AI profile used by both sides (easy|normal|hard)
+ *   yarn sim --league   -> random player teams (--ai profile) vs every Kanto League stop: the difficulty curve
  * Healthy targets: every line's 3v3 win rate within 42-58%, avg battle 60-150 s of ATB time,
  * most lines evolving at least once per battle they survive long enough in.
  */
@@ -22,6 +23,28 @@ const N = Number(opt('n', '2000'));
 const ai = AI_PROFILES[opt('ai', 'normal') as Difficulty];
 const ids = ROSTER.map((l) => l.id);
 const rng = new Rng(12345);
+
+if (args.includes('--league')) {
+  const { GYMS, ELITE_FOUR, champion } = await import('../src/game/league');
+  const per = Math.max(50, Math.floor(N / 13));
+  console.log(`Kanto League: ${per} random player teams (AI: ${opt('ai', 'normal')}) per stop — player win %\n`);
+  const stops = [...GYMS, ...ELITE_FOUR, champion([])];
+  for (const st of stops) {
+    let w = 0;
+    let time = 0;
+    for (let k = 0; k < per; k++) {
+      const team = rng.shuffle([...ids]).slice(0, 3);
+      const foe = st.kind === 'champion' ? champion(team) : st;
+      const bt = new Battle({ name: 'P', lines: team, isAI: true }, { name: foe.name, lines: foe.lines, isAI: true, levelBonus: foe.levelBonus }, rng.int(0, 2 ** 31));
+      const r = autoBattle(bt, [ai, AI_PROFILES[foe.difficulty]], rng.int(0, 2 ** 31));
+      if (r.winner === 0) w++;
+      time += r.time;
+    }
+    const pct = (100 * w) / per;
+    console.log(`${st.name.padEnd(10)} ${st.kind.padEnd(9)} ${st.difficulty.padEnd(7)} lv${(st.levelBonus >= 0 ? '+' : '') + st.levelBonus}  ${pct.toFixed(1).padStart(5)}%  ${'#'.repeat(Math.round(pct / 2.5))}  ${(time / per).toFixed(0)}s`);
+  }
+  process.exit(0);
+}
 
 if (args.includes('--duel')) {
   const per = Math.max(20, Math.floor(N / ids.length));

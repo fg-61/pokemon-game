@@ -21,6 +21,8 @@ export interface TeamSpec {
   name: string;
   lines: string[]; // roster line ids
   isAI: boolean;
+  /** added to every line's level (League trainers: easier early gyms, tougher Elite Four) */
+  levelBonus?: number;
 }
 
 export interface Timing {
@@ -82,10 +84,11 @@ export function statsFor(speciesKey: string, level: number) {
   return st;
 }
 
-export function buildMon(line: RosterLine, stage = 0): BattleMon {
+export function buildMon(line: RosterLine, stage = 0, levelBonus = 0): BattleMon {
   const st = line.stages[stage];
   const sp = SPECIES[st.species];
-  const stats = statsFor(st.species, line.level);
+  const level = Math.max(1, Math.min(100, (line.level ?? BATTLE_LEVEL) + levelBonus));
+  const stats = statsFor(st.species, level);
   return {
     uid: `${line.id}-${++uidCounter}`,
     lineId: line.id,
@@ -94,7 +97,7 @@ export function buildMon(line: RosterLine, stage = 0): BattleMon {
     name: sp.name,
     types: sp.types as PokeType[],
     ability: sp.abilities[0] ?? 'NONE',
-    level: line.level ?? BATTLE_LEVEL,
+    level,
     stats,
     hp: stats.hp,
     status: 'none',
@@ -142,7 +145,7 @@ export class Battle {
   constructor(player: TeamSpec, enemy: TeamSpec, seed?: number) {
     this.rng = new Rng(seed);
     const mk = (t: TeamSpec): SideState => ({
-      team: t.lines.map((id) => buildMon(getLine(id))),
+      team: t.lines.map((id) => buildMon(getLine(id), 0, t.levelBonus)),
       active: 0,
       reflect: 0,
       lightScreen: 0,
