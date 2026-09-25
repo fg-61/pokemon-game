@@ -15,13 +15,14 @@ no `--`). Don't add a `package-lock.json`.
 - `yarn dev` — game at :5173, VFX Lab at :5173/lab.html
 - `yarn typecheck` · `yarn test` (vitest) · `yarn build`
 - `yarn roster:validate` — movesets legal in FireRed + effects implemented + assets present
-- `yarn sim [--n 3000 | --duel | --ai hard | --league]` — headless AI-vs-AI balance simulator (`--league`: win % of
-  random teams vs every Kanto League stop — the difficulty curve)
+- `yarn sim [--n 3000 | --duel | --ai hard | --league | --no-items]` — headless AI-vs-AI balance simulator (`--league`:
+  win % of random teams vs every Kanto League stop — the difficulty curve; both sides hold suggested items)
 - `yarn roster:generate` — regenerate the 196 auto lines (src/data/roster.generated.ts) + roster-dex.json
 - `yarn levels:tune [--iters 4 --n 60000]` — auto-balance per-line levels into src/data/levels.json
 - `yarn data:extract` — regenerate src/data/generated from pret/pokefirered
 - `yarn assets:fetch [--ids 1-9]` — sprites/cries for roster-dex.json
 - `yarn assets:trainers` — FRLG front pics of the League trainers (+ Red) into public/assets/trainers
+- `yarn assets:items` — held-item icons (PokeAPI) into public/assets/items
 - Headless screenshots: `yarn vite --config vite.nohmr.config.ts` (port 5174, no HMR) +
   `node tools/shoot.mjs --url "http://localhost:5174/?quick=1&auto=1&fixed=1" --game --at 3000,9000 --out tests/screenshots/x`
 

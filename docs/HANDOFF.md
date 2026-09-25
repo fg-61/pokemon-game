@@ -69,9 +69,14 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
       results with rays, artwork and stat tiles; League cards tinted by type.
 - [x] Fix: a Pokémon that couldn't act mid-Fly / Dig (sleep, paralysis, confusion) stayed semi-invulnerable and its
       sprite hidden — the charge is now cancelled and the sprite lands back (`present()` restores hidden sprites).
-- [ ] Next ideas: held items (Leftovers, type boosters) chosen in team select; more League flavour (trainer-class
-      battles before each gym, rival battles along the way, leader quotes); Present scaling with its roll; mobile layout.
-- [ ] Phase 3 rest: held items, local 2-player versus, unlockables (see ROADMAP).
+- [x] Held items (Phase 3): 28 FireRed items (Leftovers, Choice Band, 17 type boosters, Scope Lens, Quick Claw,
+      Focus Band, Lum/Sitrus Berry, Shell Bell, King's Rock, White Herb, BrightPowder) with item icons
+      (`yarn assets:items`); picker on each team slot (suggested item by default), item icon on the HUD card, item
+      popups; AI trainers and the sim/tuner hold suggested items. Levels re-tuned with items (rms 1.7%), League curve
+      re-tuned (Brock 89% … Giovanni 60%, Elite Four 60-70%, Champion 59%).
+- [ ] Next ideas: more League flavour (trainer-class battles before each gym, rival battles along the way, leader
+      quotes); Present scaling with its roll; mobile layout; local 2-player versus.
+- [ ] Phase 3 rest: local 2-player versus, unlockables (see ROADMAP).
 
 ## Known issues / polish backlog
 - Generated movesets are heuristic (`tools/gen-roster.ts`): to hand-tune a line, move it into `CURATED` in

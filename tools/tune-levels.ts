@@ -31,6 +31,7 @@ async function worker(job: Job): Promise<Tally> {
   const { Battle } = await import('../src/battle/engine');
   const { Rng } = await import('../src/battle/rng');
   const { autoBattle } = await import('../src/battle/runner');
+  const { suggestItem } = await import('../src/battle/items');
   const { ROSTER } = await import('../src/data/roster');
   for (const l of ROSTER) l.level = job.levels[l.id] ?? l.level;
   const ai = AI_PROFILES.normal;
@@ -40,7 +41,12 @@ async function worker(job: Job): Promise<Tally> {
   for (let g = 0; g < job.n; g++) {
     const A = rng.shuffle([...ids]).slice(0, 3);
     const B = rng.shuffle([...ids]).slice(0, 3);
-    const r = autoBattle(new Battle({ name: 'A', lines: A, isAI: true }, { name: 'B', lines: B, isAI: true }, rng.int(0, 2 ** 31)), [ai, ai], rng.int(0, 2 ** 31));
+    const bt = new Battle(
+      { name: 'A', lines: A, isAI: true, items: A.map((l) => suggestItem(l, rng)) },
+      { name: 'B', lines: B, isAI: true, items: B.map((l) => suggestItem(l, rng)) },
+      rng.int(0, 2 ** 31),
+    );
+    const r = autoBattle(bt, [ai, ai], rng.int(0, 2 ** 31));
     A.forEach((i) => {
       w[i][1]++;
       if (r.winner === 0) w[i][0]++;

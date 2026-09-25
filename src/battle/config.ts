@@ -52,6 +52,21 @@ export const CONFIG = {
     healOther: 1 / 4,
   },
 
+  /** Held items (Gen 3 values unless noted). */
+  items: {
+    leftovers: 1 / 16, // heal per action
+    choiceBand: 1.5, // physical Attack; locks the first move used
+    typeBoost: 1.1, // Charcoal, Mystic Water...
+    quickClawChance: 0.2,
+    quickClawAtb: 0.3, // "moves first": the gauge restarts here
+    focusBandChance: 0.1,
+    sitrusAt: 0.5, // HP fraction that triggers it
+    sitrusHeal: 0.25, // Gen 4 value (Gen 3: 30 HP), fits the scaled HP
+    shellBell: 1 / 8, // of damage dealt
+    kingsRockChance: 0.1,
+    brightPowder: 0.9, // accuracy against the holder
+  },
+
   evo: {
     max: 100,
     perDealtPct: 0.6, // energy per 1% of target max HP dealt

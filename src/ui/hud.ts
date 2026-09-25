@@ -1,6 +1,7 @@
 import type { Battle } from '../battle/engine';
 import type { Action, BattleMon, Side, StatusCond, TimingGrade, WeatherKind } from '../battle/types';
 import { CONFIG } from '../battle/config';
+import { itemIcon, ITEMS, type ItemId } from '../battle/items';
 import { SPECIES } from '../data/gamedata';
 import { effectiveMove } from '../battle/engine';
 import { TYPE_COLOR } from '../data/typeColors';
@@ -48,6 +49,7 @@ class InfoCard {
   private nm = h('span', { class: 'nm' });
   private lv = h('span', { class: 'lv' });
   private statusChip = h('span', { class: 'status-chip hidden' });
+  private itemIc = h('img', { class: 'held-item hidden', alt: '' }) as HTMLImageElement;
   private types = h('span', { class: 'types' });
   private fill = h('div', { class: 'fill' });
   private lag = h('div', { class: 'lag' });
@@ -72,7 +74,7 @@ class InfoCard {
       h(
         'div',
         { class: 'card-body' },
-        h('div', { class: 'row1' }, this.nm, this.lv, this.statusChip, this.types),
+        h('div', { class: 'row1' }, this.nm, this.lv, this.itemIc, this.statusChip, this.types),
         h('div', { class: 'hp-row' }, h('span', { class: 'hp-label' }, 'HP'), h('div', { class: 'hpbar' }, this.lag, this.fill, h('i', { class: 'gloss' }))),
         side === 0 ? this.hpText : null,
         h('div', { class: 'gauges' }, h('span', null, 'ATB'), this.atb, h('span', { class: 'evo-label' }, 'EVO'), this.evo),
@@ -93,7 +95,16 @@ class InfoCard {
     this.hp = this.shownHp = this.lagHp = m.hp;
     this.evo.classList.toggle('maxed', !hasNext);
     this.setStatus(m.status);
+    this.setItem(m.itemUsed ? null : m.item);
     this.render();
+  }
+
+  setItem(item: ItemId | null) {
+    this.itemIc.classList.toggle('hidden', !item);
+    if (item) {
+      this.itemIc.src = itemIcon(item);
+      this.itemIc.title = ITEMS[item].name;
+    }
   }
 
   setHp(hp: number, max = this.maxHp) {
@@ -236,6 +247,11 @@ export class Hud {
 
   centerPop(text: string, color = '#fff', ms = 1400) {
     this.pop(h('div', { class: 'center-pop', style: `color:${color}` }, text), ms);
+  }
+
+  itemPop(side: Side, item: ItemId, text: string) {
+    const pos = side === 0 ? 'right:24px;bottom:330px' : 'left:24px;top:150px';
+    this.pop(h('div', { class: 'item-pop', style: pos }, h('img', { src: itemIcon(item), alt: '' }), text), 1700);
   }
 
   abilityPop(side: Side, text: string) {
@@ -390,7 +406,7 @@ export class Hud {
         {
           class: 'move-btn',
           style: `background:${moveGradient(mv.type)}`,
-          disabled: slot.pp <= 0 && !allOut,
+          disabled: (slot.pp <= 0 && !allOut) || !b.moveAllowed(side, i),
           title: mv.description,
           onclick: () => choose({ type: 'move', slot: i }),
           onmouseenter: () => audio.playSfx('uiHover', { volume: 0.3 }),

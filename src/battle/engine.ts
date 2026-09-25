@@ -2,6 +2,7 @@ import { MOVES, SPECIES, typeMultiplier } from '../data/gamedata';
 import type { MoveData, PokeType } from '../data/types';
 import { getLine, type RosterLine } from '../data/roster';
 import { CONFIG } from './config';
+import { ITEMS, type ItemId } from './items';
 import { Rng } from './rng';
 import { accuracyMultiplier, BATTLE_LEVEL, calcStats, critChance, stageMultiplier, STAT_LABEL } from './stats';
 import {
@@ -25,6 +26,8 @@ export interface TeamSpec {
   isAI: boolean;
   /** added to every line's level (League trainers: easier early gyms, tougher Elite Four) */
   levelBonus?: number;
+  /** held item per line (same order as `lines`) */
+  items?: (ItemId | null)[];
 }
 
 export interface Timing {
@@ -96,7 +99,7 @@ export function statsFor(speciesKey: string, level: number) {
   return st;
 }
 
-export function buildMon(line: RosterLine, stage = 0, levelBonus = 0): BattleMon {
+export function buildMon(line: RosterLine, stage = 0, levelBonus = 0, item: ItemId | null = null): BattleMon {
   const st = line.stages[stage];
   const sp = SPECIES[st.species];
   const level = Math.max(1, Math.min(100, (line.level ?? BATTLE_LEVEL) + levelBonus));
@@ -125,6 +128,8 @@ export function buildMon(line: RosterLine, stage = 0, levelBonus = 0): BattleMon
     vol: freshVolatile(),
     dealt: 0,
     perfects: 0,
+    item,
+    itemUsed: false,
   };
 }
 
@@ -143,6 +148,7 @@ function freshVolatile(): BattleMon['vol'] {
     lastTaken: null,
     transformed: null,
     orig: null,
+    choiceLock: null,
   };
 }
 
@@ -159,7 +165,7 @@ export class Battle {
   constructor(player: TeamSpec, enemy: TeamSpec, seed?: number) {
     this.rng = new Rng(seed);
     const mk = (t: TeamSpec): SideState => ({
-      team: t.lines.map((id) => buildMon(getLine(id), 0, t.levelBonus)),
+      team: t.lines.map((id, i) => buildMon(getLine(id), 0, t.levelBonus, t.items?.[i] ?? null)),
       active: 0,
       reflect: 0,
       lightScreen: 0,
@@ -240,6 +246,15 @@ export class Battle {
     return { type: 'move', slot: Math.max(0, slot) };
   }
 
+  /** Choice Band: once a move was used the holder can only use that one (while it has PP) until it switches. */
+  moveAllowed(side: Side, slot: number): boolean {
+    const m = this.active(side);
+    const lock = m.vol.choiceLock;
+    if (!lock) return true;
+    const locked = m.moves.find((x) => x.key === lock);
+    return !locked || locked.pp <= 0 || m.moves[slot]?.key === lock;
+  }
+
   isReady(side: Side): boolean {
     const m = this.active(side);
     return !m.fainted && m.atb >= 1 && this.winner === null;
@@ -304,6 +319,7 @@ export class Battle {
       this.doMoveAction(side, action.slot, timing, ev);
       if (!mon.fainted) this.residual(side, ev);
     }
+    this.itemChecks(ev);
     this.checkFaints(ev);
     return ev;
   }
@@ -316,6 +332,7 @@ export class Battle {
     this.doSwitch(side, index, ev, CONFIG.replaceAtb);
     const m = this.active(side);
     if (this.hasNextStage(m)) this.gainEvo(m, CONFIG.evo.faintRally, ev, side, true);
+    this.itemChecks(ev);
     return ev;
   }
 
@@ -422,6 +439,7 @@ export class Battle {
     mon.statusCounter = 0;
     mon.vol.confusion = 0;
     mon.vol.locked = null;
+    mon.vol.choiceLock = null;
     mon.evo = 0;
     mon.atb = CONFIG.evolveAtb;
     ev.push({ t: 'evolve', side, from, to: stage.species, newMoves: stage.moves });
@@ -495,6 +513,7 @@ export class Battle {
     } else if (locked) {
       moveKey = locked.move;
     } else {
+      if (!this.moveAllowed(side, slot)) slot = user.moves.findIndex((m) => m.key === user.vol.choiceLock);
       const ms = user.moves[slot];
       if (!ms || user.moves.every((m) => m.pp <= 0)) {
         moveKey = 'STRUGGLE';
@@ -508,6 +527,7 @@ export class Battle {
     }
     const move = effectiveMove(moveKey);
     user.vol.lastMove = moveKey;
+    if (user.item === 'choice_band' && !user.vol.choiceLock && moveKey !== 'STRUGGLE') user.vol.choiceLock = moveKey;
 
     // --- two-turn moves: first action charges
     if (TWO_TURN.has(move.effect) && !charging && !(move.effect === 'SOLAR_BEAM' && this.weatherNow() === 'sun')) {
@@ -537,6 +557,10 @@ export class Battle {
     // gauge after acting
     if (move.effect === 'RECHARGE' && !user.fainted) user.atb = CONFIG.rechargeAtb;
     else user.atb = Math.max(0, move.priority) * CONFIG.priorityAtb;
+    if (user.item === 'quick_claw' && !user.fainted && user.atb < CONFIG.items.quickClawAtb && this.rng.chance(CONFIG.items.quickClawChance)) {
+      user.atb = CONFIG.items.quickClawAtb;
+      ev.push({ t: 'item', side, item: 'quick_claw' });
+    }
   }
 
   private moveTargetsFoe(move: MoveData): boolean {
@@ -550,6 +574,7 @@ export class Battle {
     if (move.effect === 'THUNDER' && w === 'rain') return true;
     let acc = ((move.effect === 'THUNDER' && w === 'sun' ? 50 : move.accuracy) / 100) * accuracyMultiplier(user.boosts.acc - target.boosts.eva);
     if (w === 'sand' && target.ability === 'SAND_VEIL') acc *= 0.8;
+    if (target.item === 'bright_powder') acc *= CONFIG.items.brightPowder;
     if (timing.atk === 'perfect') acc *= CONFIG.perfectAccuracy;
     return this.rng.next() < acc;
   }
@@ -665,6 +690,10 @@ export class Battle {
     for (let i = 0; i < hits && !foe.fainted; i++) {
       const powerOverride = move.effect === 'TRIPLE_KICK' ? move.power * (i + 1) : undefined;
       const r = this.calcDamage(user, foe, move, timing, foeSide, powerOverride);
+      if (foe.item === 'focus_band' && foe.hp > 1 && r.damage >= foe.hp && this.rng.chance(CONFIG.items.focusBandChance)) {
+        r.damage = foe.hp - 1;
+        ev.push({ t: 'item', side: foeSide, item: 'focus_band' });
+      }
       this.applyDamage(foe, r.damage);
       if (move.effect === 'FALSE_SWIPE' && foe.hp <= 0) {
         foe.hp = 1;
@@ -674,6 +703,13 @@ export class Battle {
       moveEv.hits.push({ ...r, hpAfter: foe.hp });
     }
     user.dealt += total;
+    if (user.item === 'shell_bell' && total > 0 && !user.fainted) {
+      const h = this.heal(user, Math.max(1, Math.floor(total * CONFIG.items.shellBell)));
+      if (h > 0) {
+        ev.push({ t: 'item', side, item: 'shell_bell' });
+        ev.push({ t: 'heal', side, amount: h, hpAfter: user.hp, cause: 'item' });
+      }
+    }
     if (timing.atk === 'perfect') user.perfects++;
     if (total > 0) foe.vol.lastTaken = { dmg: total, physical: move.category === 'physical', at: this.time };
     if (move.effect === 'SMELLINGSALT' && foe.status === 'par' && !foe.fainted) {
@@ -714,6 +750,10 @@ export class Battle {
     const flinchChance = ['FLINCH_HIT', 'FLINCH_MINIMIZE_HIT', 'SKY_ATTACK', 'TWISTER'].includes(move.effect) ? move.effectChance : 0;
     if (flinchChance > 0 && !foe.fainted && foe.ability !== 'INNER_FOCUS' && this.rng.chance(flinchChance / 100)) {
       foe.atb = Math.max(0, foe.atb - CONFIG.flinchAtb);
+      ev.push({ t: 'flinch', side: foeSide, atbAfter: foe.atb });
+    } else if (flinchChance === 0 && user.item === 'kings_rock' && total > 0 && !foe.fainted && foe.ability !== 'INNER_FOCUS' && this.rng.chance(CONFIG.items.kingsRockChance)) {
+      foe.atb = Math.max(0, foe.atb - CONFIG.flinchAtb);
+      ev.push({ t: 'item', side, item: 'kings_rock' });
       ev.push({ t: 'flinch', side: foeSide, atbAfter: foe.atb });
     }
 
@@ -914,6 +954,7 @@ export class Battle {
         user.statusCounter = 2;
         ev.push({ t: 'status', side, status: 'slp' });
         ev.push({ t: 'heal', side, amount: h, hpAfter: user.hp, cause: 'move' });
+        this.lumBerry(side, ev); // the classic Rest + Lum Berry
         return true;
       }
 
@@ -1030,11 +1071,13 @@ export class Battle {
     const w = this.weatherNow();
     if (move.effect === 'SOLAR_BEAM' && w && w !== 'sun') power = Math.floor(power * CONFIG.weather.weaken);
     const rolled = power;
+    if (user.item && ITEMS[user.item].boost === moveType) power = Math.floor(power * CONFIG.items.typeBoost);
     const pinch = PINCH_ABILITY[user.ability];
     if (pinch === moveType && user.hp <= user.stats.hp / 3) power = Math.floor(power * 1.5);
 
     let critStage = (move.effect === 'HIGH_CRITICAL' || move.effect === 'BLAZE_KICK' || move.effect === 'POISON_TAIL' || move.effect === 'SKY_ATTACK' ? 1 : 0) + (user.vol.focusEnergy ? 2 : 0);
     if (timing.atk === 'perfect') critStage += 1;
+    if (user.item === 'scope_lens') critStage += 1;
     const crit = this.rng.chance(critChance(critStage));
 
     const physical = move.category === 'physical' || move.key === 'STRUGGLE';
@@ -1051,6 +1094,7 @@ export class Battle {
     if (move.effect === 'EXPLOSION') D = Math.max(1, Math.floor(D / 2)); // Gen 3 halves the target's Defense
     if (physical && user.ability === 'GUTS' && user.status !== 'none') A *= 1.5;
     if (physical && user.ability === 'HUGE_POWER') A *= 2;
+    if (physical && user.item === 'choice_band') A *= CONFIG.items.choiceBand;
     if (foe.ability === 'THICK_FAT' && (moveType === 'FIRE' || moveType === 'ICE')) A /= 2;
 
     let dmg = Math.floor(Math.floor((Math.floor((2 * user.level) / 5 + 2) * power * A) / D) / 50);
@@ -1150,6 +1194,7 @@ export class Battle {
       mon.vol.charging = null;
     }
     ev.push({ t: 'status', side, status });
+    this.lumBerry(side, ev);
     // Synchronize passes brn/par/psn back
     const foe = this.active(other(side));
     if (mon.ability === 'SYNCHRONIZE' && (status === 'brn' || status === 'par' || status === 'psn' || status === 'tox') && foe.status === 'none' && !foe.fainted) {
@@ -1164,7 +1209,44 @@ export class Battle {
     if (mon.fainted || mon.vol.confusion > 0 || mon.ability === 'OWN_TEMPO') return false;
     mon.vol.confusion = this.rng.int(...CONFIG.confusionActions);
     ev.push({ t: 'confused', side });
+    this.lumBerry(side, ev);
     return true;
+  }
+
+  /** Lum Berry: cures a status or confusion the moment it lands (once). */
+  private lumBerry(side: Side, ev: BattleEvent[]) {
+    const mon = this.active(side);
+    if (mon.item !== 'lum_berry' || mon.itemUsed || mon.fainted) return;
+    if (mon.status === 'none' && mon.vol.confusion === 0) return;
+    mon.itemUsed = true;
+    ev.push({ t: 'item', side, item: 'lum_berry' });
+    if (mon.status !== 'none') {
+      ev.push({ t: 'cure', side, status: mon.status });
+      mon.status = 'none';
+      mon.statusCounter = 0;
+    }
+    if (mon.vol.confusion > 0) {
+      mon.vol.confusion = 0;
+      ev.push({ t: 'cure', side, status: 'confusion' });
+    }
+  }
+
+  /** After every action: Sitrus Berry at half HP, White Herb against lowered stats. */
+  private itemChecks(ev: BattleEvent[]) {
+    for (const side of [0, 1] as Side[]) {
+      const m = this.active(side);
+      if (m.fainted || m.itemUsed) continue;
+      if (m.item === 'sitrus_berry' && m.hp <= m.stats.hp * CONFIG.items.sitrusAt) {
+        m.itemUsed = true;
+        const h = this.heal(m, Math.floor(m.stats.hp * CONFIG.items.sitrusHeal));
+        ev.push({ t: 'item', side, item: 'sitrus_berry' });
+        ev.push({ t: 'heal', side, amount: h, hpAfter: m.hp, cause: 'item' });
+      } else if (m.item === 'white_herb' && Object.values(m.boosts).some((v) => v < 0)) {
+        m.itemUsed = true;
+        for (const k of Object.keys(m.boosts) as BoostStat[]) m.boosts[k] = Math.max(0, m.boosts[k]);
+        ev.push({ t: 'item', side, item: 'white_herb' });
+      }
+    }
   }
 
   private applyBoost(side: Side, stat: BoostStat, delta: number, ev: BattleEvent[]): boolean {
@@ -1227,6 +1309,11 @@ export class Battle {
     if (!mon.fainted && w === 'rain' && mon.ability === 'RAIN_DISH') {
       const h = this.heal(mon, Math.max(1, Math.floor(mon.stats.hp / 16)));
       if (h > 0) ev.push({ t: 'heal', side, amount: h, hpAfter: mon.hp, cause: 'ability' });
+    }
+    if (!mon.fainted && mon.item === 'leftovers' && mon.hp < mon.stats.hp) {
+      const h = this.heal(mon, Math.max(1, Math.floor(mon.stats.hp * CONFIG.items.leftovers)));
+      ev.push({ t: 'item', side, item: 'leftovers' });
+      ev.push({ t: 'heal', side, amount: h, hpAfter: mon.hp, cause: 'item' });
     }
     if (!mon.fainted && mon.ability === 'SHED_SKIN' && mon.status !== 'none' && this.rng.chance(0.3)) {
       const s = mon.status;

@@ -28,6 +28,7 @@ yarn build      # production build in dist/
   sprite'ları, rozetler, Şöhretler Salonu; zorluk eğrisi simülatörle ayarlı (`yarn sim --league`).
 - **Hava durumu**: Sunny Day / Rain Dance / Sandstorm / Hail, Drought / Drizzle / Sand Stream, Swift Swim, Chlorophyll,
   Weather Ball, Castform — FireRed kuralları gerçek zamanlı savaşta; arena çapında yağmur, güneş, kum ve dolu efektleri.
+- **Eşyalar**: 28 FireRed eşyası (Leftovers, Choice Band, tip güçlendiriciler, berry'ler...) takım seçiminde seçilir.
 - **Görsel**: 8 arena, animasyonlu sprite'lar, kadrodaki 179 hareketin her birine özel VFX, evrim sineması, bloom + ekran efektleri.
 - **Ses**: orijinal prosedürel chiptune müzik, tipe özel efektler, gerçek Pokémon çığlıkları.
 - **Claude skill & agent'ları** (`.claude/`): add-pokemon, move-vfx, balance-sim, firered-data, playtest;

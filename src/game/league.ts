@@ -55,13 +55,13 @@ const stop = (d: StopDef): LeagueStop => ({
 });
 
 export const GYMS: LeagueStop[] = [
-  stop({ id: 'brock', kind: 'gym', trainer: 'LEADER_BROCK', city: 'Pewter City', type: 'ROCK', species: ['GEODUDE', 'ONIX'], theme: 'quarry', difficulty: 'easy', levelBonus: -2, badge: { name: 'Boulder Badge', color: '#a9aab4', shape: 'octagon' } }),
+  stop({ id: 'brock', kind: 'gym', trainer: 'LEADER_BROCK', city: 'Pewter City', type: 'ROCK', species: ['GEODUDE', 'ONIX'], theme: 'quarry', difficulty: 'easy', levelBonus: -3, badge: { name: 'Boulder Badge', color: '#a9aab4', shape: 'octagon' } }),
   stop({ id: 'misty', kind: 'gym', trainer: 'LEADER_MISTY', city: 'Cerulean City', type: 'WATER', species: ['STARYU', 'STARMIE'], theme: 'cape', difficulty: 'easy', levelBonus: 4, badge: { name: 'Cascade Badge', color: '#4ea9f2', shape: 'drop' } }),
   stop({ id: 'surge', kind: 'gym', trainer: 'LEADER_LT_SURGE', city: 'Vermilion City', type: 'ELECTRIC', species: ['VOLTORB', 'PIKACHU', 'RAICHU'], theme: 'storm', difficulty: 'easy', levelBonus: -1, badge: { name: 'Thunder Badge', color: '#f2a93a', shape: 'sun' } }),
   stop({ id: 'erika', kind: 'gym', trainer: 'LEADER_ERIKA', city: 'Celadon City', type: 'GRASS', species: ['TANGELA', 'VICTREEBEL', 'VILEPLUME'], theme: 'meadow', difficulty: 'normal', levelBonus: -4, badge: { name: 'Rainbow Badge', color: '#7ad06a', shape: 'flower' } }),
-  stop({ id: 'koga', kind: 'gym', trainer: 'LEADER_KOGA', city: 'Fuchsia City', type: 'POISON', species: ['KOFFING', 'MUK', 'WEEZING'], theme: 'night', difficulty: 'normal', levelBonus: -5, badge: { name: 'Soul Badge', color: '#e8649f', shape: 'heart' } }),
+  stop({ id: 'koga', kind: 'gym', trainer: 'LEADER_KOGA', city: 'Fuchsia City', type: 'POISON', species: ['KOFFING', 'MUK', 'WEEZING'], theme: 'night', difficulty: 'normal', levelBonus: -6, badge: { name: 'Soul Badge', color: '#e8649f', shape: 'heart' } }),
   stop({ id: 'sabrina', kind: 'gym', trainer: 'LEADER_SABRINA', city: 'Saffron City', type: 'PSYCHIC', species: ['MR_MIME', 'VENOMOTH', 'ALAKAZAM'], theme: 'night', difficulty: 'normal', levelBonus: -3, badge: { name: 'Marsh Badge', color: '#e9c43a', shape: 'ring' } }),
-  stop({ id: 'blaine', kind: 'gym', trainer: 'LEADER_BLAINE', city: 'Cinnabar Island', type: 'FIRE', species: ['GROWLITHE', 'RAPIDASH', 'ARCANINE'], theme: 'volcano', difficulty: 'normal', levelBonus: -2, badge: { name: 'Volcano Badge', color: '#ee5236', shape: 'flame' } }),
+  stop({ id: 'blaine', kind: 'gym', trainer: 'LEADER_BLAINE', city: 'Cinnabar Island', type: 'FIRE', species: ['GROWLITHE', 'RAPIDASH', 'ARCANINE'], theme: 'volcano', difficulty: 'normal', levelBonus: -1, badge: { name: 'Volcano Badge', color: '#ee5236', shape: 'flame' } }),
   stop({ id: 'giovanni', kind: 'gym', trainer: 'LEADER_GIOVANNI', city: 'Viridian City', type: 'GROUND', species: ['DUGTRIO', 'NIDOKING', 'RHYHORN'], theme: 'quarry', difficulty: 'normal', levelBonus: -2, badge: { name: 'Earth Badge', color: '#5fbf62', shape: 'leaf' } }),
 ];
 
@@ -69,7 +69,7 @@ export const ELITE_FOUR: LeagueStop[] = [
   stop({ id: 'lorelei', kind: 'elite', trainer: 'ELITE_FOUR_LORELEI', city: 'Indigo Plateau', type: 'ICE', species: ['CLOYSTER', 'JYNX', 'LAPRAS'], theme: 'snow', difficulty: 'hard', levelBonus: -5 }),
   stop({ id: 'bruno', kind: 'elite', trainer: 'ELITE_FOUR_BRUNO', city: 'Indigo Plateau', type: 'FIGHTING', species: ['ONIX', 'HITMONLEE', 'MACHAMP'], theme: 'quarry', difficulty: 'hard', levelBonus: -5 }),
   stop({ id: 'agatha', kind: 'elite', trainer: 'ELITE_FOUR_AGATHA', city: 'Indigo Plateau', type: 'GHOST', species: ['GOLBAT', 'ARBOK', 'GENGAR'], theme: 'night', difficulty: 'hard', levelBonus: -5 }),
-  stop({ id: 'lance', kind: 'elite', trainer: 'ELITE_FOUR_LANCE', city: 'Indigo Plateau', type: 'DRAGON', species: ['GYARADOS', 'AERODACTYL', 'DRAGONITE'], theme: 'indigo', difficulty: 'hard', levelBonus: -5 }),
+  stop({ id: 'lance', kind: 'elite', trainer: 'ELITE_FOUR_LANCE', city: 'Indigo Plateau', type: 'DRAGON', species: ['GYARADOS', 'AERODACTYL', 'DRAGONITE'], theme: 'indigo', difficulty: 'hard', levelBonus: -7 }),
 ];
 
 /** The rival's three possible Champion parties, keyed by the starter he took. */

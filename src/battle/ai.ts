@@ -41,7 +41,7 @@ export function scoreActions(b: Battle, side: Side, profile: AIProfile): Scored[
   const myHpFrac = me.hp / me.stats.hp;
 
   me.moves.forEach((slot, i) => {
-    if (slot.pp <= 0) return;
+    if (slot.pp <= 0 || !b.moveAllowed(side, i)) return;
     const mv = MOVES[slot.key];
     let s = 0;
     if (mv.category !== 'status') {

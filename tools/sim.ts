@@ -5,6 +5,7 @@
  *   yarn sim --duel     -> 1v1 round-robin matrix (line vs line)
  *   yarn sim --ai hard  -> AI profile used by both sides (easy|normal|hard)
  *   yarn sim --league   -> random player teams (--ai profile) vs every Kanto League stop: the difficulty curve
+ *   yarn sim --no-items -> without held items (default: every Pokemon holds its suggested item, like the AI teams)
  * Healthy targets: every line's 3v3 win rate within 42-58%, avg battle 60-150 s of ATB time,
  * most lines evolving at least once per battle they survive long enough in.
  */
@@ -13,6 +14,7 @@ import { Battle } from '../src/battle/engine';
 import { Rng } from '../src/battle/rng';
 import { autoBattle } from '../src/battle/runner';
 import { ROSTER } from '../src/data/roster';
+import { suggestItem } from '../src/battle/items';
 
 const args = process.argv.slice(2);
 const opt = (k: string, d: string) => {
@@ -23,6 +25,8 @@ const N = Number(opt('n', '2000'));
 const ai = AI_PROFILES[opt('ai', 'normal') as Difficulty];
 const ids = ROSTER.map((l) => l.id);
 const rng = new Rng(12345);
+/** --no-items: battles without held items (by default both sides hold the suggested item for each line) */
+const noItems = args.includes('--no-items');
 
 if (args.includes('--league')) {
   const { GYMS, ELITE_FOUR, champion } = await import('../src/game/league');
@@ -35,7 +39,11 @@ if (args.includes('--league')) {
     for (let k = 0; k < per; k++) {
       const team = rng.shuffle([...ids]).slice(0, 3);
       const foe = st.kind === 'champion' ? champion(team) : st;
-      const bt = new Battle({ name: 'P', lines: team, isAI: true }, { name: foe.name, lines: foe.lines, isAI: true, levelBonus: foe.levelBonus }, rng.int(0, 2 ** 31));
+      const bt = new Battle(
+        { name: 'P', lines: team, isAI: true, items: noItems ? undefined : team.map((l) => suggestItem(l, rng)) },
+        { name: foe.name, lines: foe.lines, isAI: true, levelBonus: foe.levelBonus, items: noItems ? undefined : foe.lines.map((l) => suggestItem(l)) },
+        rng.int(0, 2 ** 31),
+      );
       const r = autoBattle(bt, [ai, AI_PROFILES[foe.difficulty]], rng.int(0, 2 ** 31));
       if (r.winner === 0) w++;
       time += r.time;
@@ -85,7 +93,11 @@ for (let g = 0; g < N; g++) {
   const pick = () => rng.shuffle([...ids]).slice(0, 3);
   const A = pick();
   const B = pick();
-  const bt = new Battle({ name: 'A', lines: A, isAI: true }, { name: 'B', lines: B, isAI: true }, rng.int(0, 2 ** 31));
+  const bt = new Battle(
+    { name: 'A', lines: A, isAI: true, items: noItems ? undefined : A.map((l) => suggestItem(l, rng)) },
+    { name: 'B', lines: B, isAI: true, items: noItems ? undefined : B.map((l) => suggestItem(l, rng)) },
+    rng.int(0, 2 ** 31),
+  );
   const r = autoBattle(bt, [ai, ai], rng.int(0, 2 ** 31));
   totalTime += r.time;
   totalActions += r.actions;

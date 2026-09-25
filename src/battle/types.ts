@@ -1,4 +1,5 @@
 import type { PokeType, StatBlock } from '../data/types';
+import type { ItemId } from './items';
 
 export type Side = 0 | 1; // 0 = player, 1 = opponent
 export const other = (s: Side): Side => (s === 0 ? 1 : 0);
@@ -32,6 +33,8 @@ export interface Volatile {
   /** Transform: species copied and the original data to restore on switch-out */
   transformed: string | null;
   orig: { types: PokeType[]; stats: StatBlock; moves: MoveSlot[]; ability: string } | null;
+  /** Choice Band: the move the holder is locked into until it switches out */
+  choiceLock: string | null;
 }
 
 export interface BattleMon {
@@ -55,6 +58,9 @@ export interface BattleMon {
   atb: number;
   fainted: boolean;
   vol: Volatile;
+  /** held item (null = none) and whether a one-shot item (berry, White Herb) was used up */
+  item: ItemId | null;
+  itemUsed: boolean;
   // battle statistics (for result screen / balance sim)
   dealt: number;
   perfects: number;
@@ -103,7 +109,9 @@ export type BattleEvent =
       target: Side;
     }
   | { t: 'damage'; side: Side; amount: number; hpAfter: number; cause: 'recoil' | 'psn' | 'brn' | 'leech' | 'confusion' | 'crash' | 'sand' | 'hail' }
-  | { t: 'heal'; side: Side; amount: number; hpAfter: number; cause: 'drain' | 'move' | 'leech' | 'evolve' | 'ability' }
+  | { t: 'heal'; side: Side; amount: number; hpAfter: number; cause: 'drain' | 'move' | 'leech' | 'evolve' | 'ability' | 'item' }
+  /** a held item did something (the matching heal / cure / flinch event follows) */
+  | { t: 'item'; side: Side; item: ItemId }
   /** weather `kind` starts (source move / ability; `side` = who caused it) or stops (source 'end') */
   | { t: 'weather'; kind: WeatherKind; source: 'move' | 'ability' | 'end'; side?: Side }
   | { t: 'status'; side: Side; status: StatusCond }

@@ -18,6 +18,7 @@ import { statName, t } from '../ui/i18n';
 import { playEvolutionFx } from '../vfx/evolution';
 import { playMoveFx } from '../vfx/playMove';
 import { WeatherFx } from '../vfx/weather';
+import { ITEMS, type ItemId } from '../battle/items';
 import { boostFx, healFx, residualFx, returnFx, sendOutFx, statusFx } from '../vfx/statusFx';
 import type { Vfx } from '../vfx/vfx';
 import { settings } from './settings';
@@ -26,6 +27,8 @@ import type { Trainer } from './trainers';
 export interface BattleSetup {
   playerName: string;
   playerLines: string[];
+  /** held items of the player's lines (same order) */
+  playerItems?: (ItemId | null)[];
   trainer: Trainer;
   round?: { i: number; n: number };
   /** AI controls the player side too (demo / automated tests) */
@@ -48,6 +51,17 @@ const TWO_TURN_MSG: Record<string, 'solarCharge' | 'digCharge' | 'flyCharge' | '
   DIG: 'digCharge',
   FLY: 'flyCharge',
   SKULL_BASH: 'skullCharge',
+};
+
+const ITEM_MSG: Partial<Record<ItemId, 'itemHeal' | 'itemCure' | 'itemEndure' | 'itemFirst' | 'itemRestore' | 'itemFlinch'>> = {
+  leftovers: 'itemHeal',
+  sitrus_berry: 'itemHeal',
+  shell_bell: 'itemHeal',
+  lum_berry: 'itemCure',
+  focus_band: 'itemEndure',
+  quick_claw: 'itemFirst',
+  white_herb: 'itemRestore',
+  kings_rock: 'itemFlinch',
 };
 
 const WEATHER_START = { sun: 'weatherSun', rain: 'weatherRain', sand: 'weatherSand', hail: 'weatherHail' } as const;
@@ -78,8 +92,8 @@ export class BattleController {
   ) {
     this.rng = new Rng(setup.seed ?? (Math.random() * 2 ** 31) | 0);
     this.battle = new Battle(
-      { name: setup.playerName, lines: setup.playerLines, isAI: !!setup.autoPlayer },
-      { name: setup.trainer.name, lines: setup.trainer.lines, isAI: true, levelBonus: setup.trainer.levelBonus },
+      { name: setup.playerName, lines: setup.playerLines, isAI: !!setup.autoPlayer, items: setup.playerItems },
+      { name: setup.trainer.name, lines: setup.trainer.lines, isAI: true, levelBonus: setup.trainer.levelBonus, items: setup.trainer.items },
       this.rng.int(0, 2 ** 31),
     );
     const theme = THEMES.find((x) => x.id === setup.trainer.theme) ?? THEMES[0];
@@ -387,6 +401,10 @@ export class BattleController {
         }
         if (e.cause === 'evolve') return;
         const fx = healFx(this.vfx, s);
+        if (e.cause === 'item') {
+          await this.wait(250); // the item popup already says what happened
+          return;
+        }
         if (e.cause === 'drain') await Promise.all([fx, this.msg(t('drained', this.name(other(e.side))), 350)]);
         else await Promise.all([fx, this.msg(t('regained', this.name(e.side)), 400)]);
         return;
@@ -499,6 +517,13 @@ export class BattleController {
         hud.abilityPop(e.side, e.text);
         await this.wait(500);
         return;
+      case 'item': {
+        const m = b.active(e.side);
+        hud.itemPop(e.side, e.item, t(ITEM_MSG[e.item] ?? 'itemHeal', this.name(e.side), ITEMS[e.item].name));
+        hud.cards[e.side].setItem(m.itemUsed ? null : m.item);
+        if (e.item !== 'leftovers') await this.wait(380);
+        return;
+      }
       case 'weather':
         if (e.source === 'end') {
           this.weatherFx.set(null);

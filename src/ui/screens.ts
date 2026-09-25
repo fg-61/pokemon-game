@@ -15,6 +15,8 @@ import { iconUrl, shade, typeBadge } from './hud';
 import { getLang, setLang, t, type Lang } from './i18n';
 import { menuFx } from './fx';
 import { ICONS } from './icons';
+import { itemIcon, ITEMS, itemsForLine, suggestItem, type ItemId } from '../battle/items';
+import { Rng } from '../battle/rng';
 import { badgeCase } from './league';
 
 const dexOf = (key: string) => SPECIES[key].dex;
@@ -151,9 +153,10 @@ const TYPE_LIST: PokeType[] = ['NORMAL', 'FIRE', 'WATER', 'ELECTRIC', 'GRASS', '
 const STAT_NAMES = { hp: 'HP', atk: 'Atk', def: 'Def', spa: 'SpA', spd: 'SpD', spe: 'Spe' };
 const STAT_COLORS = { hp: '#ff5959', atk: '#f5ac78', def: '#fae078', spa: '#9db7f5', spd: '#a7db8d', spe: '#fa92b2' };
 
-export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (lines: string[]) => void; onBack: () => void }) {
+export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (lines: string[], items: (ItemId | null)[]) => void; onBack: () => void }) {
   const root = h('div', { class: 'screen select-screen' });
   const picked: string[] = [];
+  const pickedItems: (ItemId | null)[] = [];
   let focus: RosterLine = ROSTER[0];
   let focusStage = 0;
   const grid = h('div', { class: 'roster-grid' });
@@ -341,12 +344,27 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
     for (let i = 0; i < 3; i++) {
       const id = picked[i];
       const sp = id ? ROSTER.find((l) => l.id === id)!.stages[0].species : null;
+      const item = pickedItems[i] ?? null;
       slots.appendChild(
         h(
           'div',
           { class: `team-slot ${sp ? 'filled' : ''}`, onclick: () => sp && toggle(ROSTER.find((l) => l.id === id)!) },
           sp ? h('img', { src: assetUrl(SPECIES[sp].dex, 'frlg-front.png') }) : h('span', { class: 'slot-num' }, String(i + 1)),
           sp ? h('span', { class: 'slot-name' }, SPECIES[sp].name) : null,
+          sp
+            ? h(
+                'button',
+                {
+                  class: `slot-item ${item ? '' : 'empty'}`,
+                  title: `${t('heldItem')}: ${item ? ITEMS[item].name : t('noItem')}`,
+                  onclick: (e: Event) => {
+                    e.stopPropagation();
+                    openPicker(i);
+                  },
+                },
+                item ? h('img', { src: itemIcon(item), alt: ITEMS[item].name }) : h('span', null, '+'),
+              )
+            : null,
         ),
       );
     }
@@ -359,13 +377,47 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
     (goBtn as HTMLButtonElement).disabled = picked.length !== 3;
   };
 
+  // held-item picker (opens above the team bar for one slot)
+  const picker = h('div', { class: 'item-picker panel hidden' });
+  const closePicker = () => picker.classList.add('hidden');
+  const itemDesc = (id: ItemId) => (ITEMS[id].boost ? t('itemDescBoost', ITEMS[id].boost!) : t(`itemDesc_${id}` as 'itemDesc_leftovers'));
+  const openPicker = (slot: number) => {
+    const lineId = picked[slot];
+    if (!lineId) return;
+    audio.playSfx('uiSelect');
+    clear(picker);
+    const cur = pickedItems[slot] ?? null;
+    const choose = (id: ItemId | null) => {
+      pickedItems[slot] = id;
+      audio.playSfx('uiMove');
+      closePicker();
+      renderSlots();
+    };
+    const opt = (id: ItemId | null) =>
+      h(
+        'button',
+        { class: `item-opt ${cur === id ? 'on' : ''}`, onclick: () => choose(id), title: id ? itemDesc(id) : '' },
+        id ? h('img', { src: itemIcon(id), alt: '' }) : h('span', { class: 'none' }, '∅'),
+        h('span', { class: 'tx' }, h('b', null, id ? ITEMS[id].name : t('noItem')), id ? h('small', null, itemDesc(id)) : null),
+      );
+    const sp = SPECIES[ROSTER.find((l) => l.id === lineId)!.stages[0].species];
+    picker.append(
+      h('div', { class: 'picker-head' }, h('b', null, t('chooseItem')), h('span', null, sp.name), h('button', { class: 'icon-x', onclick: closePicker, html: ICONS.close })),
+      h('div', { class: 'picker-grid' }, opt(null), ...itemsForLine(lineId).map(opt)),
+    );
+    picker.classList.remove('hidden');
+  };
+
   const toggle = (line: RosterLine) => {
     const i = picked.indexOf(line.id);
     if (i >= 0) {
       picked.splice(i, 1);
+      pickedItems.splice(i, 1);
+      closePicker();
       audio.playSfx('uiBack');
     } else if (picked.length < 3) {
       picked.push(line.id);
+      pickedItems.push(suggestItem(line.id));
       audio.playSfx('uiSelect');
       audio.playCry(dexOf(line.stages[0].species), { volume: 0.6 });
     } else audio.playSfx('uiError');
@@ -375,8 +427,12 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
 
   const randomize = () => {
     picked.length = 0;
+    pickedItems.length = 0;
+    closePicker();
     const ids = ROSTER.filter((l) => !cards.get(l.id)!.classList.contains('hidden')).map((l) => l.id).sort(() => Math.random() - 0.5);
     picked.push(...ids.slice(0, 3));
+    const rng = new Rng(Math.floor(Math.random() * 2 ** 31));
+    pickedItems.push(...picked.map((id) => suggestItem(id, rng)));
     audio.playSfx('uiSelect');
     renderSlots();
   };
@@ -385,7 +441,7 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
     if (picked.length !== 3) return;
     audio.playSfx('uiSelect');
     cleanup();
-    opts.onDone([...picked]);
+    opts.onDone([...picked], [...pickedItems]);
   };
   const cleanup = () => {
     removeEventListener('keydown', onKey);
@@ -394,6 +450,7 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
   const onKey = (e: KeyboardEvent) => {
     if (e.key === 'Enter') done();
     if (e.key === 'Escape') {
+      if (!picker.classList.contains('hidden')) return closePicker();
       cleanup();
       opts.onBack();
     }
@@ -416,6 +473,7 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
       h('div', { class: 'team-bar' }, h('b', null, t('team')), slots),
       h('div', { class: 'foot-btns' }, h('button', { class: 'btn ghost', onclick: randomize }, h('span', { class: 'ic', html: ICONS.dice }), t('random')), goBtn),
     ),
+    picker,
   );
   cards.get(focus.id)?.classList.add('focus');
   renderDetail();

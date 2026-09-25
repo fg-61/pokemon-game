@@ -14,6 +14,7 @@ import { recordBattle } from './game/records';
 import { settings } from './game/settings';
 import { champion, earnBadge, ELITE_FOUR, enterHallOfFame, GYMS, loadLeague, type LeagueStop } from './game/league';
 import { leagueTrainer, randomTrainer, type Trainer } from './game/trainers';
+import { suggestItem, type ItemId } from './battle/items';
 import { Arena, ENEMY_POS, PLAYER_POS, THEMES } from './render/arena';
 import { PokemonSprite } from './render/pokemonSprite';
 import { wideShot } from './render/shots';
@@ -126,9 +127,9 @@ function showTitle() {
     teamSelect(ui, {
       title: t('quick'),
       onBack: showTitle,
-      onDone: (lines) => {
+      onDone: (lines, items) => {
         leaveTitle();
-        runQuick(lines);
+        runQuick(lines, items);
       },
     });
   });
@@ -145,10 +146,11 @@ function shiftDifficulty(d: Difficulty): Difficulty {
   return order[Math.max(0, Math.min(2, order.indexOf(d) + shift))];
 }
 
-async function playBattle(lines: string[], trainer: Trainer, round?: { i: number; n: number }): Promise<BattleOutcome> {
+async function playBattle(lines: string[], items: (ItemId | null)[], trainer: Trainer, round?: { i: number; n: number }): Promise<BattleOutcome> {
   const ctl = new BattleController(stage, vfx, ui, {
     playerName: qs.get('name') ?? 'Trainer',
     playerLines: lines,
+    playerItems: items,
     trainer,
     round,
     autoPlayer: qs.get('auto') === '1',
@@ -172,25 +174,25 @@ function showLeague() {
       teamSelect(ui, {
         title: `${t('gymLeader')} ${g.name} · ${g.city}`,
         onBack: showLeague,
-        onDone: (lines) => {
+        onDone: (lines, items) => {
           leaveTitle();
-          runGym(g, lines);
+          runGym(g, lines, items);
         },
       }),
     onLeague: () =>
       teamSelect(ui, {
         title: `${t('pokemonLeague')} · ${t('leagueRunHint')}`,
         onBack: showLeague,
-        onDone: (lines) => {
+        onDone: (lines, items) => {
           leaveTitle();
-          runEliteFour(lines);
+          runEliteFour(lines, items);
         },
       }),
   });
 }
 
-async function runGym(g: LeagueStop, lines: string[]) {
-  const out = await playBattle(lines, leagueTrainer(g, shiftDifficulty(g.difficulty)));
+async function runGym(g: LeagueStop, lines: string[], items: (ItemId | null)[]) {
+  const out = await playBattle(lines, items, leagueTrainer(g, shiftDifficulty(g.difficulty)));
   if (out.quit) return showLeague();
   recordBattle(out.won);
   const firstBadge = out.won && !loadLeague().badges.includes(g.id);
@@ -200,19 +202,19 @@ async function runGym(g: LeagueStop, lines: string[]) {
     hasNext: false,
     extra: firstBadge ? badgeEarnedEl(g) : null,
     onNext: showLeague,
-    onRetry: () => runGym(g, lines),
+    onRetry: () => runGym(g, lines, items),
     onTitle: showLeague,
     backLabel: t('toLeague'),
   });
 }
 
 /** Lorelei, Bruno, Agatha, Lance and the Champion back to back with one team; a loss restarts from Lorelei. */
-async function runEliteFour(lines: string[]) {
+async function runEliteFour(lines: string[], items: (ItemId | null)[]) {
   const stops = [...ELITE_FOUR, champion(lines)];
   let i = 0;
   const next = async () => {
     const st = stops[i];
-    const out = await playBattle(lines, leagueTrainer(st, shiftDifficulty(st.difficulty)), { i: i + 1, n: stops.length });
+    const out = await playBattle(lines, items, leagueTrainer(st, shiftDifficulty(st.difficulty)), { i: i + 1, n: stops.length });
     if (out.quit) return showLeague();
     const last = i === stops.length - 1;
     recordBattle(out.won, out.won && last);
@@ -240,12 +242,12 @@ async function runEliteFour(lines: string[]) {
   next();
 }
 
-async function runQuick(lines: string[]) {
+async function runQuick(lines: string[], items: (ItemId | null)[]) {
   const trainer = randomTrainer(settings.difficulty);
-  const out = await playBattle(lines, trainer);
+  const out = await playBattle(lines, items, trainer);
   if (out.quit) return showTitle();
   recordBattle(out.won);
-  resultsScreen(ui, { outcome: out, hasNext: false, onNext: showTitle, onRetry: () => runQuick(lines), onTitle: showTitle });
+  resultsScreen(ui, { outcome: out, hasNext: false, onNext: showTitle, onRetry: () => runQuick(lines, items), onTitle: showTitle });
 }
 
 // Test / demo shortcuts: ?quick=1&team=charmander,pikachu,gastly&foe=squirtle,abra,machop&auto=1 (or &gym=brock)
@@ -258,9 +260,12 @@ if (qs.get('quick')) {
   const stopId = qs.get('gym');
   const stop = stopId === 'champion' ? champion(team) : [...GYMS, ...ELITE_FOUR].find((g) => g.id === stopId);
   const tr = stop ? leagueTrainer(stop) : randomTrainer((qs.get('difficulty') as Difficulty) ?? 'normal', 7);
-  if (foe) tr.lines = foe;
+  if (foe) {
+    tr.lines = foe;
+    tr.items = foe.map((l) => suggestItem(l));
+  }
   if (qs.get('theme')) tr.theme = qs.get('theme')!;
-  playBattle(team, tr).then((out) => resultsScreen(ui, { outcome: out, hasNext: false, onNext: showTitle, onRetry: () => location.reload(), onTitle: showTitle }));
+  playBattle(team, qs.get('items') === 'none' ? [] : team.map((l) => suggestItem(l)), tr).then((out) => resultsScreen(ui, { outcome: out, hasNext: false, onNext: showTitle, onRetry: () => location.reload(), onTitle: showTitle }));
 } else {
   showTitle();
 }

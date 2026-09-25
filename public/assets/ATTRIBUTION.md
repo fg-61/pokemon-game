@@ -11,6 +11,9 @@ The trainer front pics in `public/assets/trainers/` (FireRed/LeafGreen gym leade
 the [pret/pokefirered](https://github.com/pret/pokefirered) decompilation's `graphics/trainers/front_pics/`, fetched by
 `tools/fetch-trainer-pics.mjs` (background colour made transparent, otherwise unchanged).
 
+The held-item icons in `public/assets/items/` come from the PokeAPI sprites repository (`sprites/items/`), fetched
+by `tools/fetch-item-icons.mjs` (unchanged).
+
 Pokémon and all related names, characters, images and sounds are © Nintendo / Creatures Inc. /
 GAME FREAK inc. This is a non-commercial fan project, not affiliated with or endorsed by
 Nintendo, The Pokémon Company, Creatures Inc. or GAME FREAK inc. No assets are sold or used for

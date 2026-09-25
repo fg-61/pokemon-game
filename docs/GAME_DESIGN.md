@@ -69,6 +69,17 @@ Water Absorb, Volt Absorb, Poison Point, Wonder Guard (Shedinja keeps exactly 1 
 - The AI values weather moves by their synergy with its own moves and abilities vs the foe's
   (`weatherValue` in `src/battle/ai.ts`); damage estimates already include the weather.
 
+## Held items (`src/battle/items.ts`, `CONFIG.items`)
+Each Pokémon can hold one FireRed item, chosen in team select (every pick starts with a suggested item; the ✚
+badge on its slot opens the picker). AI trainers hold the suggested item for each line (`suggestItem`: Choice Band
+for strong physical attackers, Leftovers for walls, a booster for the main attacking type, a berry or utility item
+otherwise). Leftovers 1/16 HP per action · Choice Band physical Attack ×1.5 + locked into the first move until it
+switches · type boosters (Charcoal, Mystic Water... 17 types) +10% · Scope Lens +1 crit stage · Quick Claw 20% to
+restart the gauge at 30% · Focus Band 10% to endure a KO at 1 HP · Lum Berry cures a status/confusion once (Rest +
+Lum!) · Sitrus Berry +1/4 HP at half HP (Gen 4 value) · Shell Bell 1/8 of damage dealt · King's Rock 10% flinch ·
+White Herb restores lowered stats once · BrightPowder accuracy ×0.9. The balance sim and the level tuner run with
+items on both sides (`yarn sim --no-items` to compare).
+
 ## Deviations from FireRed (all in `src/battle/config.ts`)
 | rule | FireRed | Evo Clash | why |
 |---|---|---|---|

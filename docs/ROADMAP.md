@@ -26,7 +26,7 @@ Suggested next lines (all FireRed species, mostly 3 stages, fill role gaps):
 ## Phase 3 — depth
 - ~~Weather (Sunny Day, Rain Dance, Sandstorm, Hail) as arena-wide timed effects + VFX + ability hooks.~~ Done.
 - More move effects (Substitute, Encore, Baton Pass, Perish Song, Future Sight, Counter/Mirror Coat).
-- Held items (Leftovers, Choice Band, type boosters) chosen in team select.
+- ~~Held items (Leftovers, Choice Band, type boosters) chosen in team select.~~ Done (28 items).
 - Local 2-player versus (split keyboard) and online via WebRTC.
 - ~~Trainer sprites and battle intros~~ (done for the League). Unlockable roster via League badges; gym puzzles or
   trainer-class battles before each leader; rival battles along the way (Route 22, Cerulean, S.S. Anne...).
