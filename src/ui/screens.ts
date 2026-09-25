@@ -2,7 +2,7 @@ import { audio } from '../audio/audio';
 import type { Difficulty } from '../battle/ai';
 import { calcStats } from '../battle/stats';
 import { MOVES, SPECIES } from '../data/gamedata';
-import { ROSTER, type RosterLine } from '../data/roster';
+import { CURATED, ROSTER, type RosterLine } from '../data/roster';
 import { TYPE_COLOR } from '../data/typeColors';
 import type { PokeType } from '../data/types';
 import type { BattleOutcome } from '../game/battleController';
@@ -16,6 +16,7 @@ import { getLang, setLang, t, type Lang } from './i18n';
 import { badgeCase } from './league';
 
 const dexOf = (key: string) => SPECIES[key].dex;
+const curatedIds = new Set(CURATED.map((l) => l.id));
 
 // ------------------------------------------------------------------ modals
 
@@ -183,7 +184,7 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
       const ok =
         (!q || searchText.get(line.id)!.includes(q)) &&
         (!typeFilter || types.has(typeFilter as PokeType)) &&
-        (!region || (region === 'curated' ? !line.tags : line.tags?.includes(region)));
+        (!region || (region === 'curated' ? curatedIds.has(line.id) : line.tags?.includes(region)));
       cards.get(line.id)!.classList.toggle('hidden', !ok);
       if (ok) shown++;
     }

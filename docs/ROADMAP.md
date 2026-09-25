@@ -10,8 +10,8 @@
 
 ## Phase 2 — roster expansion — done
 All 386 FireRed species are playable (19 curated + 196 generated lines, auto-balanced levels).
-Remaining: hand-curate popular generated lines (starters of Johto/Hoenn, pseudo-legendaries, legendaries) and give
-their signature moves dedicated VFX.
+Local session 1: 31 popular generated lines hand-curated (starters of Johto/Hoenn, pseudo-legendaries, legendaries,
+weather teams) with signature-move VFX. Remaining: curate more mid-tier lines as players ask for them.
 
 ### History (use the `add-pokemon` skill for new curated lines)
 Done: Magikarp→Gyarados, Nidoran♂→Nidoking, Oddish→Vileplume, Poliwag→Poliwrath, Onix→Steelix,
@@ -24,7 +24,7 @@ Suggested next lines (all FireRed species, mostly 3 stages, fill role gaps):
 - Each needs: assets, moveset, VFX for new moves, sim-tuned level.
 
 ## Phase 3 — depth
-- Weather (Sunny Day, Rain Dance, Sandstorm, Hail) as arena-wide timed effects + VFX + ability hooks.
+- ~~Weather (Sunny Day, Rain Dance, Sandstorm, Hail) as arena-wide timed effects + VFX + ability hooks.~~ Done.
 - More move effects (Substitute, Encore, Baton Pass, Perish Song, Future Sight, Counter/Mirror Coat).
 - Held items (Leftovers, Choice Band, type boosters) chosen in team select.
 - Local 2-player versus (split keyboard) and online via WebRTC.

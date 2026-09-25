@@ -165,6 +165,18 @@ Bağımsız işlerde evet: popüler hatların elle iyileştirilmesi paralel agen
 grup başına (Johto/Hoenn başlangıçları, pseudo-efsaneviler, efsaneviler; 4–5 agent), her agent kendi tarif dosyasına
 yazar; `roster.ts` birleştirmesi ve denge (levels:tune + sim) en sonda tek seferde yapılır.
 
+## 14. Kullanıcı
+> otomatik commit atabilirsin iznin var. Devam et. Kendine görevler bul ve onları uyarla. red and fire oyununa bakabilirsin. Güzel bir oyun yapalım seninle
+
+### Asistan
+- **Kanto Ligi**: rastgele "Meydan Okuma" yerine FireRed'in 8 Salon Lideri + Elit Dörtlü + Şampiyon'u; takımlar
+  pret'ten (`trainers.json`), özgün FRLG eğitmen sprite'ları, rozetler, Şöhretler Salonu, 4 yeni arena; zorluk eğrisi
+  `yarn sim --league` ile ayarlandı. Salon Lideri ve Şampiyon için özgün müzikler.
+- **Kamera**: rakip, oyuncunun tam arkasında kalıyordu → BW tarzı kadraj; dev arka sprite'lara boyut sınırı.
+- **Hava durumu** (Faz 3): tüm Gen 3 kuralları, yetenekler, AI, HUD, arena efektleri.
+- **31 popüler hat** elle düzenlendi (araştırma agent'ı FireRed yasallığını kontrol etti), hava takımları; seviyeler
+  yeniden dengelendi. Paralel agent'lar: hava VFX'i, imza hareketi VFX'leri, moveset araştırması.
+
 ---
 
 ## Önemli kararlar (neden böyle?)
@@ -183,6 +195,8 @@ yazar; `roster.ts` birleştirmesi ve denge (levels:tune + sim) en sonda tek sefe
 | yarn 1 (classic) | Kullanıcının tercihi (yerel oturum 1) |
 | VFX kontrolü iki taraftan (side 0/1) ekran görüntüsüyle | Kadraj sorunları çoğunlukla tek tarafta çıkıyor |
 | Paralel agent'lar grup başına, denge en sonda tek seferde | Ortak dosya çakışmaları ve kadro çapında denge |
+| Kanto Ligi gerçek FireRed takımlarıyla, zorluk = AI profili + seviye farkı | FireRed ruhu; eğri simülatörle ölçülebilir |
+| Hava süresi: hareket 20 sn, yetenek 45 sn | Gen 3'ün 5 turu / kalıcı yetenek havası gerçek zamanlı akışa uyarlandı |
 
 ## Local Claude Code'da devam
 ```bash

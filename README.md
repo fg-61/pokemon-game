@@ -22,10 +22,12 @@ yarn build      # production build in dist/
 
 ## Neler var / What's inside
 - **Veri**: pret/pokefirered decompile'ından çıkarılan 386 tür + 354 hareket + tip tablosu (`yarn data:extract`).
-- **Kadro**: FireRed'deki 386 türün tamamı (215 hat: 19 elle, 196 otomatik), FireRed'de yasal moveset'ler (`yarn roster:validate`).
+- **Kadro**: FireRed'deki 386 türün tamamı (215 hat: 50 elle, 165 otomatik), FireRed'de yasal moveset'ler (`yarn roster:validate`).
 - **Denge**: AI-vs-AI simülatör + otomatik seviye ayarı; 215 hattın sapması ~%1.7 (`yarn sim`, `yarn levels:tune`).
 - **Kanto Ligi**: FireRed'in 8 Salon Lideri, Elit Dörtlü ve Şampiyon'u — gerçek takımları (pret'ten), özgün FRLG
   sprite'ları, rozetler, Şöhretler Salonu; zorluk eğrisi simülatörle ayarlı (`yarn sim --league`).
+- **Hava durumu**: Sunny Day / Rain Dance / Sandstorm / Hail, Drought / Drizzle / Sand Stream, Swift Swim, Chlorophyll,
+  Weather Ball, Castform — FireRed kuralları gerçek zamanlı savaşta; arena çapında yağmur, güneş, kum ve dolu efektleri.
 - **Görsel**: 8 arena, animasyonlu sprite'lar, kadrodaki 179 hareketin her birine özel VFX, evrim sineması, bloom + ekran efektleri.
 - **Ses**: orijinal prosedürel chiptune müzik, tipe özel efektler, gerçek Pokémon çığlıkları.
 - **Claude skill & agent'ları** (`.claude/`): add-pokemon, move-vfx, balance-sim, firered-data, playtest;

@@ -2,7 +2,7 @@
  * Kanto League: FireRed's eight gym leaders, the Elite Four and the Champion with their real parties
  * (src/data/generated/trainers.json, extracted from pret/pokefirered). Each stop fields 2-3 picks from the
  * trainer's FireRed party (lead -> ace) as roster lines. Difficulty = AI profile + a level bonus on the trainer's lines,
- * tuned with `yarn sim --league` so random teams (normal AI) win ~90% vs Brock down to ~55% vs the Champion.
+ * tuned with `yarn sim --league` so random teams (normal AI) win ~90% vs Brock down to ~60% vs the Champion.
  * No DOM here except the guarded localStorage progress helpers.
  */
 import type { Difficulty } from '../battle/ai';
@@ -59,7 +59,7 @@ export const GYMS: LeagueStop[] = [
   stop({ id: 'misty', kind: 'gym', trainer: 'LEADER_MISTY', city: 'Cerulean City', type: 'WATER', species: ['STARYU', 'STARMIE'], theme: 'cape', difficulty: 'easy', levelBonus: 4, badge: { name: 'Cascade Badge', color: '#4ea9f2', shape: 'drop' } }),
   stop({ id: 'surge', kind: 'gym', trainer: 'LEADER_LT_SURGE', city: 'Vermilion City', type: 'ELECTRIC', species: ['VOLTORB', 'PIKACHU', 'RAICHU'], theme: 'storm', difficulty: 'easy', levelBonus: -1, badge: { name: 'Thunder Badge', color: '#f2a93a', shape: 'sun' } }),
   stop({ id: 'erika', kind: 'gym', trainer: 'LEADER_ERIKA', city: 'Celadon City', type: 'GRASS', species: ['TANGELA', 'VICTREEBEL', 'VILEPLUME'], theme: 'meadow', difficulty: 'normal', levelBonus: -4, badge: { name: 'Rainbow Badge', color: '#7ad06a', shape: 'flower' } }),
-  stop({ id: 'koga', kind: 'gym', trainer: 'LEADER_KOGA', city: 'Fuchsia City', type: 'POISON', species: ['KOFFING', 'MUK', 'WEEZING'], theme: 'night', difficulty: 'normal', levelBonus: -6, badge: { name: 'Soul Badge', color: '#e8649f', shape: 'heart' } }),
+  stop({ id: 'koga', kind: 'gym', trainer: 'LEADER_KOGA', city: 'Fuchsia City', type: 'POISON', species: ['KOFFING', 'MUK', 'WEEZING'], theme: 'night', difficulty: 'normal', levelBonus: -5, badge: { name: 'Soul Badge', color: '#e8649f', shape: 'heart' } }),
   stop({ id: 'sabrina', kind: 'gym', trainer: 'LEADER_SABRINA', city: 'Saffron City', type: 'PSYCHIC', species: ['MR_MIME', 'VENOMOTH', 'ALAKAZAM'], theme: 'night', difficulty: 'normal', levelBonus: -3, badge: { name: 'Marsh Badge', color: '#e9c43a', shape: 'ring' } }),
   stop({ id: 'blaine', kind: 'gym', trainer: 'LEADER_BLAINE', city: 'Cinnabar Island', type: 'FIRE', species: ['GROWLITHE', 'RAPIDASH', 'ARCANINE'], theme: 'volcano', difficulty: 'normal', levelBonus: -2, badge: { name: 'Volcano Badge', color: '#ee5236', shape: 'flame' } }),
   stop({ id: 'giovanni', kind: 'gym', trainer: 'LEADER_GIOVANNI', city: 'Viridian City', type: 'GROUND', species: ['DUGTRIO', 'NIDOKING', 'RHYHORN'], theme: 'quarry', difficulty: 'normal', levelBonus: -2, badge: { name: 'Earth Badge', color: '#5fbf62', shape: 'leaf' } }),

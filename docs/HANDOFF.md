@@ -51,9 +51,21 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
       progress + Hall of Fame, 4 new arenas (quarry, cape, storm, indigo); difficulty curve tuned with `yarn sim --league`.
 - [x] Battle framing: the wide shot put the foe straight behind the player (big back sprites hid it and spilled over
       the HUD card) — now BW-style (player left, foe right); oversized back sprites are capped (`BACK_MAX_H/W`).
-- [ ] Next: hand-curate popular generated lines (Johto/Hoenn starters, pseudo-legendaries, legendaries) + signature VFX
-      (plan: parallel agents per group writing their own recipe files; merge + `levels:tune` once at the end).
-- [ ] Phase 3: weather, held items, local 2-player versus, unlockables (see ROADMAP).
+- [x] Weather (Phase 3): Sunny Day / Rain Dance / Sandstorm / Hail, Drought / Drizzle / Sand Stream (also on evolution
+      into Tyranitar), Swift Swim, Chlorophyll, Rain Dish, Sand Veil, Cloud Nine / Air Lock, Forecast, Weather Ball, Solar
+      Beam / Thunder / Moonlight interactions (`CONFIG.weather`, `tests/weather.test.ts`); weather-aware AI; HUD chip;
+      arena-wide weather VFX (`src/vfx/weather.ts`) + weather move recipes.
+- [x] 31 popular lines hand-curated (FireRed-legal, checked by a research agent + `roster:validate`): Johto/Hoenn
+      starters, Bagon, Beldum, Ralts, Aron, Lapras, Snorlax, the Eeveelutions, legendaries with signature moves (Sacred
+      Fire, Aeroblast, Mist Ball, Luster Purge, Psycho Boost), and weather teams (Groudon/Exeggutor/Victreebel/Ho-Oh sun,
+      Kyogre/Ludicolo/Kingdra/Vaporeon rain, Tyranitar/Aggron sand, Castform). 50 curated + 165 generated lines; all
+      levels re-tuned (6x60k battles, rms 1.6%); League curve re-checked. New recipes in `src/vfx/recipes/signature.ts`.
+- [x] Original Gym Leader and Champion music themes.
+- [x] Fix: a Pokémon that couldn't act mid-Fly / Dig (sleep, paralysis, confusion) stayed semi-invulnerable and its
+      sprite hidden — the charge is now cancelled and the sprite lands back (`present()` restores hidden sprites).
+- [ ] Next ideas: held items (Leftovers, type boosters) chosen in team select; more League flavour (trainer-class
+      battles before each gym, rival battles along the way, leader quotes); Present scaling with its roll; mobile layout.
+- [ ] Phase 3 rest: held items, local 2-player versus, unlockables (see ROADMAP).
 
 ## Known issues / polish backlog
 - Generated movesets are heuristic (`tools/gen-roster.ts`): to hand-tune a line, move it into `CURATED` in
