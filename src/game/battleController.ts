@@ -125,6 +125,7 @@ export class BattleController {
   async run(): Promise<BattleOutcome> {
     const b = this.battle;
     audio.playMusic(this.setup.trainer.boss ? 'boss' : 'battle');
+    this.stage.director.orbit = 0; // never inherit the title screen's slow orbit
     this.stage.director.cut(introShot());
     this.stage.director.move(wideShot(), 3.2, ease.inOutCubic);
     this.stage.director.sway = 1;

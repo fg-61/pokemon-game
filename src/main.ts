@@ -91,8 +91,9 @@ class TitleScene {
           target.knockback(attacker.group.position);
         },
       });
-      stage.director.orbit = 0.035;
+      // the title scene may have been disposed while the move was playing: don't touch the camera then
       if (!this.alive) break;
+      stage.director.orbit = 0.035;
       stage.director.move({ pos: wideShot().pos.clone().add(TITLE_OFFSET), look: wideShot().look }, 1.2);
     }
   }
