@@ -12,11 +12,9 @@ Done: Magikarp→Gyarados, Nidoran♂→Nidoking, Oddish→Vileplume, Poliwag→
 Larvitar→Tyranitar (19 lines / 51 species).
 
 Suggested next lines (all FireRed species, mostly 3 stages, fill role gaps):
-- Oddish → Gloom → Vileplume (Grass/Poison support), Poliwag → Poliwhirl → Poliwrath (Water/Fighting),
-  Nidoran♂ → Nidorino → Nidoking (coverage monster), Magikarp → Gyarados (joke → monster, Intimidate),
-  Onix → Steelix, Eevee (branching: Vaporeon/Jolteon/Flareon/Espeon/Umbreon as separate lines),
-  Larvitar → Pupitar → Tyranitar, Cyndaquil/Totodile/Chikorita lines, Treecko/Torchic/Mudkip lines,
-  Beldum → Metang → Metagross, Bagon → Shelgon → Salamence, Ralts → Kirlia → Gardevoir, Aron → Lairon → Aggron.
+- Eevee (branching: Vaporeon/Jolteon/Flareon/Espeon/Umbreon as separate roster lines),
+  Cyndaquil/Totodile/Chikorita lines, Treecko/Torchic/Mudkip lines, Beldum → Metang → Metagross,
+  Bagon → Shelgon → Salamence, Ralts → Kirlia → Gardevoir, Aron → Lairon → Aggron.
 - Each needs: assets, moveset, VFX for new moves, sim-tuned level.
 
 ## Phase 3 — depth
