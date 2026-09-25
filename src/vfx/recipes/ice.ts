@@ -150,12 +150,12 @@ registerMoveFx('AURORA_BEAM', async (c) => {
     for (const m of mats) (m.uniforms.color.value as THREE.Color).copy(col);
     const reach = Math.min(1, el / 200);
     // shimmering body: bands of hue flowing along the beam
-    const nb = Math.round(260 * dt + Math.random());
+    const nb = Math.round(650 * dt + Math.random());
     for (let i = 0; i < nb; i++) {
       const f = Math.random() * reach;
       const off = sv.clone().multiplyScalar((Math.random() - 0.5) * 0.35).add(new THREE.Vector3(0, (Math.random() - 0.5) * 0.35, 0));
       const p = from.clone().addScaledVector(fwd, f * len).add(off);
-      vfx.particle({ tex: 'glow', pos: p, vel: fwd.clone().multiplyScalar(4), life: 0.12, size: [0.55, 0.3], color: hsl(hue0 + f * 1.4 - t * 2, 0.95, 0.58), intensity: 1.0, additive: false, alpha: [0.75, 0] });
+      vfx.particle({ tex: 'dot', pos: p, vel: fwd.clone().multiplyScalar(4), life: 0.2, size: [0.4, 0.2], color: hsl(hue0 + f * 1.4 - t * 2, 0.95, 0.55), intensity: 1.0, additive: false, alpha: [0.8, 0] });
     }
     for (let j = 0; j < 3; j++) {
       for (let s = 0; s < 5; s++) {

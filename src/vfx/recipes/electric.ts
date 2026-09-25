@@ -85,10 +85,10 @@ registerMoveFx('THUNDERBOLT', async (c) => {
 
 registerMoveFx('THUNDER', async (c) => {
   const { vfx, stage } = c;
-  pulledShot(c, 'foe', 1.9, 1.6, 500);
+  pulledShot(c, 'foe', 1.9, 1.3, 500);
   stage.setTint(0x5060a8, 0.5, 400);
   const to = c.aim(0.5);
-  const cloudC = to.clone().add(new THREE.Vector3(0, 3.6, 0));
+  const cloudC = to.clone().add(new THREE.Vector3(0, 3.0, 0));
   // storm cloud gathers over the target
   const gather = during(c, 650, (k) => {
     for (let i = 0; i < 3; i++) {
@@ -101,13 +101,12 @@ registerMoveFx('THUNDER', async (c) => {
   await gather;
   const ground = c.missed ? to : c.foeFeet.clone().setY(c.foeFeet.y + 0.4);
   for (let i = 0; i < 2; i++) {
-    vfx.prim.lightning(cloudC.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.8, 0, 0)), ground, { color: E.main, width: 0.3, jitter: 1.1, segments: 22, ms: 560, intensity: 1.3 });
+    vfx.prim.lightning(cloudC.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.8, 0, 0)), ground, { color: E.main, width: 0.17, jitter: 0.9, segments: 22, ms: 480, intensity: 1.25 });
     await vfx.wait(70);
   }
-  vfx.prim.lightning(cloudC, ground, { color: E.white, width: 0.1, jitter: 0.7, segments: 20, ms: 420, intensity: 1.2 });
-  stage.flash(0xffffff, 0.3, 280);
-  stage.shockwave(ground, 1.0, 400);
-  stage.chromaPulse(0.02, 400);
+  vfx.prim.lightning(cloudC, ground, { color: E.white, width: 0.07, jitter: 0.6, segments: 20, ms: 380, intensity: 1.2 });
+  stage.flash(0xffffff, 0.3, 200);
+  stage.chromaPulse(0.008, 250);
   vfx.shake(0.5, 550);
   if (!c.missed) {
     c.impact(0);
