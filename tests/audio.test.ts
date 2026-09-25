@@ -43,7 +43,7 @@ describe('music data', () => {
   });
 
   it('has every track with sensible lengths', () => {
-    const expected: TrackName[] = ['title', 'select', 'battle', 'boss', 'victory', 'defeat'];
+    const expected: TrackName[] = ['title', 'select', 'battle', 'boss', 'gym', 'champion', 'victory', 'defeat'];
     expect([...TRACK_NAMES].sort()).toEqual([...expected].sort());
     expect(songDuration('victory')).toBeGreaterThan(3);
     expect(songDuration('victory')).toBeLessThan(5);

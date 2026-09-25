@@ -8,7 +8,7 @@
  */
 import { getNoiseBuffer, getPulseWave } from './sfx';
 
-export type TrackName = 'title' | 'select' | 'battle' | 'boss' | 'victory' | 'defeat';
+export type TrackName = 'title' | 'select' | 'battle' | 'boss' | 'gym' | 'champion' | 'victory' | 'defeat';
 
 const LOOKAHEAD_MS = 25;
 const SCHEDULE_AHEAD = 0.1;
@@ -374,6 +374,105 @@ const BOSS_INTRO: Section = {
   arp: 'none',
 };
 
+// --- Gym Leader (E minor, driving; original) --------------------------------
+const GYM_INTRO: Section = {
+  chords: ['Em', 'C|D'],
+  lead: ['E5:1 E5:1 r:2 E5:1 E5:1 r:2 G5:2 F#5:2 E5:2 D5:2', 'C5:4 D5:4 E5:2 B4:2 B4:4'],
+  drums: ['c... k.k. k... k.k.', 'z.z. z.z. zzzz tmll'],
+  bass: 'octave',
+  arp: 'stab',
+};
+
+const GYM_A: Section = {
+  chords: ['Em', 'C', 'G', 'D', 'Em', 'C', 'Am', 'B'],
+  lead: [
+    'B4:2 E5:2 G5:3 F#5:1 E5:2 B4:2 E5:4',
+    'C5:2 E5:2 G5:4 A5:2 G5:2 E5:4',
+    'D5:2 G5:2 B5:3 A5:1 G5:2 D5:2 G5:4',
+    'F#5:6 E5:2 D5:4 A4:4',
+    'B4:2 E5:2 G5:3 F#5:1 E5:2 G5:2 B5:4',
+    'C6:4 B5:2 A5:2 G5:4 E5:4',
+    'A5:3 G5:1 F#5:2 E5:2 C5:4 E5:4',
+    'D#5:4 F#5:4 B5:6 r:2',
+  ],
+  drums: 'x.h. z.hk x.x. z.hh',
+  fill: 'zz.z zz.z tttm mlll',
+  crash: true,
+  bass: 'drive',
+  arp: 'arp16',
+};
+
+const GYM_B: Section = {
+  chords: ['C', 'D', 'Bm', 'Em', 'Am', 'D', 'G', 'B'],
+  lead: [
+    'E5:4 G5:4 C6:6 B5:2',
+    'A5:4 F#5:4 D5:4 A5:4',
+    'B5:4 A5:2 F#5:2 D5:4 F#5:4',
+    'G5:2 F#5:2 E5:4 B4:8',
+    'C5:2 E5:2 A5:4 G5:2 E5:2 C5:4',
+    'D5:2 F#5:2 A5:4 C6:4 A5:4',
+    'B5:3 A5:1 G5:2 D5:2 G5:2 B5:2 D6:4',
+    'D#6:4 B5:4 F#5:4 D#5:4',
+  ],
+  drums: 'x.hh z.hh x.hh z.hx',
+  fill: 'zzzz zzzz tttm mmll',
+  crash: true,
+  bass: 'gallop',
+  arp: 'arp16',
+};
+
+// --- Champion (B minor rising to D major; original) -------------------------
+const CHAMP_INTRO: Section = {
+  chords: ['Bm', 'G', 'A', 'F#'],
+  lead: [
+    'B4:1 D5:1 F#5:1 B5:1 r:4 B4:1 D5:1 F#5:1 B5:1 r:4',
+    'G4:1 B4:1 D5:1 G5:1 r:4 G4:1 B4:1 D5:1 G5:1 r:4',
+    'A4:1 C#5:1 E5:1 A5:1 r:4 A4:1 C#5:1 E5:1 A5:1 r:4',
+    'F#5:4 F5:4 F#5:4 A#5:4',
+  ],
+  drums: ['c... k... k.k. k...', 'k... k... k.k. k...', 'k... k... k.k. zzzz', 'zzzz zzzz tttm mmll'],
+  bass: 'octave',
+  arp: 'stab',
+};
+
+const CHAMP_A: Section = {
+  chords: ['Bm', 'G', 'D', 'A', 'Bm', 'G', 'Em', 'F#'],
+  lead: [
+    'F#5:2 B5:2 D6:3 C#6:1 B5:2 F#5:2 B5:4',
+    'G5:2 B5:2 D6:4 E6:2 D6:2 B5:4',
+    'A5:2 F#5:2 D5:4 F#5:2 A5:2 D6:4',
+    'C#6:6 B5:2 A5:4 E5:4',
+    'F#5:2 B5:2 D6:3 C#6:1 B5:2 D6:2 F#6:4',
+    'G6:4 F#6:2 E6:2 D6:4 B5:4',
+    'E6:3 D6:1 C#6:2 B5:2 G5:4 B5:4',
+    'A#5:4 C#6:4 F#6:6 r:2',
+  ],
+  drums: 'x.kk z.kk x.kk z.kh',
+  fill: 'zzzz zzzz tttm mmll',
+  crash: true,
+  bass: 'gallop',
+  arp: 'arp16',
+};
+
+const CHAMP_B: Section = {
+  chords: ['D', 'A', 'Bm', 'G', 'D', 'A', 'G', 'A'],
+  lead: [
+    'A5:4 D6:4 F#6:6 E6:2',
+    'E6:4 C#6:4 A5:8',
+    'B5:4 D6:2 F#6:2 E6:4 D6:4',
+    'D6:2 B5:2 G5:4 B5:4 D6:4',
+    'F#6:4 E6:2 D6:2 A5:4 D6:4',
+    'C#6:4 E6:4 A6:8',
+    'G6:3 F#6:1 E6:2 D6:2 B5:4 G5:4',
+    'A5:4 C#6:4 E6:4 A6:4',
+  ],
+  drums: 'x.h. z.hk x.x. z.hh',
+  fill: 'zzzz zzzz tttm mmll',
+  crash: true,
+  bass: 'octave',
+  arp: 'arp16',
+};
+
 // --- Title (C major, heroic, mid tempo) ------------------------------------
 const TITLE_1: Section = {
   chords: ['C', 'Am', 'F', 'G', 'C', 'Em', 'F', 'G'],
@@ -447,6 +546,22 @@ const SONG_DEFS: Record<TrackName, SongDef> = {
     arpDuty: 0.25,
     level: 1,
     transform: toDHarmonicMinor,
+  },
+  gym: {
+    bpm: 164,
+    intro: [GYM_INTRO],
+    loop: [GYM_A, GYM_B],
+    lead: 0.25,
+    arpDuty: 0.125,
+    level: 1,
+  },
+  champion: {
+    bpm: 182,
+    intro: [CHAMP_INTRO],
+    loop: [CHAMP_A, CHAMP_B],
+    lead: 0.125,
+    arpDuty: 0.25,
+    level: 1,
   },
   title: {
     bpm: 120,

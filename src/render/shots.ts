@@ -31,7 +31,8 @@ export function overShoulder(attacker: Side): Shot {
   const b = attacker === 0 ? ENEMY_POS : PLAYER_POS;
   const back = a.clone().sub(b).normalize();
   const side = new THREE.Vector3(-back.z, 0, back.x).multiplyScalar(attacker === 0 ? 1.6 : -1.6);
-  const pos = a.clone().addScaledVector(back, 4.2).add(side).setY(2.1);
+  // far and high enough that a big back sprite leaves room for the command menu and the player's HUD card
+  const pos = a.clone().addScaledVector(back, 5.4).add(side).setY(2.5);
   return { pos, look: b.clone().setY(1.3), fov: 46 };
 }
 

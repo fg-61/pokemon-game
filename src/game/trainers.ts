@@ -1,3 +1,4 @@
+import type { TrackName } from '../audio/music';
 import type { Difficulty } from '../battle/ai';
 import { Rng } from '../battle/rng';
 import { ROSTER } from '../data/roster';
@@ -15,6 +16,8 @@ export interface Trainer {
   levelBonus?: number;
   /** front pic URL shown in the VS intro */
   pic?: string;
+  /** battle theme (default: 'boss' for bosses, else 'battle') */
+  music?: TrackName;
 }
 
 /** A League stop as a battle opponent ("Gym Leader Brock", "Elite Four Lorelei", "Champion Blue"). */
@@ -29,6 +32,7 @@ export function leagueTrainer(st: LeagueStop, difficulty: Difficulty = st.diffic
     boss: true,
     levelBonus: st.levelBonus,
     pic: `assets/trainers/${st.pic}.png`,
+    music: st.kind === 'gym' ? 'gym' : st.kind === 'champion' ? 'champion' : 'boss',
   };
 }
 
