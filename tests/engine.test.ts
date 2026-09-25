@@ -107,6 +107,17 @@ describe('move effects', () => {
     if (use?.t === 'moveUse' && use.outcome === 'hit') expect(ev.some((e) => e.t === 'heal' && e.cause === 'drain')).toBe(true);
   });
 
+  it('Magnitude reports its rolled base power on the hit (for the presentation)', () => {
+    const seen = new Set<number>();
+    for (let seed = 0; seed < 40; seed++) {
+      const ev = useMove(setup('geodude', 'squirtle', seed), 0, 'MAGNITUDE');
+      const use = ev.find((e) => e.t === 'moveUse');
+      if (use?.t === 'moveUse' && use.hits[0]) seen.add(use.hits[0].power ?? -1);
+    }
+    expect([...seen].every((p) => [10, 30, 50, 70, 90, 110, 150].includes(p))).toBe(true);
+    expect(seen.size).toBeGreaterThan(2);
+  });
+
   it('Protect blocks the next attack', () => {
     const bt = setup('squirtle', 'machop', 3);
     useMove(bt, 0, 'PROTECT');

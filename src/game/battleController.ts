@@ -49,6 +49,9 @@ const TWO_TURN_MSG: Record<string, 'solarCharge' | 'digCharge' | 'flyCharge' | '
   SKULL_BASH: 'skullCharge',
 };
 
+/** Magnitude's rolled base power → the "Magnitude N!" number FireRed announces. */
+const MAGNITUDE_LEVEL: Record<number, number> = { 10: 4, 30: 5, 50: 6, 70: 7, 90: 8, 110: 9, 150: 10 };
+
 export class BattleController {
   readonly battle: Battle;
   private hud: Hud;
@@ -304,7 +307,9 @@ export class BattleController {
         }
         const self = mv.category === 'status' && (mv.target === 'USER' || mv.target === 'DEPENDS');
         audio.playMoveSfx(mv.type, 'cast', 0.4 + (mv.power / 150) * 0.6, pan);
-        const say = this.msg(t('used', this.name(e.side), mv.name), 200);
+        const rolled = e.hits[0]?.power;
+        const magnitude = mv.effect === 'MAGNITUDE' && rolled ? MAGNITUDE_LEVEL[rolled] : undefined;
+        const say = this.msg(t('used', this.name(e.side), mv.name), 200).then(() => (magnitude ? this.msg(t('magnitude', magnitude), 300) : undefined));
         const missed = e.outcome === 'miss' || e.outcome === 'protected' || e.outcome === 'noEffect';
         if (e.outcome === 'protected') this.vfx.prim.shield(target.at(0.5), { color: 0x7affa0, radius: Math.max(1.2, target.height * 0.7), ms: 1100 });
         let critShown = false;
@@ -317,6 +322,7 @@ export class BattleController {
           hits: Math.max(1, e.hits.length),
           missed,
           self,
+          power: rolled,
           onImpact: (i) => {
             const h = e.hits[i];
             if (!h) {

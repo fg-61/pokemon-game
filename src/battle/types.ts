@@ -81,6 +81,8 @@ export interface HitResult {
   crit: boolean;
   timing: TimingGrade; // attacker grade
   brace: TimingGrade; // defender grade
+  /** base power used for this hit (the roll for Magnitude/Present, Flail's HP tier...); absent for fixed damage */
+  power?: number;
 }
 
 export type BattleEvent =

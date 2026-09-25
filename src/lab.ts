@@ -1,7 +1,8 @@
 /**
  * VFX Lab (lab.html): plays any move's recipe between two sprites so effects can be iterated on
  * and screenshotted. URL params: ?move=FLAMETHROWER&side=0&miss=0&theme=meadow&auto=1&a=6&b=9
- * window.__lab.play(moveKey, side, missed) returns a promise resolved when the recipe finished.
+ * window.__lab.play(moveKey, side, missed, phase?, power?) returns a promise resolved when the recipe finished
+ * (power = the engine's rolled base power, e.g. 10..150 for Magnitude).
  */
 import { Arena, ENEMY_POS, PLAYER_POS, THEMES } from './render/arena';
 import { PokemonSprite } from './render/pokemonSprite';
@@ -56,7 +57,7 @@ themeSel.onchange = () => {
 const log = document.getElementById('log')!;
 
 let busy = false;
-async function play(moveKey: string, side: Side, missed: boolean, phase: 'charge' | 'strike' = 'strike') {
+async function play(moveKey: string, side: Side, missed: boolean, phase: 'charge' | 'strike' = 'strike', power?: number) {
   await ready;
   if (busy) return;
   busy = true;
@@ -77,6 +78,7 @@ async function play(moveKey: string, side: Side, missed: boolean, phase: 'charge
     missed,
     self,
     phase,
+    power,
     onImpact: (i) => {
       log.textContent += `\nimpact ${i} @ ${Math.round(performance.now() - t0)}ms`;
       if (mv.category !== 'status') {

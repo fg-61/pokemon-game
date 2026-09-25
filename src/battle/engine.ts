@@ -916,6 +916,7 @@ export class Battle {
         break;
       }
     }
+    const rolled = power;
     const pinch = PINCH_ABILITY[user.ability];
     if (pinch === moveType && user.hp <= user.stats.hp / 3) power = Math.floor(power * 1.5);
 
@@ -950,7 +951,7 @@ export class Battle {
     dmg = Math.floor(dmg * eff);
     dmg = Math.floor((dmg * this.rng.int(85, 100)) / 100);
     dmg = Math.floor(dmg * CONFIG.timingAttack[timing.atk] * CONFIG.timingBrace[timing.brace]);
-    return { ...base, damage: Math.max(1, dmg), crit };
+    return { ...base, damage: Math.max(1, dmg), crit, power: rolled };
   }
 
   private confusionDamage(mon: BattleMon): number {
@@ -972,8 +973,8 @@ export class Battle {
       return ok ? { min: lt.dmg * 2, max: lt.dmg * 2, eff: 1 } : { min: 0, max: 0, eff: 1 };
     }
     const saved = this.rng;
-    // deterministic probe: max roll, no crit
-    const probe = { next: () => 0.999, int: (_a: number, b: number) => b, chance: () => false, pick: <T,>(a: readonly T[]) => a[0], shuffle: <T,>(a: T[]) => a } as unknown as Rng;
+    // deterministic probe: max roll, no crit, the typical (median) pick for Magnitude / Present
+    const probe = { next: () => 0.999, int: (_a: number, b: number) => b, chance: () => false, pick: <T,>(a: readonly T[]) => a[Math.floor(a.length / 2)], shuffle: <T,>(a: T[]) => a } as unknown as Rng;
     this.rng = probe;
     const r = this.calcDamage(user, foe, move, { atk: 'none', brace: 'none' }, foeSide);
     this.rng = saved;

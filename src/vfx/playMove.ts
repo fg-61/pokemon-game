@@ -18,6 +18,8 @@ export interface PlayMoveArgs {
   /** self-targeted: user and target are the same sprite */
   self?: boolean;
   phase?: 'charge' | 'strike';
+  /** base power the engine actually used (Magnitude's roll, Flail's tier...); defaults to the move's power */
+  power?: number;
 }
 
 /** Build the recipe context and run the move's VFX. Guarantees every impact fires exactly once. */
@@ -56,7 +58,7 @@ export async function playMoveFx(a: PlayMoveArgs): Promise<void> {
     missed: a.missed,
     phase,
     self: !!a.self,
-    power: Math.min(1, Math.max(0, (move.power <= 1 ? 60 : move.power) / 150)),
+    power: Math.min(1, Math.max(0, (a.power ?? (move.power <= 1 ? 60 : move.power)) / 150)),
     impact,
     aim: (frac = 0.5) => {
       const p = (a.self ? a.attacker : a.target).at(frac);
