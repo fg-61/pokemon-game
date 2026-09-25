@@ -1,4 +1,4 @@
-# Evo Clash — geliştirme sohbeti (Claude Code web oturumu)
+# Evo Clash — geliştirme sohbeti (Claude Code web + yerel oturumlar)
 
 Bu dosya, oyunun geliştirildiği Claude Code oturumunun okunabilir dökümüdür: kullanıcı mesajları **aynen**,
 asistan cevapları **özet** halinde (araç çağrıları ve ara çıktılar hariç), ardından alınan kararlar ve
@@ -121,6 +121,52 @@ Bu dosya (`docs/CONVERSATION.md`) hazırlandı.
 
 ---
 
+# Yerel oturum 1 — terminal (macOS), 2026-09-25
+
+## 9. Kullanıcı
+> dosyaları oku
+
+### Asistan
+CLAUDE.md, HANDOFF, ROADMAP, CONVERSATION okundu; yerel dal 2 doküman commit'i gerideydi, kökte `docs/`'un
+birebir kopyası olan HANDOFF.md / CONVERSATION.md vardı; typecheck + 34 test + roster doğrulaması temiz.
+
+## 10. Kullanıcı
+> bu dosyalar ihtiyaç varsa güncel bir şekilde devam ettirebilirsin. Bağlamı korumak anlamında ihtiyaç yoksa sil. git pull yaptım şu an
+
+### Asistan
+Kökteki kopyalar silindi (asıl dosyalar `docs/` altında, her oturumda güncelleniyor).
+
+## 11. Kullanıcı
+> yarna çektim yarndan devam edelim ona göre güncelle
+
+### Asistan
+yarn 1'e geçildi: `yarn.lock` commit'lendi, `package-lock.json` silinip gitignore'a eklendi, `packageManager` sabitlendi;
+tüm dokümanlar / skill'ler / agent'lar / araç açıklamaları `yarn <script>` (bayraklar `--` olmadan) kullanıyor.
+
+## 12. Kullanıcı
+> zayıf efektler mi, popüler Pokémon hatlarını elle iyileştirmek mi, yoksa Faz 3 mü? sırayla başla zayıf efektlerden
+
+### Asistan
+- **Surf**: gölgeli, kıvrılan dalga + dolu gövde kesiti, dalgayı yandan gösteren kamera, kullanıcı dalganın tepesinde.
+- **Aurora Beam**: `prim.aurora` — boyunca akan gökkuşağı gövde + ışınlı aurora perdeleri + ışın boyunca koşan halkalar.
+- **Psycho Boost**: `prim.psyOrb` plazma küresi, iki tarafta da kadrajda; pembe sis yerine keskin patlama.
+- **Shock Wave**: ekran düzleminde sönümlü sinüs (önceden kavis kameraya doğru bükülüyordu).
+- **Magnitude**: motorun attığı güç (`HitResult.power`) VFX'e geçiyor; 4–10 büyüklüğe göre ölçekleniyor,
+  FireRed'deki gibi "Magnitude N!" mesajı.
+- Bulunan hata: AI tahmini Magnitude/Present için en düşük zarı varsayıyordu (AI hiç seçmiyordu) → medyan;
+  etkilenen hatlar sim ile kontrol edildi (%47.8–52.4), numel/pichu seviyeleri ayarlandı.
+- Araçlar: `tools/shoot.mjs` yerelde Chrome + GPU kullanıyor; oyun saati her karede tutuluyor (kesin zamanlama).
+
+## 13. Kullanıcı
+> her pokemon için ayrı agent çalıştırsan daha hızlı olur mu?
+
+### Asistan
+Bağımsız işlerde evet: popüler hatların elle iyileştirilmesi paralel agent'larla hızlanır — ama Pokémon başına değil
+grup başına (Johto/Hoenn başlangıçları, pseudo-efsaneviler, efsaneviler; 4–5 agent), her agent kendi tarif dosyasına
+yazar; `roster.ts` birleştirmesi ve denge (levels:tune + sim) en sonda tek seferde yapılır.
+
+---
+
 ## Önemli kararlar (neden böyle?)
 | Karar | Gerekçe |
 |---|---|
@@ -134,6 +180,9 @@ Bu dosya (`docs/CONVERSATION.md`) hazırlandı.
 | Hat başına seviye ile denge | FireRed'in de eğitmen seviyeleriyle dengelemesi |
 | Otomatik roster + otomatik seviye ayarı | 386 türü elle dengelemek pratik değil; popüler hatlar elle iyileştirilebilir |
 | Orijinal prosedürel müzik | Telifli müzik kullanılmadı |
+| yarn 1 (classic) | Kullanıcının tercihi (yerel oturum 1) |
+| VFX kontrolü iki taraftan (side 0/1) ekran görüntüsüyle | Kadraj sorunları çoğunlukla tek tarafta çıkıyor |
+| Paralel agent'lar grup başına, denge en sonda tek seferde | Ortak dosya çakışmaları ve kadro çapında denge |
 
 ## Local Claude Code'da devam
 ```bash

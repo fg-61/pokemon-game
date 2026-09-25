@@ -39,20 +39,31 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
       incl. `elemental2.ts` / `physical2.ts` for the generated-roster moves). Check coverage after roster changes with
       the snippet in `.claude/skills/add-pokemon` (step 4).
 - [x] Fixes: camera kept orbiting in battle (title scene leak); pale sprites (Neutral tone mapping); redesigned HUD cards.
+- [x] Local session 1 (terminal, macOS): switched to yarn 1; weak-VFX pass — Surf (shaded curling wave with a body,
+      side-on camera, the user rides the crest), Aurora Beam (`prim.aurora`: flowing rainbow body + aurora curtains +
+      rings), Psycho Boost (`prim.psyOrb`, orb framed from both sides, crisp detonation instead of pink haze), Shock Wave
+      (damped sine in the screen plane), Magnitude (scales with the engine's roll; `HitResult.power` →
+      `playMoveFx({power})`, "Magnitude N!" message). AI fix: `estimateDamage` probes the median Magnitude/Present roll
+      (it assumed power 10/40, so the AI never picked them); numel/pichu levels retuned. `tools/shoot.mjs` uses the
+      local Chrome + GPU and holds the game clock at each capture (`Stage.holdAt`).
+- [ ] Next: hand-curate popular generated lines (Johto/Hoenn starters, pseudo-legendaries, legendaries) + signature VFX
+      (plan: parallel agents per group writing their own recipe files; merge + `levels:tune` once at the end).
 - [ ] Phase 3: weather, held items, local 2-player versus, unlockables (see ROADMAP).
 
 ## Known issues / polish backlog
 - Generated movesets are heuristic (`tools/gen-roster.ts`): to hand-tune a line, move it into `CURATED` in
   `src/data/roster.ts` and re-run `yarn roster:generate && yarn levels:tune`.
 - Assets for all 386 species are ~66 MB in `public/assets` (artwork is the biggest part).
-- Weakest VFX: Surf's wave, Aurora Beam's rainbow, Psycho Boost from side 1 (hazy), Shock Wave's arc (curves
-  towards the camera rather than sideways). Magnitude's visuals don't scale with the rolled power.
+- VFX that could still be richer: Present (could scale with its 40/80/120 roll via `c.power` like Magnitude),
+  Flail/Eruption/Low Kick now receive their real power in `c.power` but their recipes don't use it yet.
 - Bright arenas + bloom wash additive effects to white above intensity ~1.2 — prefer `softHit` (common.ts)
   and intensities 0.6–1.2 in new recipes.
 - The timing ring (QTE) uses real time; it could not be screenshotted in the software-rendered test browser,
   so verify its look in a real browser after UI changes.
-- Headless screenshots are slow (software WebGL). Always use `vite.nohmr.config.ts` (port 5174) + `?fixed=1`
-  + `tools/shoot.mjs --game`, and don't run more than 2 capture browsers at once.
+- Screenshots: always use `vite.nohmr.config.ts` (port 5174) + `?fixed=1` + `tools/shoot.mjs --game` (the clock is
+  held at every `--at` time, so captures are exact on fast and slow machines). On a local Mac `shoot.mjs` drives the
+  installed Google Chrome on the GPU (~7 s per capture run); in the cloud sandbox it falls back to software WebGL
+  (slow — don't run more than 2 capture browsers at once there).
 - `stage-*.js` bundle is ~1.2 MB (three.js + FireRed JSON). Code-split `species.json` if load time matters.
 
 ## Conventions to keep
