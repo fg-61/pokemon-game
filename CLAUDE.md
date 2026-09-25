@@ -6,6 +6,7 @@ decompilation; sprites and cries from the PokeAPI repos. Non-commercial fan proj
 
 ## Continuing work
 Start with `docs/HANDOFF.md` (status checklist, known issues, resume steps), then `docs/ROADMAP.md`.
+`docs/CONVERSATION.md` is the readable log of the original web session (user requests verbatim + decisions).
 Update the HANDOFF status section at the end of every session.
 
 ## Commands

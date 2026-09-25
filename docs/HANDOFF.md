@@ -2,6 +2,7 @@
 
 This file is the "where are we / what next" note for a new Claude Code session (terminal, desktop or web).
 Read `CLAUDE.md` first (architecture + commands), then this file, then `docs/ROADMAP.md`.
+The original session's requests and decisions are in `docs/CONVERSATION.md`.
 
 ## Resume in a terminal
 ```bash
