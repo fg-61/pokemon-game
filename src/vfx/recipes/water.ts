@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
-import { during, pulledShot, screenAngle, sideOf } from './common';
+import { during, motes, pulledShot, screenAngle, sideOf } from './common';
 
 const W = { foam: 0xeaf8ff, light: 0x8ad4ff, main: 0x3a9aff, deep: 0x0c50c0, dark: 0x06307a };
 
@@ -299,3 +299,132 @@ registerMoveFx('SURF', async (c) => {
   vfx.shot('wide', c.side, 500);
 });
 
+// --------------------------------------------------------------------------------------- HYDRO PUMP
+
+registerMoveFx('HYDRO_PUMP', async (c) => {
+  const { vfx, stage } = c;
+  vfx.shot('side', c.side, 400);
+  const mouth = mouthOf(c, 0.55);
+  // intake: water swirls into the mouth while the pressure builds
+  c.attacker.setOutline(1.4, W.main);
+  c.attacker.shake(0.05, 0.5);
+  await during(c, 480, (k) => {
+    for (let i = 0; i < 3; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = 1.4 + Math.random();
+      const p = mouth.clone().add(new THREE.Vector3(Math.cos(a) * r, (Math.random() - 0.5) * 1.4, Math.sin(a) * r));
+      vfx.particle({ tex: 'drop', pos: p, vel: new THREE.Vector3(), attract: { to: mouth, strength: 32 }, swirl: { center: mouth, speed: 3 }, drag: 2.2, life: 0.35, size: [0.22, 0.06], color: [W.light, W.main], intensity: 1.05, additive: false, alpha: [0.9, 0.4], fadeIn: 0.2 });
+    }
+    vfx.particle({ tex: 'glow', pos: mouth.clone(), life: 0.06, size: 0.6 + k * 0.9, color: W.main, intensity: 0.8, alpha: [0.5, 0] });
+  });
+  c.attacker.setOutline(0);
+  // FIRE: a thick high-pressure torrent
+  const to = c.aim(0.5);
+  const fwd = to.clone().sub(mouth);
+  const len = fwd.length();
+  fwd.normalize();
+  const back = fwd.clone().negate();
+  const sideV = sideOf(fwd);
+  const rot = screenAngle(c, mouth, to) + Math.PI / 2;
+  const travel = 0.22;
+  const hold = 620;
+  stage.flash(W.light, 0.1, 120);
+  void c.attacker.knockback(c.foe, 0.3, 700);
+  const beam = vfx.prim.beam(mouth, to, { color: W.deep, core: W.light, width: 0.38, holdMs: hold, growMs: travel * 1000, fadeMs: 220, intensity: 0.9, noise: 0.7, wobble: 0.14 });
+  let hit = false;
+  let ringT = -1e9;
+  await during(c, travel * 1000 + hold, (_k, dt, el) => {
+    const n = Math.round(240 * dt + Math.random());
+    for (let i = 0; i < n; i++) {
+      const d = fwd.clone().addScaledVector(sideV, (Math.random() - 0.5) * 0.1).add(new THREE.Vector3(0, (Math.random() - 0.5) * 0.1, 0)).normalize();
+      const s = 0.3 + Math.random() * 0.3;
+      const drop = Math.random() < 0.55;
+      vfx.particle({ tex: drop ? 'drop' : 'smoke', pos: mouth.clone(), vel: d.multiplyScalar((len / travel) * (0.9 + Math.random() * 0.2)), life: travel * 1.05, size: [s, s * 2], color: drop ? [W.light, W.main] : [W.foam, W.light], intensity: 1.05, additive: false, alpha: [0.9, 0.3], rot: drop ? rot + (Math.random() - 0.5) * 0.3 : Math.random() * 6, spin: drop ? 0 : 3 });
+    }
+    // foam flicked off the sides of the jet
+    if (Math.random() < 0.7) {
+      const p = mouth.clone().lerp(to, Math.random());
+      vfx.particle({ tex: 'dot', pos: p, vel: sideV.clone().multiplyScalar((Math.random() - 0.5) * 4).add(new THREE.Vector3(0, 1 + Math.random() * 2, 0)), acc: new THREE.Vector3(0, -9, 0), life: 0.45, size: [0.12, 0.05], color: W.foam, intensity: 1.2 });
+    }
+    if (el - ringT > 110) {
+      ringT = el;
+      const p = mouth.clone().addScaledVector(fwd, 0.5 + Math.random() * Math.max(0.2, len - 1));
+      vfx.prim.shockwave(p, { color: W.foam, radius: 1.0, ms: 240, thickness: 0.14, facing: fwd, intensity: 1.1 });
+    }
+    if (el >= travel * 1000) {
+      if (!hit) {
+        hit = true;
+        if (!c.missed) {
+          c.impact(0);
+          c.target.flash(W.light, 300, 0.7);
+          stage.shockwave(to, 0.7, 350);
+          vfx.shake(0.35, 700);
+        }
+        splash(c, to, 1.3, back);
+      }
+      if (Math.random() < 0.5) splash(c, to.clone().addScaledVector(fwd, -0.2), 0.5, back);
+      if (!c.missed && Math.random() < 0.3) c.target.shake(0.1, 0.15);
+    }
+  });
+  await beam.done;
+  // the spray rains back down
+  splash(c, to, 0.8);
+  vfx.prim.shockwave((c.missed ? to.clone().setY(c.foeFeet.y) : c.foeFeet.clone()).setY(c.foeFeet.y + 0.05), { color: W.light, radius: 3, facing: 'ground', ms: 550, intensity: 1.3 });
+  await vfx.rain(c.missed ? to : c.foeFeet.clone(), { ms: 350, rate: 60, radius: 1.8, height: 3.5, fall: 9, tex: 'drop', color: W.light, size: [0.12, 0.2], additive: false, intensity: 1.05 });
+  await vfx.wait(250);
+  vfx.shot('wide', c.side, 500);
+});
+
+// --------------------------------------------------------------------------------------- BUBBLE
+
+registerMoveFx('BUBBLE', async (c) => {
+  const { vfx } = c;
+  vfx.shot('side', c.side, 400);
+  const mouth = mouthOf(c, 0.5);
+  c.attacker.shake(0.05, 0.25);
+  vfx.burst(mouth, { count: 8, tex: 'bubble', color: W.foam, speed: [0.5, 1.5], size: [0.1, 0.2], life: 0.35, intensity: 1.1 });
+  await vfx.wait(180);
+  const to = c.aim(0.5);
+  const sv = sideOf(c.dir);
+  const n = 14;
+  const sizes = Array.from({ length: n }, () => 0.3 + Math.random() * 0.35);
+  const dests = Array.from({ length: n }, () => to.clone().addScaledVector(sv, (Math.random() - 0.5) * 1.0).add(new THREE.Vector3(0, (Math.random() - 0.5) * 1.0, 0)));
+  let arrivals = 0;
+  await motes({
+    ctx: c,
+    count: n,
+    spreadMs: 520,
+    travelMs: 620,
+    from: mouth,
+    to: (i) => dests[i],
+    jitter: 0.25,
+    arc: 0.6,
+    up: 0.5,
+    wiggle: 0.2,
+    step: 0.4,
+    emit: (p, _d, _k, i, head) => {
+      if (!head) return;
+      vfx.particle({ tex: 'bubble', pos: p, life: 0.045, size: sizes[i], color: W.foam, intensity: 1.1, alpha: [0.95, 0.95] });
+      vfx.particle({ tex: 'glow', pos: p, life: 0.045, size: sizes[i] * 0.9, color: W.main, intensity: 0.5, alpha: [0.35, 0.35] });
+    },
+    onArrive: (p, i) => {
+      arrivals++;
+      // pop!
+      vfx.particle({ tex: 'ring', pos: p.clone(), life: 0.18, size: [sizes[i] * 0.8, sizes[i] * 2.2], color: W.foam, intensity: 1.2, alpha: [1, 0] });
+      for (let j = 0; j < 5; j++) {
+        const d = new THREE.Vector3(Math.random() - 0.5, Math.random() * 0.8, Math.random() - 0.5).normalize();
+        vfx.particle({ tex: 'drop', pos: p.clone(), vel: d.multiplyScalar(2 + Math.random() * 2), acc: new THREE.Vector3(0, -10, 0), life: 0.35, size: [0.12, 0.05], color: [W.light, W.main], intensity: 1.05, additive: false });
+      }
+      if (c.missed) return;
+      if (arrivals === 3) {
+        c.impact(0);
+        c.target.flash(W.light, 250, 0.5);
+        vfx.shake(0.1, 250);
+        vfx.prim.shockwave(to, { color: W.light, radius: 1.3, ms: 300, thickness: 0.2, intensity: 1.3 });
+      } else if (arrivals > 3 && Math.random() < 0.5) c.target.shake(0.06, 0.12);
+    },
+  });
+  vfx.burst(to, { count: 10, tex: 'bubble', color: W.foam, speed: [1, 2.5], size: [0.1, 0.25], life: [0.4, 0.7], gravity: -1.5, drag: 2, intensity: 1.1 });
+  await vfx.wait(300);
+  vfx.shot('wide', c.side, 500);
+});

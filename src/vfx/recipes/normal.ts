@@ -642,7 +642,7 @@ function rageFlames(c: MoveFxContext, feet: THREE.Vector3, R: number, dt: number
   const n = Math.round(40 * amt * dt + Math.random() * amt);
   for (let i = 0; i < n; i++) {
     const a = Math.random() * Math.PI * 2;
-    c.vfx.particle({ tex: 'flame', pos: feet.clone().add(V(Math.cos(a) * R, 0.1 + Math.random() * 0.5, Math.sin(a) * R)), vel: V(0, 2.2 + Math.random() * 1.6, 0), life: 0.5, size: [0.6, 0.15], color: [0xffa070, 0xd81808], intensity: 1.15, alpha: [0.75, 0] });
+    c.vfx.particle({ tex: 'flame', pos: feet.clone().add(V(Math.cos(a) * R, 0.1 + Math.random() * 0.5, Math.sin(a) * R)), vel: V(0, 2.2 + Math.random() * 1.6, 0), life: 0.5, size: [0.6, 0.15], color: [0xff7040, 0xc80800], intensity: 1.1, alpha: [0.85, 0] });
   }
 }
 
@@ -713,12 +713,11 @@ registerMoveFx('FLAIL', async (c) => {
     const at = center.clone().add(V((Math.random() - 0.5) * 0.6, (Math.random() - 0.5) * 0.6, 0));
     sp.mesh.rotation.z = (i % 2 ? -0.35 : 0.35) * tilt;
     void slideTo(c, D - 0.3 + (i % 2) * 0.3, 60);
-    const r = slashStroke(c, strokePoints(c, at, angles[i], 1.6, 0.3 * (i % 2 ? -1 : 1), 7), { color: 0xffe0c0, core: 0xffffff, width: 0.09, ms: 70, length: 0.8, holdMs: 0, fadeMs: 160, intensity: 1.1, e: ease.inQuad });
+    const r = slashStroke(c, strokePoints(c, at, angles[i], 2.0, 0.35 * (i % 2 ? -1 : 1), 7), { color: 0xffa860, core: 0xfff4e0, width: 0.12, ms: 70, length: 0.8, holdMs: 0, fadeMs: 180, intensity: 1.15, edge: 0x3a1408, e: ease.inQuad });
     await r.arrived;
     if (!c.missed) {
-      vfx.prim.impactStar(towardCam(c, at, 0.6), { color: 0xffb070, core: 0xffffff, size: 0.45, ms: 160 });
-      c.target.shake(0.08, 0.15);
-      vfx.shake(0.06, 100);
+      impactFx(c, at, { strength: 0.5, pal: { core: 0xffffff, main: 0xffa060, dark: 0x8a3a20 }, ground: false });
+      c.target.shake(0.1, 0.15);
     }
     await vfx.wait(35);
   }
@@ -1048,9 +1047,14 @@ registerMoveFx('SCREECH', async (c) => {
   await during(c, 800, (_k, _dt, el) => {
     if (el - last > 95 && el < 620) {
       last = el;
-      const sw = vfx.prim.shockwave(mouth, { color: (el / 95) % 2 < 1 ? SCR.main : SCR.hot, radius: 1.9, startRadius: 0.3, ms: travel + 60, thickness: 0.14, facing: fwd, intensity: 1.2 });
+      const sw = vfx.prim.shockwave(mouth, { color: SCR.hot, radius: 2.0, startRadius: 0.3, ms: travel + 60, thickness: 0.2, facing: fwd, intensity: 1.3 });
+      const sw2 = vfx.prim.shockwave(mouth, { color: SCR.core, radius: 1.5, startRadius: 0.2, ms: travel + 60, thickness: 0.1, facing: fwd, intensity: 1.2 });
       const end = to.clone().addScaledVector(fwd, 0.6);
-      void during(c, travel + 60, (k) => sw.mesh.position.lerpVectors(mouth, end, Math.min(1, k * 1.1)));
+      void during(c, travel + 60, (k) => {
+        sw.mesh.position.lerpVectors(mouth, end, Math.min(1, k * 1.1));
+        sw2.mesh.position.lerpVectors(mouth, end, Math.min(1, k * 1.05));
+      });
+      speedLines(c, mouth.clone().lerp(to, 0.35), fwd, { count: 3, radius: 0.6, color: SCR.main, size: 1.2, speed: 16, life: 0.2, intensity: 1.1 });
     }
     if (Math.random() < 0.45 && el < 650) {
       const a = Math.random() * Math.PI * 2;
@@ -1095,14 +1099,14 @@ registerMoveFx('HARDEN', async (c) => {
   const W = Math.max(0.8, sp.width);
   const Hh = Math.max(1, sp.height);
   const ctr = towardCam(c, c.user, 0.45);
-  const bar = [ctr.clone().addScaledVector(up, -Hh * 0.5).addScaledVector(right, -Hh * 0.2), ctr.clone().addScaledVector(up, Hh * 0.5).addScaledVector(right, Hh * 0.2)];
-  const r1 = vfx.prim.ribbon(bar, { color: 0xe0e8ff, core: 0xffffff, width: 0.14, ms: 60, length: 1, holdMs: 380, fadeMs: 120, intensity: 1.0, e: ease.linear });
-  const r2 = vfx.prim.ribbon(bar, { color: 0xc8d4f0, core: 0xffffff, width: 0.05, ms: 60, length: 1, holdMs: 380, fadeMs: 120, intensity: 1.0, e: ease.linear });
+  const bar = [ctr.clone().addScaledVector(up, -Hh * 0.4).addScaledVector(right, -Hh * 0.15), ctr.clone().addScaledVector(up, Hh * 0.4).addScaledVector(right, Hh * 0.15)];
+  const r1 = vfx.prim.ribbon(bar, { color: 0xc8d8ff, core: 0xffffff, width: 0.06, ms: 60, length: 1, holdMs: 380, fadeMs: 120, intensity: 0.8, e: ease.linear });
+  const r2 = vfx.prim.ribbon(bar, { color: 0xb0c0e0, core: 0xffffff, width: 0.025, ms: 60, length: 1, holdMs: 380, fadeMs: 120, intensity: 0.8, e: ease.linear });
   const o1 = right.clone().multiplyScalar(-W * 0.7);
   await during(c, 440, (k) => {
     const x = ease.inOutQuad(k);
     r1.mesh.position.copy(o1).addScaledVector(right, W * 1.4 * x);
-    r2.mesh.position.copy(o1).addScaledVector(right, W * 1.4 * x + 0.28);
+    r2.mesh.position.copy(o1).addScaledVector(right, W * 1.4 * x + 0.22);
   });
   sp.flash(0xffffff, 250, 0.45);
   const glint = towardCam(c, sp.at(0.85).addScaledVector(right, W * 0.3), 0.5);

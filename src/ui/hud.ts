@@ -55,6 +55,7 @@ class InfoCard {
   private evo = h('div', { class: 'gauge evo' }, h('i'));
   private balls = h('div', { class: 'balls' });
   private screens = h('div', { class: 'screens' });
+  private portrait = h('img', { class: 'portrait', alt: '' }) as HTMLImageElement;
   private hp = 1;
   private maxHp = 1;
   private shownHp = 1;
@@ -65,16 +66,25 @@ class InfoCard {
     this.el = h(
       'div',
       { class: `info-card ${side === 0 ? 'me' : 'foe'} off` },
-      h('div', { class: 'row1' }, this.nm, this.lv, this.statusChip, this.types),
-      h('div', { class: 'hpbar' }, this.lag, this.fill),
-      side === 0 ? this.hpText : null,
-      h('div', { class: 'gauges' }, h('span', null, 'ATB'), this.atb, h('span', null, 'EVO'), this.evo),
-      h('div', { style: 'display:flex;justify-content:space-between;align-items:center' }, this.balls, this.screens),
+      h('div', { class: 'accent' }),
+      h('div', { class: 'portrait-wrap' }, this.portrait),
+      h(
+        'div',
+        { class: 'card-body' },
+        h('div', { class: 'row1' }, this.nm, this.lv, this.statusChip, this.types),
+        h('div', { class: 'hp-row' }, h('span', { class: 'hp-label' }, 'HP'), h('div', { class: 'hpbar' }, this.lag, this.fill, h('i', { class: 'gloss' }))),
+        side === 0 ? this.hpText : null,
+        h('div', { class: 'gauges' }, h('span', null, 'ATB'), this.atb, h('span', { class: 'evo-label' }, 'EVO'), this.evo),
+        h('div', { class: 'card-foot' }, this.balls, this.screens),
+      ),
     );
   }
 
   setMon(m: BattleMon, hasNext: boolean) {
     this.nm.textContent = m.name;
+    this.portrait.src = iconUrl(m.speciesKey);
+    this.el.style.setProperty('--accent', TYPE_COLOR[m.types[0]] ?? '#58e1ff');
+    this.el.style.setProperty('--accent2', TYPE_COLOR[m.types[1] ?? m.types[0]] ?? '#58e1ff');
     this.lv.textContent = `${t('level')}${m.level}`;
     clear(this.types);
     m.types.forEach((ty) => this.types.appendChild(typeBadge(ty)));
