@@ -4,6 +4,10 @@
 hit timing rings for bonus damage / to brace, and evolve mid-battle. All game data comes from the pret/pokefirered
 decompilation; sprites and cries from the PokeAPI repos. Non-commercial fan project (see public/assets/ATTRIBUTION.md).
 
+## Continuing work
+Start with `docs/HANDOFF.md` (status checklist, known issues, resume steps), then `docs/ROADMAP.md`.
+Update the HANDOFF status section at the end of every session.
+
 ## Commands
 - `npm run dev` — game at :5173, VFX Lab at :5173/lab.html
 - `npm run typecheck` · `npm test` (vitest) · `npm run build`

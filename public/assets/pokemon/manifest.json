@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T13:17:15.615Z",
+  "generatedAt": "2026-09-25T16:40:49.096Z",
   "source": {
     "showdownFront": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/{dex}.gif",
     "showdownBack": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/{dex}.gif",
@@ -338,6 +338,213 @@
         "source": "showdown"
       }
     },
+    "32": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 56,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 58,
+        "frameH": 56,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "33": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 64,
+        "frameH": 60,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 60,
+        "frames": 51,
+        "source": "showdown"
+      }
+    },
+    "34": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 109,
+        "frameH": 87,
+        "frames": 42,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 132,
+        "frameH": 80,
+        "frames": 42,
+        "source": "showdown"
+      }
+    },
+    "43": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 56,
+        "frameH": 52,
+        "frames": 50,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 46,
+        "frameH": 52,
+        "frames": 50,
+        "source": "showdown"
+      }
+    },
+    "44": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 66,
+        "frameH": 57,
+        "frames": 38,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 68,
+        "frameH": 57,
+        "frames": 41,
+        "source": "showdown"
+      }
+    },
+    "45": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 85,
+        "frameH": 60,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 85,
+        "frameH": 58,
+        "frames": 32,
+        "source": "showdown"
+      }
+    },
+    "60": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 59,
+        "frameH": 44,
+        "frames": 45,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 72,
+        "frameH": 44,
+        "frames": 48,
+        "source": "showdown"
+      }
+    },
+    "61": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 77,
+        "frameH": 54,
+        "frames": 40,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 64,
+        "frameH": 53,
+        "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "62": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 77,
+        "frameH": 67,
+        "frames": 37,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 74,
+        "frameH": 64,
+        "frames": 40,
+        "source": "showdown"
+      }
+    },
     "63": {
       "files": [
         "artwork.png",
@@ -660,6 +867,29 @@
         "source": "showdown"
       }
     },
+    "95": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 94,
+        "frameH": 119,
+        "frames": 61,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 102,
+        "frameH": 116,
+        "frames": 64,
+        "source": "showdown"
+      }
+    },
     "123": {
       "files": [
         "artwork.png",
@@ -679,6 +909,52 @@
       "back": {
         "frameW": 99,
         "frameH": 112,
+        "frames": 63,
+        "source": "showdown"
+      }
+    },
+    "129": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 62,
+        "frameH": 64,
+        "frames": 29,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 65,
+        "frameH": 62,
+        "frames": 33,
+        "source": "showdown"
+      }
+    },
+    "130": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 119,
+        "frameH": 103,
+        "frames": 59,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 154,
+        "frameH": 106,
         "frames": 63,
         "source": "showdown"
       }
@@ -752,6 +1028,29 @@
         "source": "showdown"
       }
     },
+    "208": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 96,
+        "frameH": 109,
+        "frames": 80,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 113,
+        "frameH": 102,
+        "frames": 80,
+        "source": "showdown"
+      }
+    },
     "212": {
       "files": [
         "artwork.png",
@@ -818,6 +1117,75 @@
         "frameW": 97,
         "frameH": 99,
         "frames": 43,
+        "source": "showdown"
+      }
+    },
+    "246": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 50,
+        "frameH": 69,
+        "frames": 35,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 53,
+        "frameH": 68,
+        "frames": 34,
+        "source": "showdown"
+      }
+    },
+    "247": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 59,
+        "frameH": 72,
+        "frames": 70,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 58,
+        "frameH": 71,
+        "frames": 73,
+        "source": "showdown"
+      }
+    },
+    "248": {
+      "files": [
+        "artwork.png",
+        "back.png",
+        "cry.ogg",
+        "frlg-back.png",
+        "frlg-front.png",
+        "front.png",
+        "icon.png"
+      ],
+      "front": {
+        "frameW": 79,
+        "frameH": 105,
+        "frames": 60,
+        "source": "showdown"
+      },
+      "back": {
+        "frameW": 113,
+        "frameH": 104,
+        "frames": 59,
         "source": "showdown"
       }
     }
