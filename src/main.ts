@@ -12,11 +12,13 @@ import { ROSTER } from './data/roster';
 import { BattleController, type BattleOutcome } from './game/battleController';
 import { recordBattle } from './game/records';
 import { settings } from './game/settings';
-import { gauntlet, randomTrainer, type Trainer } from './game/trainers';
+import { champion, earnBadge, ELITE_FOUR, enterHallOfFame, GYMS, loadLeague, type LeagueStop } from './game/league';
+import { leagueTrainer, randomTrainer, type Trainer } from './game/trainers';
 import { Arena, ENEMY_POS, PLAYER_POS, THEMES } from './render/arena';
 import { PokemonSprite } from './render/pokemonSprite';
 import { wideShot } from './render/shots';
 import { Stage } from './render/stage';
+import { badgeEarnedEl, hallOfFame, leagueScreen } from './ui/league';
 import { resultsScreen, teamSelect, titleScreen } from './ui/screens';
 import { t } from './ui/i18n';
 import { playMoveFx } from './vfx/playMove';
@@ -120,17 +122,21 @@ function showTitle() {
   audio.playMusic('title');
   titleScreen(ui, (mode) => {
     audio.playMusic('select');
+    if (mode === 'league') return showLeague();
     teamSelect(ui, {
-      title: mode === 'gauntlet' ? t('gauntlet') : t('quick'),
+      title: t('quick'),
       onBack: showTitle,
       onDone: (lines) => {
-        title?.dispose();
-        title = null;
-        if (mode === 'gauntlet') runGauntlet(lines);
-        else runQuick(lines);
+        leaveTitle();
+        runQuick(lines);
       },
     });
   });
+}
+
+function leaveTitle() {
+  title?.dispose();
+  title = null;
 }
 
 function shiftDifficulty(d: Difficulty): Difficulty {
@@ -153,24 +159,82 @@ async function playBattle(lines: string[], trainer: Trainer, round?: { i: number
   return out;
 }
 
-async function runGauntlet(lines: string[]) {
-  const ladder = gauntlet(Date.now() & 0xffff, lines).map((tr) => ({ ...tr, difficulty: shiftDifficulty(tr.difficulty) }));
+// ------------------------------------------------------------------ Kanto League
+
+/** The League hub: badge case, the eight gyms in FireRed order, then the Elite Four + Champion run. */
+function showLeague() {
+  if (!title) title = new TitleScene();
+  audio.playMusic('select');
+  leagueScreen(ui, {
+    progress: loadLeague(),
+    onBack: showTitle,
+    onGym: (g) =>
+      teamSelect(ui, {
+        title: `${t('gymLeader')} ${g.name} · ${g.city}`,
+        onBack: showLeague,
+        onDone: (lines) => {
+          leaveTitle();
+          runGym(g, lines);
+        },
+      }),
+    onLeague: () =>
+      teamSelect(ui, {
+        title: `${t('pokemonLeague')} · ${t('leagueRunHint')}`,
+        onBack: showLeague,
+        onDone: (lines) => {
+          leaveTitle();
+          runEliteFour(lines);
+        },
+      }),
+  });
+}
+
+async function runGym(g: LeagueStop, lines: string[]) {
+  const out = await playBattle(lines, leagueTrainer(g, shiftDifficulty(g.difficulty)));
+  if (out.quit) return showLeague();
+  recordBattle(out.won);
+  const firstBadge = out.won && !loadLeague().badges.includes(g.id);
+  if (out.won) earnBadge(loadLeague(), g.id);
+  resultsScreen(ui, {
+    outcome: out,
+    hasNext: false,
+    extra: firstBadge ? badgeEarnedEl(g) : null,
+    onNext: showLeague,
+    onRetry: () => runGym(g, lines),
+    onTitle: showLeague,
+    backLabel: t('toLeague'),
+  });
+}
+
+/** Lorelei, Bruno, Agatha, Lance and the Champion back to back with one team; a loss restarts from Lorelei. */
+async function runEliteFour(lines: string[]) {
+  const stops = [...ELITE_FOUR, champion(lines)];
   let i = 0;
   const next = async () => {
-    const out = await playBattle(lines, ladder[i], { i: i + 1, n: ladder.length });
-    if (out.quit) return showTitle();
-    const last = i === ladder.length - 1;
+    const st = stops[i];
+    const out = await playBattle(lines, leagueTrainer(st, shiftDifficulty(st.difficulty)), { i: i + 1, n: stops.length });
+    if (out.quit) return showLeague();
+    const last = i === stops.length - 1;
     recordBattle(out.won, out.won && last);
+    if (out.won && last) {
+      const p = enterHallOfFame(loadLeague(), lines);
+      await hallOfFame(ui, { species: out.finalSpecies, entries: p.hallOfFame.length });
+      return showLeague();
+    }
     resultsScreen(ui, {
       outcome: out,
-      champion: out.won && last,
       hasNext: !last,
       onNext: () => {
         i++;
         next();
       },
-      onRetry: () => next(),
-      onTitle: showTitle,
+      onRetry: () => {
+        i = 0;
+        next();
+      },
+      retryLabel: t('startOver'),
+      onTitle: showLeague,
+      backLabel: t('toLeague'),
     });
   };
   next();
@@ -184,13 +248,16 @@ async function runQuick(lines: string[]) {
   resultsScreen(ui, { outcome: out, hasNext: false, onNext: showTitle, onRetry: () => runQuick(lines), onTitle: showTitle });
 }
 
-// Test / demo shortcuts: ?quick=1&team=charmander,pikachu,gastly&foe=squirtle,abra,machop&auto=1
+// Test / demo shortcuts: ?quick=1&team=charmander,pikachu,gastly&foe=squirtle,abra,machop&auto=1 (or &gym=brock)
 if (qs.get('quick')) {
   document.getElementById('loading')?.remove();
   const ids = ROSTER.map((l) => l.id);
   const team = qs.get('team')?.split(',') ?? ids.slice(0, 3);
   const foe = qs.get('foe')?.split(',');
-  const tr = randomTrainer((qs.get('difficulty') as Difficulty) ?? 'normal', 7);
+  // ?gym=brock|...|lorelei|...|champion plays that League stop
+  const stopId = qs.get('gym');
+  const stop = stopId === 'champion' ? champion(team) : [...GYMS, ...ELITE_FOUR].find((g) => g.id === stopId);
+  const tr = stop ? leagueTrainer(stop) : randomTrainer((qs.get('difficulty') as Difficulty) ?? 'normal', 7);
   if (foe) tr.lines = foe;
   if (qs.get('theme')) tr.theme = qs.get('theme')!;
   playBattle(team, tr).then((out) => resultsScreen(ui, { outcome: out, hasNext: false, onNext: showTitle, onRetry: () => location.reload(), onTitle: showTitle }));

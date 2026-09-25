@@ -5,6 +5,7 @@
 - Hybrid ATB engine, timing rings, in-battle evolution, AI (3 difficulties), balance simulator.
 - Three.js arena (4 themes), animated sprites, VFX for all 85 roster moves, evolution cinematic.
 - Gauntlet (5 trainers + Champion) and Quick Battle; TR/EN UI; procedural music/SFX + cries.
+  (Replaced in local session 1 by the Kanto League: real gym leaders / Elite Four / Champion, badges, Hall of Fame.)
 - Claude skills (add-pokemon, move-vfx, balance-sim, firered-data, playtest) and agents.
 
 ## Phase 2 — roster expansion — done
@@ -27,7 +28,8 @@ Suggested next lines (all FireRed species, mostly 3 stages, fill role gaps):
 - More move effects (Substitute, Encore, Baton Pass, Perish Song, Future Sight, Counter/Mirror Coat).
 - Held items (Leftovers, Choice Band, type boosters) chosen in team select.
 - Local 2-player versus (split keyboard) and online via WebRTC.
-- Unlockable roster via Gauntlet wins; trainer sprites (FRLG trainer classes) and battle intros.
+- ~~Trainer sprites and battle intros~~ (done for the League). Unlockable roster via League badges; gym puzzles or
+  trainer-class battles before each leader; rival battles along the way (Route 22, Cerulean, S.S. Anne...).
 
 ## Phase 4 — polish
 - Per-species attack animations (sprite squash/stretch, custom lunge arcs), shader-based sprite normal lighting.

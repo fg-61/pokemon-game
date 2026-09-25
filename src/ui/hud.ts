@@ -247,11 +247,12 @@ export class Hud {
     }, 1300);
   }
 
-  async vsIntro(left: { name: string; icons: string[] }, right: { name: string; icons: string[] }) {
-    const side = (s: { name: string; icons: string[] }) => h('div', { class: 'side' }, s.name, h('div', { class: 'icons' }, s.icons.map((src) => h('img', { src }))));
-    const el = h('div', { class: 'vs-intro' }, side(left), h('div', { class: 'vs' }, t('vs')), side(right));
+  async vsIntro(left: { name: string; icons: string[]; pic?: string }, right: { name: string; icons: string[]; pic?: string }) {
+    const side = (s: { name: string; icons: string[]; pic?: string }) =>
+      h('div', { class: 'side' }, s.pic ? h('img', { class: 'trainer-pic', src: s.pic, alt: '' }) : null, s.name, h('div', { class: 'icons' }, s.icons.map((src) => h('img', { src }))));
+    const el = h('div', { class: `vs-intro ${right.pic ? 'with-pic' : ''}` }, side(left), h('div', { class: 'vs' }, t('vs')), side(right));
     this.overlay.appendChild(el);
-    await sleep(1900);
+    await sleep(right.pic ? 2400 : 1900);
     el.style.transition = 'opacity .35s';
     el.style.opacity = '0';
     await sleep(350);

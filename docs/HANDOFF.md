@@ -46,6 +46,10 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
       `playMoveFx({power})`, "Magnitude N!" message). AI fix: `estimateDamage` probes the median Magnitude/Present roll
       (it assumed power 10/40, so the AI never picked them); numel/pichu levels retuned. `tools/shoot.mjs` uses the
       local Chrome + GPU and holds the game clock at each capture (`Stage.holdAt`).
+- [x] Kanto League (replaces the random gauntlet): the 8 FireRed Gym Leaders in order, then the Elite Four + Champion
+      run, with their real parties (`trainers.json` from pret), FRLG trainer pics in the VS intro, SVG badges, local
+      progress + Hall of Fame, 4 new arenas (quarry, cape, storm, indigo); difficulty curve tuned with `yarn sim --league`.
+- [ ] Next: big back sprites (Machoke, Gyarados...) overlap the player's HUD card — clamp the on-screen size.
 - [ ] Next: hand-curate popular generated lines (Johto/Hoenn starters, pseudo-legendaries, legendaries) + signature VFX
       (plan: parallel agents per group writing their own recipe files; merge + `levels:tune` once at the end).
 - [ ] Phase 3: weather, held items, local 2-player versus, unlockables (see ROADMAP).

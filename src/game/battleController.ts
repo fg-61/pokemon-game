@@ -74,7 +74,7 @@ export class BattleController {
     this.rng = new Rng(setup.seed ?? (Math.random() * 2 ** 31) | 0);
     this.battle = new Battle(
       { name: setup.playerName, lines: setup.playerLines, isAI: !!setup.autoPlayer },
-      { name: setup.trainer.name, lines: setup.trainer.lines, isAI: true },
+      { name: setup.trainer.name, lines: setup.trainer.lines, isAI: true, levelBonus: setup.trainer.levelBonus },
       this.rng.int(0, 2 ** 31),
     );
     const theme = THEMES.find((x) => x.id === setup.trainer.theme) ?? THEMES[0];
@@ -134,7 +134,10 @@ export class BattleController {
     this.stage.director.sway = 1;
     for (const side of [0, 1] as Side[]) this.hud.cards[side].setTeam(b.sides[side].team);
     const icons = (lines: string[]) => lines.map((l) => iconUrl(getLine(l).stages[0].species));
-    const vs = this.hud.vsIntro({ name: this.setup.playerName, icons: icons(this.setup.playerLines) }, { name: this.setup.trainer.name, icons: icons(this.setup.trainer.lines) });
+    const vs = this.hud.vsIntro(
+      { name: this.setup.playerName, icons: icons(this.setup.playerLines), pic: this.setup.trainer.pic ? 'assets/trainers/red.png' : undefined },
+      { name: this.setup.trainer.name, icons: icons(this.setup.trainer.lines), pic: this.setup.trainer.pic },
+    );
     // preload every stage's sheet (so switches and evolutions never hitch)
     const pre: Promise<unknown>[] = [];
     b.sides.forEach((st, side) => st.team.forEach((m) => getLine(m.lineId).stages.forEach((sg) => pre.push(loadSheet(SPECIES[sg.species].dex, side === 0 ? 'back' : 'front').catch(() => null)))));

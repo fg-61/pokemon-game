@@ -7,7 +7,15 @@
 4. **Eye candy** — 3D arena, animated sprites, per-move VFX, camera direction, bloom, screen effects.
 
 ## Loop
-Title → mode (Gauntlet: 5 trainers ending with the Champion / Quick Battle) → pick 3 lines → battle → results.
+Title → mode (Kanto League / Quick Battle) → pick 3 lines → battle → results.
+
+**Kanto League** (`src/game/league.ts`): FireRed's eight Gym Leaders in order (Brock → Giovanni), each fielding 2-3
+members of their real FireRed party (`src/data/generated/trainers.json`); a won gym gives its badge (saved locally,
+rematches allowed). Eight badges open the Pokémon League: Lorelei, Bruno, Agatha, Lance and the Champion (the rival,
+"Blue", who takes the starter that beats yours) back to back with one team — a loss restarts from Lorelei; winning
+enters the Hall of Fame. Difficulty = the trainer's AI profile + a level bonus on its lines, tuned with
+`yarn sim --league` (random teams, normal AI): ~93% vs Brock falling to ~60% vs Giovanni, 62-73% per Elite Four
+member, ~59% vs the Champion.
 Every battle starts with base forms (evolution progress resets between battles).
 
 ## Battle system: hybrid ATB

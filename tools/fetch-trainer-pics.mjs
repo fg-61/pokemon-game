@@ -20,7 +20,8 @@ const force = process.argv.includes('--force');
 
 const trainers = JSON.parse(readFileSync(join(ROOT, 'src/data/generated/trainers.json'), 'utf8'));
 const commit = /commit `([0-9a-f]{40})`/.exec(readFileSync(join(ROOT, 'src/data/generated/README.md'), 'utf8'))?.[1] ?? 'master';
-const pics = [...new Set(Object.values(trainers).map((t) => t.pic))];
+// + the FRLG protagonist (the player's side of the VS intro)
+const pics = [...new Set([...Object.values(trainers).map((t) => t.pic), 'red'])];
 
 /** First palette entry of a PNG (the GBA background colour). */
 function backgroundColor(png) {

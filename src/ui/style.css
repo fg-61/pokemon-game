@@ -286,3 +286,67 @@ button { font-family: inherit; cursor: pointer; }
 .mon-card.legendary { background: linear-gradient(160deg, rgba(110, 84, 20, 0.85), rgba(40, 28, 60, 0.92)); border-color: rgba(255, 211, 90, 0.35); }
 .records { margin-top: 18px; padding: 8px 14px; border-radius: 10px; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 211, 90, 0.35); color: var(--gold); font-weight: 800; font-size: 14px; }
 .records span { color: #dfe8ff; font-weight: 600; }
+
+/* ------------------------------------------------------------------ Kanto League */
+.league-screen { justify-content: flex-start; padding: 18px; gap: 12px; overflow-y: auto; background: linear-gradient(180deg, rgba(6, 10, 26, 0.6), rgba(6, 10, 26, 0.88)); }
+.league-screen .head-right { display: flex; align-items: center; gap: 14px; }
+.badge-box { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.badge-box small { color: var(--muted); font-weight: 700; letter-spacing: 0.04em; }
+.badge-case { display: flex; gap: 4px; padding: 4px 8px; border-radius: 10px; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line); }
+.badge-slot { display: flex; }
+svg.badge { display: block; }
+svg.badge.earned { filter: drop-shadow(0 0 5px rgba(255, 230, 150, 0.55)); }
+.records .badge-case { display: inline-flex; margin-right: 10px; vertical-align: middle; padding: 2px 6px; }
+.gym-grid { width: 100%; max-width: 1280px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.gym-card { position: relative; display: grid; grid-template-columns: 96px 1fr; grid-template-rows: 1fr auto; gap: 2px 10px; padding: 10px; border-radius: 14px; background: linear-gradient(160deg, rgba(40, 54, 100, 0.82), rgba(18, 24, 50, 0.92)); border: 2px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s; overflow: hidden; }
+.gym-card:hover { transform: translateY(-3px); border-color: rgba(255, 255, 255, 0.35); }
+.gym-card.next { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(255, 211, 90, 0.25), 0 8px 26px rgba(255, 170, 40, 0.28); animation: gymPulse 1.6s ease-in-out infinite alternate; }
+.gym-card.beaten { border-color: rgba(78, 240, 138, 0.45); }
+.gym-card.locked { cursor: not-allowed; filter: saturate(0.25) brightness(0.62); }
+.gym-card.locked:hover { transform: none; }
+.gym-card .num { position: absolute; top: 6px; left: 8px; font-family: var(--font-pixel); color: var(--muted); font-size: 14px; }
+.gym-card .pic { grid-row: 1 / 3; width: 96px; height: 96px; image-rendering: pixelated; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, 0.55)); align-self: center; }
+.gym-card .who small { display: block; color: var(--muted); font-size: 11px; }
+.gym-card .who b { font-size: 18px; }
+.gym-card .city { color: var(--muted); font-size: 12px; margin-bottom: 3px; }
+.gym-card .row { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+.gym-card .team-icons { display: flex; margin: 2px 0 -6px -8px; }
+.gym-card .team-icons img { width: 50px; height: 42px; object-fit: contain; image-rendering: pixelated; margin-right: -6px; }
+.hof-line img { width: 40px; height: 33px; object-fit: contain; image-rendering: pixelated; }
+.gym-card .badge-name { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #dfe8ff; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.gym-card .info { min-width: 0; }
+.gym-card .state { grid-column: 2; font-size: 12px; font-weight: 800; color: var(--gold); text-align: right; }
+.gym-card.beaten .state { color: var(--green); }
+.gym-card.locked .state { color: var(--muted); }
+@keyframes gymPulse { from { box-shadow: 0 0 0 2px rgba(255, 211, 90, 0.2), 0 6px 18px rgba(255, 170, 40, 0.2); } to { box-shadow: 0 0 0 3px rgba(255, 211, 90, 0.45), 0 8px 30px rgba(255, 170, 40, 0.45); } }
+.elite { width: 100%; max-width: 1280px; padding: 14px 18px; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 8px 18px; align-items: center; }
+.elite.open { border-color: rgba(255, 211, 90, 0.55); box-shadow: 0 0 30px rgba(255, 170, 40, 0.2); }
+.elite-head h3 { margin: 0; font-family: var(--font-pixel); font-size: 22px; color: var(--gold); }
+.elite-head h3 small { color: var(--muted); font-family: var(--font-ui); font-size: 13px; }
+.elite-head p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.elite > .btn { grid-row: 1 / 3; grid-column: 2; }
+.elite-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.elite-card { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 108px; padding: 6px; border-radius: 12px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--line); text-align: center; }
+.elite-card.champion { border-color: rgba(255, 211, 90, 0.5); background: linear-gradient(180deg, rgba(90, 60, 10, 0.45), rgba(0, 0, 0, 0.3)); }
+.elite-card .pic { width: 72px; height: 72px; image-rendering: pixelated; }
+.elite:not(.open) .elite-card .pic { filter: brightness(0.35) saturate(0); }
+.elite-card small { color: var(--muted); font-size: 10px; }
+.elite-card .type-q { font-family: var(--font-pixel); color: var(--gold); }
+.hof-line { color: var(--gold); font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 2px; margin-top: 2px; }
+.badge-earned { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 10px 0 4px; font-size: 20px; font-weight: 800; color: var(--gold); animation: popIn 0.5s 0.3s cubic-bezier(0.2, 1.3, 0.4, 1) both; }
+.vs-intro .trainer-pic { display: block; width: clamp(140px, 17vw, 230px); height: auto; margin: 0 auto 6px; image-rendering: pixelated; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.55)); animation: trainerIn 0.55s cubic-bezier(0.2, 1.2, 0.4, 1) both; }
+@keyframes trainerIn { from { transform: translateX(60px); opacity: 0; } to { transform: none; opacity: 1; } }
+.vs-intro .side:first-child .trainer-pic { animation-name: trainerInLeft; }
+@keyframes trainerInLeft { from { transform: translateX(-60px); opacity: 0; } to { transform: none; opacity: 1; } }
+.hof-screen { gap: 14px; background: radial-gradient(ellipse at 50% 40%, #4a320c, #06081a 70%); overflow: hidden; z-index: 5; }
+.hof-screen h1 { margin: 0; font-family: var(--font-pixel); font-size: clamp(40px, 7vw, 84px); color: var(--gold); -webkit-text-stroke: 3px #3a1400; paint-order: stroke fill; animation: popIn 0.6s cubic-bezier(0.2, 1.3, 0.4, 1) both; }
+.hof-screen .congrats { margin: 0; font-size: 20px; font-weight: 700; }
+.hof-screen .entries { margin: 0; color: var(--gold); font-weight: 800; }
+.hof-team { display: flex; gap: 3vw; align-items: flex-end; }
+.hof-mon { display: flex; flex-direction: column; align-items: center; gap: 6px; animation: popIn 0.6s cubic-bezier(0.2, 1.3, 0.4, 1) both; }
+.hof-mon img { width: clamp(120px, 16vw, 220px); filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.6)); }
+.hof-mon b { font-size: 18px; }
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: -20px; width: 9px; height: 14px; border-radius: 2px; animation: confettiFall linear infinite; opacity: 0.9; }
+@keyframes confettiFall { from { transform: translateY(-20px) rotate(0deg); } to { transform: translateY(110vh) rotate(720deg); } }
+@media (max-width: 1000px) { .gym-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .elite { grid-template-columns: 1fr; } .elite > .btn { grid-row: auto; grid-column: auto; } }

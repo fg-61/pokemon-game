@@ -6,12 +6,14 @@ import { ROSTER, type RosterLine } from '../data/roster';
 import { TYPE_COLOR } from '../data/typeColors';
 import type { PokeType } from '../data/types';
 import type { BattleOutcome } from '../game/battleController';
+import { loadLeague } from '../game/league';
 import { loadRecords } from '../game/records';
 import { saveSettings, settings } from '../game/settings';
 import { assetUrl } from '../render/pokemonSprite';
 import { clear, h } from './dom';
 import { iconUrl, shade, typeBadge } from './hud';
 import { getLang, setLang, t, type Lang } from './i18n';
+import { badgeCase } from './league';
 
 const dexOf = (key: string) => SPECIES[key].dex;
 
@@ -72,18 +74,27 @@ export function openHelp(parent: HTMLElement) {
 
 function recordsLine(): HTMLElement[] {
   const r = loadRecords();
-  if (!r.battlesWon) return [];
-  return [h('div', { class: 'records' }, `🏆 ${t('championWins')}: ${r.championWins}`, h('span', null, ` · ${t('wins')}: ${r.battlesWon} · ${t('bestStreak')}: ${r.bestStreak}`))];
+  const lg = loadLeague();
+  if (!r.battlesWon && !lg.badges.length) return [];
+  return [
+    h(
+      'div',
+      { class: 'records' },
+      badgeCase(lg, 22),
+      `🏆 ${t('championWins')}: ${lg.titles}`,
+      h('span', null, ` · ${t('badgeCount', lg.badges.length)} · ${t('wins')}: ${r.battlesWon} · ${t('bestStreak')}: ${r.bestStreak}`),
+    ),
+  ];
 }
 
-export function titleScreen(parent: HTMLElement, onPick: (mode: 'gauntlet' | 'quick') => void) {
+export function titleScreen(parent: HTMLElement, onPick: (mode: 'league' | 'quick') => void) {
   const root = h('div', { class: 'screen title-screen' });
   const render = () => {
     clear(root);
     const menu = h(
       'div',
       { class: 'menu' },
-      h('button', { class: 'btn primary', onclick: () => go('gauntlet') }, t('gauntlet'), h('small', null, t('gauntletDesc'))),
+      h('button', { class: 'btn primary', onclick: () => go('league') }, t('league'), h('small', null, t('leagueDesc'))),
       h('button', { class: 'btn', onclick: () => go('quick') }, t('quick'), h('small', null, t('quickDesc'))),
       h('button', { class: 'btn', onclick: () => (audio.playSfx('uiSelect'), openHelp(root)) }, t('howTo')),
       h('button', { class: 'btn', onclick: () => (audio.playSfx('uiSelect'), openSettings(root, render)) }, t('settings')),
@@ -101,7 +112,7 @@ export function titleScreen(parent: HTMLElement, onPick: (mode: 'gauntlet' | 'qu
       h('div', { class: 'corner' }, 'Fan project · Data: pret/pokefirered · Sprites & cries: PokeAPI · Pokémon © Nintendo / Creatures / GAME FREAK'),
     );
   };
-  const go = (m: 'gauntlet' | 'quick') => {
+  const go = (m: 'league' | 'quick') => {
     audio.unlock();
     audio.playSfx('uiSelect');
     root.remove();
@@ -341,7 +352,7 @@ function prettify(s: string) {
 
 export function resultsScreen(
   parent: HTMLElement,
-  o: { outcome: BattleOutcome; champion?: boolean; hasNext: boolean; onNext: () => void; onRetry: () => void; onTitle: () => void },
+  o: { outcome: BattleOutcome; champion?: boolean; hasNext: boolean; onNext: () => void; onRetry: () => void; onTitle: () => void; extra?: HTMLElement | null; backLabel?: string; retryLabel?: string },
 ) {
   const { outcome } = o;
   const bg = h('div', { class: 'modal-bg' });
@@ -354,6 +365,7 @@ export function resultsScreen(
       { class: 'results panel' },
       h('h2', { class: outcome.won ? 'win' : 'lose' }, outcome.won ? t('youWin') : t('youLose')),
       o.champion ? h('div', { style: 'font-size:20px;color:var(--gold);font-weight:800;margin-top:6px' }, '🏆 ', t('champion')) : null,
+      o.extra ?? null,
       h('div', { class: 'team' }, outcome.finalSpecies.map((k) => h('img', { src: assetUrl(SPECIES[k].dex, 'frlg-front.png'), title: SPECIES[k].name }))),
       h(
         'table',
@@ -363,7 +375,7 @@ export function resultsScreen(
         h('tr', null, h('td', null, t('damage')), h('td', null, String(outcome.damage))),
         h('tr', null, h('td', null, t('duration')), h('td', null, `${mins}:${String(secs).padStart(2, '0')}`)),
       ),
-      h('div', { class: 'btns' }, o.hasNext && outcome.won ? btn(t('next'), o.onNext, true) : null, !outcome.won ? btn(t('retry'), o.onRetry, true) : null, btn(t('toTitle'), o.onTitle)),
+      h('div', { class: 'btns' }, o.hasNext && outcome.won ? btn(t('next'), o.onNext, true) : null, !outcome.won ? btn(o.retryLabel ?? t('retry'), o.onRetry, true) : null, btn(o.backLabel ?? t('toTitle'), o.onTitle)),
     ),
   );
   parent.appendChild(bg);

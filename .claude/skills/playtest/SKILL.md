@@ -22,7 +22,8 @@ software WebGL (a few fps) in the cloud (`CHROMIUM_PATH` overrides). Two things 
 | `quick=1` | skip menus, start a battle immediately |
 | `team=charmander,pikachu,gastly` / `foe=squirtle,abra,machop` | roster line ids |
 | `auto=1` | the AI plays your side too (no timing prompts) — full unattended battles |
-| `difficulty=easy|normal|hard`, `theme=meadow|volcano|night|snow` | opponent AI / arena |
+| `difficulty=easy|normal|hard`, `theme=meadow|volcano|night|snow|quarry|cape|storm|indigo` | opponent AI / arena |
+| `gym=brock|misty|…|giovanni|lorelei|bruno|agatha|lance|champion` | (with `quick=1`) fight that Kanto League stop |
 | `fixed=1` | deterministic frame-stepped clock (for screenshots) |
 
 ### Examples
