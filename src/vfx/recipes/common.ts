@@ -163,8 +163,8 @@ export interface MoteOpts {
   spreadMs: number;
   /** flight time of each mote */
   travelMs: number;
-  from: THREE.Vector3 | (() => THREE.Vector3);
-  to: THREE.Vector3 | (() => THREE.Vector3);
+  from: THREE.Vector3 | ((i: number) => THREE.Vector3);
+  to: THREE.Vector3 | ((i: number) => THREE.Vector3);
   /** random start offset radius */
   jitter?: number;
   /** sideways/up bulge of each mote's arc */
@@ -186,7 +186,7 @@ export interface MoteOpts {
  */
 export function motes(c: MoteOpts & { ctx: MoveFxContext }): Promise<void> {
   const { ctx } = c;
-  const get = (v: THREE.Vector3 | (() => THREE.Vector3)) => (typeof v === 'function' ? v() : v.clone());
+  const get = (v: THREE.Vector3 | ((i: number) => THREE.Vector3), i: number) => (typeof v === 'function' ? v(i) : v.clone());
   const ms = c.spreadMs + c.travelMs;
   const ms0 = Array.from({ length: c.count }, (_, i) => (c.count <= 1 ? 0 : (i / (c.count - 1)) * c.spreadMs));
   const offs = Array.from({ length: c.count }, () => {
@@ -199,8 +199,8 @@ export function motes(c: MoteOpts & { ctx: MoveFxContext }): Promise<void> {
   const last: (THREE.Vector3 | null)[] = new Array(c.count).fill(null);
   const done: boolean[] = new Array(c.count).fill(false);
   const pos = (i: number, k: number) => {
-    const a = get(c.from).add(offs[i]);
-    const b = get(c.to);
+    const a = get(c.from, i).add(offs[i]);
+    const b = get(c.to, i);
     const d = b.clone().sub(a);
     const side = new THREE.Vector3(-d.z, 0, d.x).normalize();
     const env = Math.sin(k * Math.PI);
@@ -344,12 +344,14 @@ export function impactFx(
   const s = o.strength ?? 0.6 + c.power * 0.8;
   const pal = o.pal ?? c.pal;
   const p = towardCam(c, at, 0.5);
+  // hits close to the camera (the player's side) are drawn smaller so they don't swallow the screen
+  const z = THREE.MathUtils.clamp(p.distanceTo(c.stage.camera.position) / 12, 0.55, 1);
   // impact star (short, crisp) + small colored bloom, thin ring, spark spray and speed streaks
-  vfx.prim.impactStar(p, { color: o.ring ?? pal.main, core: pal.core, size: 0.55 + 0.45 * s, ms: 200 + 80 * s });
-  vfx.particle({ tex: 'glow', pos: p.clone(), life: 0.22, size: [0.9 * s, 1.6 * s], color: pal.main, intensity: 1.1, alpha: [0.55, 0] });
-  vfx.prim.shockwave(p, { color: o.ring ?? pal.main, radius: 1.5 * s, thickness: 0.1, ms: 260, intensity: 1.3 });
-  vfx.burst(p, { count: Math.round(12 * s), tex: 'spark', color: [pal.core, pal.main], speed: [3, 8 * s], size: [0.1, 0.24], life: [0.2, 0.4], drag: 3, intensity: 1.6 });
-  vfx.burst(p, { count: Math.round(8 * s), tex: 'streak', color: [pal.core, pal.main], speed: [6, 12], size: [0.4, 0.8], life: [0.1, 0.2], drag: 4, intensity: 1.3 });
+  vfx.prim.impactStar(p, { color: o.ring ?? pal.main, core: pal.core, size: (0.55 + 0.45 * s) * z, ms: 200 + 80 * s });
+  vfx.particle({ tex: 'glow', pos: p.clone(), life: 0.22, size: [0.9 * s * z, 1.6 * s * z], color: pal.main, intensity: 1.1, alpha: [0.5 * z, 0] });
+  vfx.prim.shockwave(p, { color: o.ring ?? pal.main, radius: 1.5 * s * z, thickness: 0.1, ms: 260, intensity: 1.3 });
+  vfx.burst(p, { count: Math.round(12 * s), tex: 'spark', color: [pal.core, pal.main], speed: [3 * z, 8 * s * z], size: [0.1, 0.24], life: [0.2, 0.4], drag: 3, intensity: 1.6 });
+  vfx.burst(p, { count: Math.round(8 * s), tex: 'streak', color: [pal.core, pal.main], speed: [6 * z, 12 * z], size: [0.4 * z, 0.8 * z], life: [0.1, 0.2], drag: 4, intensity: 1.3 });
   if (o.ground ?? true) {
     vfx.prim.shockwave(c.foeFeet.clone().setY(c.foeFeet.y + 0.06), { color: pal.main, radius: 1.8 + s, facing: 'ground', ms: 420, thickness: 0.16, intensity: 0.9 });
     vfx.dust(c.foeFeet.clone().setY(c.foeFeet.y), o.dust ?? 0xa89878, Math.round(6 + 6 * s));
@@ -417,4 +419,50 @@ export function slashStroke(
   const r = c.vfx.prim.ribbon(pts, { ...common, color: o.color, core: o.core ?? 0xffffff, width: o.width ?? 0.1, intensity: o.intensity ?? 1.4 });
   r.mesh.renderOrder = 6;
   return r;
+}
+
+/** Drifting powder cloud (normal-blended puffs + additive sparkles) from the user to above the target. */
+export function powderCloud(c: MoveFxContext, col: { a: number; b: number; spark: number }, ms = 800) {
+  const { vfx } = c;
+  const from = c.attacker.at(0.9);
+  const over = c.aim(1.0).add(new THREE.Vector3(0, 0.6, 0));
+  const fwd = over.clone().sub(from);
+  const travel = 0.95;
+  return during(c, ms, (_k, dt, el) => {
+    const n = Math.round(45 * dt + Math.random());
+    for (let i = 0; i < n; i++) {
+      const v = fwd.clone().divideScalar(travel).add(new THREE.Vector3((Math.random() - 0.5) * 1.2, (Math.random() - 0.2) * 1.0 + Math.sin(el / 120) * 0.4, (Math.random() - 0.5) * 1.2));
+      vfx.particle({ tex: 'smoke', pos: from.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.4, 0, (Math.random() - 0.5) * 0.4)), vel: v, drag: 0.3, life: travel * 1.15, size: [0.4, 1.4], color: [col.a, col.b], intensity: 1.05, additive: false, alpha: [0.55, 0], fadeIn: 0.15, spin: 1.5 });
+    }
+    const m = Math.round(90 * dt + Math.random());
+    for (let i = 0; i < m; i++) {
+      const v = fwd.clone().divideScalar(travel).add(new THREE.Vector3((Math.random() - 0.5) * 1.6, (Math.random() - 0.3) * 1.4, (Math.random() - 0.5) * 1.6));
+      vfx.particle({ tex: Math.random() < 0.25 ? 'star' : 'dot', pos: from.clone(), vel: v, drag: 0.2, life: travel * (0.9 + Math.random() * 0.4), size: [0.07 + Math.random() * 0.07, 0.02], color: [0xffffff, col.spark], intensity: 1.5, alpha: [1, 0], fadeIn: 0.1 });
+    }
+  });
+}
+
+export function powderFall(c: MoveFxContext, col: { a: number; b: number; spark: number }, ms = 700) {
+  const { vfx } = c;
+  const top = c.aim(1.0).add(new THREE.Vector3(0, 0.5, 0));
+  const R = Math.max(0.8, c.target.width * 0.55);
+  return during(c, ms, (k, dt) => {
+    const n = Math.round(80 * dt * (1 - k * 0.5) + Math.random());
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = Math.sqrt(Math.random()) * R;
+      const p = top.clone().add(new THREE.Vector3(Math.cos(a) * r, Math.random() * 0.4, Math.sin(a) * r));
+      vfx.particle({ tex: Math.random() < 0.25 ? 'star' : 'dot', pos: p, vel: new THREE.Vector3(0, -(1.2 + Math.random()), 0), swirl: { center: top, speed: 1.2 }, life: 1.1, size: [0.15, 0.04], color: [0xffffff, col.spark], intensity: 1.5, alpha: [1, 0], fadeIn: 0.1 });
+    }
+    if (Math.random() < 0.7) vfx.particle({ tex: 'smoke', pos: top.clone().add(new THREE.Vector3((Math.random() - 0.5) * R * 2, -Math.random() * 1.5, (Math.random() - 0.5) * R * 2)), vel: new THREE.Vector3(0, -0.5, 0), life: 1, size: [0.8, 1.7], color: [col.a, col.b], intensity: 1, additive: false, alpha: [0.5, 0], fadeIn: 0.3, spin: 0.8 });
+  });
+}
+
+/** Hit spark tuned to stay readable under bloom (vfx.hitSpark's glows are very hot). */
+export function softHit(c: MoveFxContext, pos: THREE.Vector3, col: { core: number; main: number }, k = 1) {
+  const { vfx } = c;
+  vfx.particle({ tex: 'star', pos: pos.clone(), life: 0.16, size: [1.1 * k, 1.8 * k], color: col.core, intensity: 1.3, alpha: [0.9, 0] });
+  vfx.particle({ tex: 'glow', pos: pos.clone(), life: 0.25, size: [1.5 * k, 2.1 * k], color: col.main, intensity: 0.9, alpha: [0.55, 0] });
+  vfx.burst(pos, { count: Math.round(12 * k), tex: 'spark', color: [col.core, col.main], speed: [3, 7 * k], size: [0.12, 0.28], life: [0.2, 0.4], drag: 3, intensity: 1.4 });
+  vfx.prim.shockwave(pos, { color: col.main, radius: 1.3 * k, ms: 300, thickness: 0.22, intensity: 1.3 });
 }

@@ -148,7 +148,7 @@ registerMoveFx('QUICK_ATTACK', async (c) => {
 
 registerMoveFx('DOUBLE_EDGE', async (c) => {
   const { vfx } = c;
-  vfx.shot('shoulder', c.side, 500);
+  vfx.shot(c.side === 0 ? 'shoulder' : 'side', c.side, 500);
   // reckless build-up: glowing, pawing the ground
   c.attacker.setOutline(2, 0xffc070);
   c.attacker.shake(0.05, 0.5);
@@ -240,7 +240,7 @@ registerMoveFx('SMOKESCREEN', async (c) => {
   orb.dispose();
   // the cloud bursts open and engulfs the target
   const center = to.clone();
-  vfx.burst(center, { count: 40, tex: 'smoke', color: [0x2a2a30, 0x050507], speed: [1.5, 4], size: [0.9, 1.5], endSize: 2.6, life: [0.9, 1.4], drag: 3, additive: false, alpha: [0.95, 0] });
+  vfx.burst(center, { count: 50, tex: 'smoke', color: [0x2a2a30, 0x050507], speed: [1.5, 4.5], size: [1, 1.7], endSize: 3, life: [1, 1.5], drag: 3, additive: false, alpha: [0.95, 0] });
   vfx.prim.shockwave(center, { color: 0x505058, radius: 2.4, ms: 380, intensity: 0.8 });
   if (!c.missed) {
     c.target.flash(0x000000, 700, 0.75);
@@ -280,8 +280,8 @@ registerMoveFx('SCARY_FACE', async (c) => {
   const eyeW = Math.min(0.28, c.attacker.width * 0.14);
   for (const s of [-1, 1]) {
     const p = towardCam(c, hd.clone().addScaledVector(right, s * eyeW), 0.3);
-    vfx.particle({ tex: 'glow', pos: p, life: 0.7, size: [0.2, 0.6], color: 0xff1a1a, intensity: 3.5, alpha: [1, 0], fadeIn: 0.15 });
-    vfx.particle({ tex: 'star', pos: p.clone(), life: 0.45, size: [0.1, 1.1], color: 0xff5040, intensity: 3, alpha: [1, 0], fadeIn: 0.2, rot: 0.3 });
+    vfx.particle({ tex: 'glow', pos: p, life: 0.8, size: [0.15, 0.35], color: 0xff1a1a, intensity: 3, alpha: [1, 0], fadeIn: 0.15 });
+    vfx.particle({ tex: 'streak', pos: p.clone(), life: 0.45, size: [0.1, 0.9], color: 0xff5040, intensity: 2.5, alpha: [1, 0], fadeIn: 0.3, rot: 0.15 });
   }
   stage.chromaPulse(0.012, 400);
   await vfx.wait(500);
@@ -304,16 +304,16 @@ registerMoveFx('SCARY_FACE', async (c) => {
 
 registerMoveFx('PROTECT', async (c) => {
   const { vfx } = c;
-  const GREEN = 0x5aff8a;
+  const GREEN = 0x3ae878;
   vfx.shot('attacker', c.side, 400);
   c.attacker.setOutline(1.3, GREEN);
   const R = Math.max(1.3, c.attacker.height * 0.7);
   vfx.burst(c.user, { count: 24, tex: 'spark', color: [0xeaffea, GREEN], speed: 0.1, jitter: R * 1.2, attract: { to: c.user, strength: 12 }, life: [0.35, 0.5], size: [0.1, 0.2] });
   await vfx.wait(220);
-  const sh = vfx.prim.shield(c.user, { color: GREEN, radius: R, ms: 1150, intensity: 2 });
-  vfx.prim.shockwave(c.user, { color: 0xb0ffc8, radius: R * 1.5, ms: 380, thickness: 0.12 });
+  const sh = vfx.prim.shield(c.user, { color: GREEN, radius: R, ms: 1150, intensity: 0.75 });
+  vfx.prim.shockwave(c.user, { color: 0x80ffa8, radius: R * 1.5, ms: 380, thickness: 0.1, intensity: 1.2 });
   vfx.prim.shockwave(c.userFeet.clone().setY(c.userFeet.y + 0.05), { color: GREEN, radius: R * 1.3, facing: 'ground', ms: 500 });
-  c.stage.flash(0xb0ffc0, 0.15, 180);
+  c.stage.flash(0x80ffa0, 0.08, 180);
   // hex glints skittering over the bubble
   await during(c, 800, () => {
     if (Math.random() < 0.5) {
@@ -333,7 +333,7 @@ registerMoveFx('RECOVER', async (c) => {
   const R = Math.max(0.8, c.attacker.width * 0.5);
   // healing light motes drift down
   const rain = vfx.rain(c.userFeet.clone().setY(c.userFeet.y + 0.2), { tex: 'glow', color: [0xffffff, HEAL], ms: 900, rate: 40, height: 3.2, radius: R * 1.1, fall: 3, size: [0.2, 0.35], intensity: 2 });
-  vfx.prim.pillar(c.userFeet, { color: 0xc8ffd8, radius: R * 1.1, height: 4.5, ms: 1500, intensity: 1.2 });
+  vfx.prim.pillar(c.userFeet, { color: 0x50e890, radius: R * 0.9, height: 4.5, ms: 1500, intensity: 0.4 });
   await vfx.wait(500);
   c.attacker.setOutline(1.2, HEAL);
   c.attacker.flash(0xe8ffe8, 700, 0.55);
@@ -380,7 +380,7 @@ registerMoveFx('SWORDS_DANCE', async (c) => {
   const center = c.userFeet.clone();
   const R = Math.max(1.0, c.attacker.width * 0.6);
   const top = c.attacker.at(1).y + 0.5;
-  const swords = Array.from({ length: N }, () => vfx.prim.sword({ color: 0x9ac8ff, core: 0xffffff, length: 1.1, intensity: 1.8 }));
+  const swords = Array.from({ length: N }, () => vfx.prim.sword({ color: 0x5a8ae0, core: 0xe8f0ff, length: 1.1, intensity: 0.9 }));
   const place = (k: number, t: number) => {
     swords.forEach((s, i) => {
       const a = (i / N) * Math.PI * 2 + t * 5.5;
@@ -410,11 +410,11 @@ registerMoveFx('SWORDS_DANCE', async (c) => {
     });
   }, ease.inQuad);
   swords.forEach((s) => s.dispose());
-  stage.flash(0xd0e4ff, 0.3, 200);
+  stage.flash(0xd0e4ff, 0.15, 200);
   vfx.burst(apex, { count: 30, tex: 'star', color: [0xffffff, 0x9ac8ff], speed: [2, 5], size: [0.15, 0.35], life: [0.3, 0.6], spin: 5 });
   vfx.prim.shockwave(apex, { color: 0xc8e0ff, radius: 2.2, ms: 350 });
   const { right, fwd } = camBasis(c);
-  const big = [vfx.prim.sword({ color: 0xffc070, core: 0xffffff, length: 1.8, intensity: 2.2 }), vfx.prim.sword({ color: 0xffc070, core: 0xffffff, length: 1.8, intensity: 2.2 })];
+  const big = [vfx.prim.sword({ color: 0xe08030, core: 0xfff0d0, length: 1.8, intensity: 1 }), vfx.prim.sword({ color: 0xe08030, core: 0xfff0d0, length: 1.8, intensity: 1 })];
   const cross = apex.clone().add(V(0, -0.2, 0));
   big.forEach((s, i) => {
     const sgn = i === 0 ? 1 : -1;
@@ -442,8 +442,8 @@ registerMoveFx('HOWL', async (c) => {
   c.attacker.shake(0.05, 1.0);
   const mouth = towardCam(c, head(c.attacker, 0.8).addScaledVector(c.dir, 0.2), 0.3);
   for (let i = 0; i < 6; i++) {
-    vfx.prim.shockwave(mouth, { color: i % 2 ? 0xffd890 : 0xfff4e0, radius: 2.6, startRadius: 0.3, ms: 520, thickness: 0.14, intensity: 1.8 });
-    vfx.burst(mouth, { count: 6, tex: 'ring', color: 0xfff0c0, speed: [1.5, 2.5], size: [0.3, 0.5], endSize: 1.2, life: 0.5, intensity: 1.3 });
+    vfx.prim.shockwave(mouth, { color: i % 2 ? 0xffb050 : 0xffe0a0, radius: 2.6, startRadius: 0.3, ms: 520, thickness: 0.1, intensity: 1.1 });
+    vfx.burst(mouth, { count: 5, tex: 'ring', color: 0xffd080, speed: [1.5, 2.5], size: [0.3, 0.5], endSize: 1.2, life: 0.5, intensity: 1 });
     if (i === 1) stage.chromaPulse(0.008, 300);
     await vfx.wait(120);
   }
@@ -462,7 +462,7 @@ registerMoveFx('HYPER_BEAM', async (c) => {
   const { vfx, stage } = c;
   const ORANGE = 0xff8a20;
   const CORE = 0xfff4d8;
-  vfx.shot('shoulder', c.side, 600);
+  vfx.shot(c.side === 0 ? 'shoulder' : 'attacker', c.side, 600);
   stage.setTint(0x806060, 0.35, 500);
   const mouth = c.user.clone().addScaledVector(c.dir, 0.7).add(V(0, 0.15, 0));
   // charge: energy sucked into a growing orb, contracting rings
@@ -476,15 +476,17 @@ registerMoveFx('HYPER_BEAM', async (c) => {
       const p = mouth.clone().add(d);
       vfx.particle({ tex: 'streak', pos: p, vel: d.clone().multiplyScalar(-3.2), life: 0.3, size: [0.8, 0.3], color: [0xffffff, ORANGE], intensity: 2, rot: Math.atan2(d.y, d.x) });
     }
-    if (Math.random() < 0.12 + k * 0.1) vfx.prim.shockwave(mouth, { color: ORANGE, radius: 0.3, startRadius: 2.4, ms: 300, thickness: 0.15 });
+    if (Math.random() < 0.1 + k * 0.1) vfx.prim.shockwave(mouth, { color: ORANGE, radius: 0.3, startRadius: 1.6, ms: 300, thickness: 0.12, intensity: 1.1 });
   });
   c.attacker.setOutline(0);
   // FIRE
   vfx.shot('side', c.side, 350);
-  stage.flash(0xfff0d0, 0.6, 250);
+  stage.flash(0xfff0d0, 0.35, 220);
   const to = c.aim(0.5);
-  const beam = vfx.prim.beam(mouth, to, { color: ORANGE, core: CORE, width: 0.75, holdMs: 900, growMs: 160, fadeMs: 350, intensity: 2.6, wobble: 0.12 });
-  const inner = vfx.prim.beam(mouth, to, { color: 0xffe0a0, core: 0xffffff, width: 0.35, holdMs: 900, growMs: 140, fadeMs: 300, intensity: 3 });
+  // solid tube body + white-hot core + a thin noisy energy sheath
+  const beam = vfx.prim.ribbon([mouth, to], { color: ORANGE, core: 0xffb060, width: 0.42, ms: 160, length: 1.2, holdMs: 900, fadeMs: 350, intensity: 1.0, segments: 40, e: ease.outCubic });
+  const inner = vfx.prim.ribbon([mouth, to], { color: 0xffd8a0, core: 0xffffff, width: 0.16, ms: 140, length: 1.2, holdMs: 900, fadeMs: 320, intensity: 1.0, segments: 40, e: ease.outCubic });
+  const sheath = vfx.prim.beam(mouth, to, { color: 0xff6a10, core: 0xffa040, width: 0.3, holdMs: 850, growMs: 160, fadeMs: 300, intensity: 0.8, wobble: 0.25, noise: 0.8 });
   vfx.shake(0.2, 1200);
   stage.chromaPulse(0.015, 900);
   orb.dispose();
@@ -494,20 +496,20 @@ registerMoveFx('HYPER_BEAM', async (c) => {
   for (let i = 0; i <= 40; i++) {
     const t = i / 40;
     const a = t * Math.PI * 10;
-    helix.push(mouth.clone().lerp(to, t).addScaledVector(side, Math.cos(a) * 0.75).add(V(0, Math.sin(a) * 0.75, 0)));
+    helix.push(mouth.clone().lerp(to, t).addScaledVector(side, Math.cos(a) * 0.6).add(V(0, Math.sin(a) * 0.6, 0)));
   }
-  vfx.prim.ribbon(helix, { color: 0xffb050, core: 0xffffff, width: 0.06, ms: 180, length: 1, holdMs: 700, fadeMs: 300, segments: 240 });
+  vfx.prim.ribbon(helix, { color: 0xff9a30, core: 0xffe0b0, width: 0.05, ms: 180, length: 1, holdMs: 700, fadeMs: 300, segments: 240, intensity: 1.4 });
   const sparks = during(c, 1000, () => {
     const t = Math.random();
     const p = mouth.clone().lerp(to, t);
     vfx.particle({ tex: 'spark', pos: p, vel: new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(4), life: 0.3, size: [0.25, 0.05], color: [0xffffff, ORANGE], intensity: 2 });
-    vfx.burst(mouth, { count: 1, tex: 'glow', color: 0xffd090, speed: 1, size: 1.2, life: 0.15 });
+    vfx.burst(mouth, { count: 1, tex: 'glow', color: 0xffa040, speed: 1, size: 0.9, life: 0.15, intensity: 1.3 });
   });
   await beam.arrived;
   if (!c.missed) {
-    vfx.prim.blast(to, { core: 0xffffff, main: 0xffa030, dark: 0x803010, radius: 2.4, ms: 1300, intensity: 2 });
-    vfx.prim.energyBlast(to, { color: ORANGE, core: 0xffffff, radius: 3, ms: 500, intensity: 2.4 });
-    impactFx(c, to, { strength: 1.6, pal: { core: 0xffffff, main: ORANGE, dark: 0x6a2a08 }, stop: true, flash: 0.5 });
+    vfx.prim.blast(to, { core: 0xfff0c0, main: 0xff8a20, dark: 0x6a2008, radius: 1.8, ms: 1300, intensity: 1.2 });
+    vfx.prim.energyBlast(to, { color: 0xff7a10, core: 0xffc080, radius: 1.6, ms: 400, intensity: 0.9 });
+    impactFx(c, to, { strength: 1.6, pal: { core: 0xffffff, main: ORANGE, dark: 0x6a2a08 }, stop: true, flash: 0.3 });
     vfx.prim.crack(c.foeFeet, { radius: 2, ms: 1500, glow: 0xff8a30 });
     vfx.prim.debris({ from: c.foeFeet.clone().setY(c.foeFeet.y + 0.2), count: 10, color: 0x6a5a48, size: 0.14, speed: 4, up: 5, ms: 1300 });
     vfx.shake(0.55, 800);
@@ -519,7 +521,7 @@ registerMoveFx('HYPER_BEAM', async (c) => {
     vfx.prim.blast(to, { core: 0xffffff, main: 0xffa030, dark: 0x803010, radius: 1.5, ms: 900 });
     vfx.shake(0.3, 500);
   }
-  await Promise.all([beam.done, inner.done, sparks]);
+  await Promise.all([beam.done, inner.done, sheath.done, sparks]);
   vfx.burst(to, { count: 16, tex: 'smoke', color: [0x5a4a40, 0x2a2420], speed: [1, 2.5], dir: UP, spread: 1.2, size: [0.8, 1.2], endSize: 2.2, life: [0.8, 1.2], additive: false, alpha: [0.6, 0] });
   stage.setTint(0xffffff, 0, 400);
   vfx.shot('wide', c.side, 600);
@@ -547,23 +549,23 @@ registerMoveFx('EXPLOSION', async (c) => {
   c.attacker.setOutline(0);
   // DETONATION
   vfx.shot('wide', c.side, 250);
-  stage.flash(0xffffff, 1.0, 450);
+  stage.flash(0xfff4e0, 0.8, 320);
   stage.setTint(0xffffff, 0, 200);
   stage.shockwave(center, 1.4, 600);
   stage.chromaPulse(0.03, 700);
   vfx.shake(0.9, 1100);
   hitStop(c, 90, 0.1);
   c.attacker.uniforms.flashAmt.value = 1;
-  vfx.prim.energyBlast(center, { color: 0xffc070, core: 0xffffff, radius: 5, ms: 600, intensity: 3 });
+  vfx.prim.energyBlast(center, { color: 0xff9a40, core: 0xfff0d0, radius: 4.2, ms: 550, intensity: 1.4 });
   vfx.prim.blast(center, { core: 0xffffff, main: 0xff9a30, dark: 0x5a2008, radius: 3.6, ms: 1600, intensity: 2.2, rise: 1.2 });
   const ground = c.userFeet.clone().setY(c.userFeet.y + 0.08);
   vfx.prim.shockwave(ground, { color: 0xffd8a0, radius: 9, facing: 'ground', ms: 800, thickness: 0.25 });
   vfx.prim.shockwave(ground, { color: 0xff8a30, radius: 6, facing: 'ground', ms: 650, thickness: 0.4 });
-  vfx.prim.shockwave(center, { color: 0xffffff, radius: 6, ms: 450, thickness: 0.1, intensity: 2.5 });
+  vfx.prim.shockwave(center, { color: 0xffe0b0, radius: 6, ms: 450, thickness: 0.08, intensity: 1.6 });
   vfx.prim.crack(c.userFeet, { radius: 2.4, ms: 1800, glow: 0xff7a20 });
   vfx.burst(center, { count: 60, tex: 'flame', color: [0xfff0c0, 0xff6a10], speed: [4, 11], size: [0.6, 1.1], endSize: 1.6, life: [0.4, 0.8], drag: 2.5, additive: false, alpha: [1, 0], spin: 3 });
-  vfx.burst(center, { count: 60, tex: 'spark', color: [0xffffff, 0xffb040], speed: [6, 16], size: [0.2, 0.4], life: [0.3, 0.7], drag: 1.5, gravity: 5 });
-  vfx.burst(center, { count: 20, tex: 'streak', color: 0xffffff, speed: [10, 18], size: [1.2, 2], life: 0.25, drag: 2 });
+  vfx.burst(center, { count: 60, tex: 'spark', color: [0xffe0a0, 0xff8a20], speed: [6, 16], size: [0.2, 0.4], life: [0.3, 0.7], drag: 1.5, gravity: 5, intensity: 1.6 });
+  vfx.burst(center, { count: 20, tex: 'streak', color: [0xfff0d0, 0xffa040], speed: [10, 18], size: [1.2, 2], life: 0.25, drag: 2, intensity: 1.3 });
   vfx.prim.debris({ from: c.userFeet.clone().setY(c.userFeet.y + 0.3), count: 16, color: 0x5a4a3a, size: 0.2, speed: 7, up: 7, ms: 1600 });
   await vfx.wait(120);
   c.attacker.uniforms.flashAmt.value = 0;

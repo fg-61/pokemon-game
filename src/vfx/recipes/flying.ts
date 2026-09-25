@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
-import { during, impactFx, rush, sideOf, speedLines, strokePoints, towardCam } from './common';
+import { during, impactFx, rush, sideOf, slashStroke, speedLines, strokePoints, towardCam } from './common';
 
 // flying-type move recipes
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const SKY = 0xc8dcff;
-const FLYPAL = { core: 0xffffff, main: 0xb8d0ff, dark: 0x6070a0 };
+const FLYPAL = { core: 0xe8f0ff, main: 0x88a8f0, dark: 0x6070a0 };
 
 function whiff(c: MoveFxContext, at = c.aim(0.5)) {
   c.vfx.burst(at, { count: 8, tex: 'streak', color: 0xe8f0ff, speed: [4, 7], size: [0.4, 0.7], life: 0.18, dir: c.dir, spread: 0.5, intensity: 1.2 });
@@ -27,9 +27,9 @@ registerMoveFx('WING_ATTACK', async (c) => {
   await rush(c, { ms: 320, ghosts: 2, ghostColor: SKY });
   const at = c.aim(0.55);
   // two wing blades sweep in from either side
-  const a = vfx.prim.ribbon(strokePoints(c, at.clone().add(V(0, 0.15, 0)), -0.35, 2.6, 0.5, 9), { color: SKY, core: 0xffffff, width: 0.12, ms: 120, length: 0.85, holdMs: 60, fadeMs: 220, e: ease.outCubic });
+  const a = slashStroke(c, strokePoints(c, at.clone().add(V(0, 0.15, 0)), -0.35, 2.6, 0.5, 9), { color: 0x8aa8f0, core: 0xe0ecff, width: 0.12, ms: 120, length: 0.85, holdMs: 60, fadeMs: 220, intensity: 1, edge: 0x101838 });
   await vfx.wait(70);
-  vfx.prim.ribbon(strokePoints(c, at.clone().add(V(0, -0.15, 0)), Math.PI + 0.35, 2.6, -0.5, 9), { color: SKY, core: 0xffffff, width: 0.12, ms: 120, length: 0.85, holdMs: 60, fadeMs: 220, e: ease.outCubic });
+  slashStroke(c, strokePoints(c, at.clone().add(V(0, -0.15, 0)), Math.PI + 0.35, 2.6, -0.5, 9), { color: 0x8aa8f0, core: 0xe0ecff, width: 0.12, ms: 120, length: 0.85, holdMs: 60, fadeMs: 220, intensity: 1, edge: 0x101838 });
   await a.arrived;
   if (c.missed) whiff(c, at);
   else {
@@ -59,22 +59,22 @@ registerMoveFx('GUST', async (c) => {
       const t = j / 5;
       return from.clone().lerp(to, t).addScaledVector(side, Math.sin(t * Math.PI) * bend).add(V(0, Math.sin(t * Math.PI * 2 + i) * 0.35 + (i - 1.5) * 0.18, 0));
     });
-    vfx.prim.ribbon(pts, { color: 0xe8f0ff, core: 0xffffff, width: 0.05, ms: 280, length: 0.5, fadeMs: 160, opacity: 0.8, intensity: 1.4, e: ease.inQuad });
+    vfx.prim.ribbon(pts, { color: 0xb8d0ff, core: 0xf0f6ff, width: 0.06, ms: 280, length: 0.5, fadeMs: 160, opacity: 0.9, intensity: 1.1, e: ease.inQuad });
     await vfx.wait(50);
   }
-  void vfx.stream(from, to, { tex: 'streak', color: [0xffffff, SKY], ms: 350, rate: 70, travel: 0.25, spread: 0.18, size: [0.6, 0.9], endSize: 0.7, intensity: 1.1, alpha: [0.7, 0] });
+  void vfx.stream(from, to, { tex: 'streak', color: [0xb8ccf0, 0x7890c8], ms: 350, rate: 40, travel: 0.3, spread: 0.2, size: [0.6, 0.9], endSize: 0.5, intensity: 0.8, alpha: [0.6, 0], life: 0.26 });
   await vfx.wait(160);
   // a small whirlwind wraps the target
   const base = c.missed ? c.aim(0).setY(c.foeFeet.y) : c.foeFeet.clone();
-  const vx = vfx.prim.vortex(base, { color: 0xe8f0ff, color2: SKY, radius: Math.max(0.8, c.target.width * 0.55), height: Math.max(2.2, c.target.height + 0.6), ms: 900, intensity: 1.3, speed: 2.4, opacity: 0.8 });
+  const vx = vfx.prim.vortex(base, { color: 0xb8ccf0, color2: 0xf0f4ff, radius: Math.max(0.8, c.target.width * 0.55), height: Math.max(2.2, c.target.height + 0.6), ms: 900, intensity: 1, speed: 2.4, opacity: 1, additive: false });
   if (!c.missed) {
-    impactFx(c, to, { strength: 0.8, pal: FLYPAL, ground: false });
+    impactFx(c, to, { strength: 0.6, pal: FLYPAL, ground: false });
     c.impact(0);
   }
   await during(c, 700, () => {
     const a = Math.random() * Math.PI * 2;
     const r = 0.6 + Math.random() * 0.5;
-    vfx.particle({ tex: Math.random() < 0.5 ? 'leaf' : 'streak', pos: base.clone().add(V(Math.cos(a) * r, Math.random() * 2, Math.sin(a) * r)), vel: V(0, 1.2, 0), swirl: { center: base, speed: 8 }, life: 0.45, size: [0.3, 0.2], color: [0xffffff, SKY], intensity: 1.2, spin: 6, additive: true });
+    vfx.particle({ tex: Math.random() < 0.5 ? 'leaf' : 'streak', pos: base.clone().add(V(Math.cos(a) * r, Math.random() * 2, Math.sin(a) * r)), vel: V(0, 1.2, 0), swirl: { center: base, speed: 8 }, life: 0.45, size: [0.35, 0.25], color: [0x6a9a4a, 0xa8b8d0], intensity: 1, spin: 6, additive: false });
     if (Math.random() < 0.3) vfx.dust(base, 0xa89878, 1);
   });
   await vx.done;
@@ -101,7 +101,7 @@ registerMoveFx('FEATHER_DANCE', async (c) => {
         vel: V(0, -1.6 - Math.random() * 0.6, 0),
         swirl: { center, speed: 1.5 + Math.random() },
         life: 1.2,
-        size: [0.32, 0.26],
+        size: [0.5, 0.4],
         color: [Math.random() < 0.3 ? 0xffe8f4 : 0xffffff, 0xe0d8f0],
         intensity: 1.05,
         additive: false,
@@ -137,7 +137,7 @@ registerMoveFx('AERIAL_ACE', async (c) => {
   await lunge;
   const at = c.aim(0.55);
   // one clean razor line across the target...
-  const cut = vfx.prim.ribbon(strokePoints(c, at, c.side === 0 ? -0.55 : Math.PI + 0.55, 3.6, 0.05, 5, 0.8), { color: 0xd8e8ff, core: 0xffffff, width: 0.045, ms: 70, length: 1, holdMs: 180, fadeMs: 200, intensity: 2.2, e: ease.outCubic });
+  const cut = vfx.prim.ribbon(strokePoints(c, at, c.side === 0 ? -0.55 : Math.PI + 0.55, 3.6, 0.05, 5, 0.8), { color: 0xd8e8ff, core: 0xffffff, width: 0.045, ms: 70, length: 1, holdMs: 180, fadeMs: 200, intensity: 1.3, e: ease.outCubic });
   await cut.arrived;
   await vfx.tween(120, (k) => (a.uniforms.opacity.value = 0.15 + 0.85 * k));
   a.uniforms.opacity.value = 1;

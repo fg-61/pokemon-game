@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
-import { during, pulledShot, sideOf, up } from './common';
+import { during, pulledShot, sideOf, up, softHit } from './common';
 
 // Fire palette (normal-blended body colors keep their hue; additive only for hot cores / sparks)
 const F = {
@@ -105,7 +105,7 @@ registerMoveFx('FLAMETHROWER', async (c) => {
       if (Math.random() < 0.3) c.target.shake(0.08, 0.2);
     });
     await Promise.all([stream, splash]);
-    vfx.hitSpark(to, c.pal, 0.9);
+    softHit(c, to, c.pal, 0.9);
     await burn;
   } else {
     await stream;
@@ -120,6 +120,7 @@ registerMoveFx('FLAMETHROWER', async (c) => {
 
 registerMoveFx('EMBER', async (c) => {
   const { vfx } = c;
+  vfx.shot('side', c.side, 350);
   const mouth = mouthOf(c, 0.4);
   vfx.particle({ tex: 'glow', pos: mouth, life: 0.25, size: [0.2, 0.9], color: F.orange, intensity: 1.6, alpha: [0.3, 0.9] });
   vfx.burst(mouth, { count: 12, tex: 'spark', color: [F.yellow, F.orange], speed: 0.2, jitter: 0.8, attract: { to: mouth, strength: 18 }, life: 0.25, size: [0.08, 0.16] });
@@ -155,12 +156,14 @@ registerMoveFx('EMBER', async (c) => {
   await Promise.all(flights);
   if (!c.missed) await burnOn(c, to, 380, 0.8, 0.45);
   else await vfx.wait(250);
+  vfx.shot('wide', c.side, 500);
 });
 
 // --------------------------------------------------------------------------------------- FIRE PUNCH
 
 registerMoveFx('FIRE_PUNCH', async (c) => {
   const { vfx } = c;
+  vfx.shot('side', c.side, 350);
   // wind-up: fist ignites with a spiral of flame
   c.attacker.setOutline(1.5, F.orange);
   const fist = () => c.attacker.at(0.5).add(c.dir.clone().multiplyScalar(0.55));
@@ -184,7 +187,7 @@ registerMoveFx('FIRE_PUNCH', async (c) => {
   c.attacker.setOutline(0);
   const at = c.aim(0.5);
   if (!c.missed) {
-    vfx.hitSpark(at, c.pal, 1.3);
+    softHit(c, at, c.pal, 1.3);
     c.stage.shockwave(at, 0.8, 300);
     c.stage.flash(F.orange, 0.3, 180);
     vfx.shake(0.3, 350);
@@ -203,6 +206,7 @@ registerMoveFx('FIRE_PUNCH', async (c) => {
     await trail;
     await vfx.wait(300);
   }
+  vfx.shot('wide', c.side, 500);
 });
 
 // --------------------------------------------------------------------------------------- WILL-O-WISP
@@ -216,8 +220,9 @@ registerMoveFx('WILL_O_WISP', async (c) => {
   const center = c.user.clone().add(new THREE.Vector3(0, 0.2, 0));
   const wispPos: THREE.Vector3[] = Array.from({ length: n }, () => center.clone());
   const emitWisp = (p: THREE.Vector3, big = 1) => {
-    vfx.particle({ tex: 'flame', pos: p.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.12, 0, (Math.random() - 0.5) * 0.12)), vel: new THREE.Vector3(0, 1.3, 0), life: 0.4, size: [0.45 * big, 0.05], color: [W.cyan, W.deep], intensity: 1.3, alpha: [0.9, 0], rot: (Math.random() - 0.5) * 0.3 });
-    vfx.particle({ tex: 'glow', pos: p.clone(), life: 0.08, size: 0.7 * big, color: W.main, intensity: 1.3, alpha: [0.7, 0] });
+    vfx.particle({ tex: 'flame', pos: p.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.14, 0, (Math.random() - 0.5) * 0.14)), vel: new THREE.Vector3(0, 1.4, 0), life: 0.42, size: [0.6 * big, 0.08], color: [0x5a9cff, 0x4a20b0], intensity: 1.05, additive: false, alpha: [0.95, 0], rot: (Math.random() - 0.5) * 0.3 });
+    vfx.particle({ tex: 'flame', pos: p.clone(), vel: new THREE.Vector3(0, 1.1, 0), life: 0.25, size: [0.32 * big, 0.05], color: [W.core, 0x8ab0ff], intensity: 1.2, alpha: [0.9, 0], rot: 0 });
+    vfx.particle({ tex: 'glow', pos: p.clone(), life: 0.08, size: 0.8 * big, color: W.main, intensity: 0.9, alpha: [0.6, 0] });
     if (Math.random() < 0.3) vfx.particle({ tex: 'dot', pos: p.clone(), vel: new THREE.Vector3((Math.random() - 0.5), 0.6, (Math.random() - 0.5)), life: 0.5, size: [0.08, 0.02], color: W.core, intensity: 1.8 });
   };
   // 1) wisps pop into existence around the user and orbit

@@ -30,14 +30,14 @@ registerMoveFx('SAND_ATTACK', async (c) => {
     await vfx.wait(120);
     const from = c.userFeet.clone().add(V(0, 0.25, 0)).addScaledVector(c.dir, 0.5);
     vfx.dust(c.userFeet, DUST, 8);
-    void vfx.stream(from, to.clone().add(V(0, 0.55, 0)), { tex: 'dot', color: [0xf0d8a0, 0xb08850], ms: 240, rate: 220, travel: 0.42, spread: 0.12, size: [0.06, 0.12], endSize: 0.08, gravity: 5, additive: false, alpha: [1, 0.8], intensity: 1.2 });
-    void vfx.stream(from, to.clone().add(V(0, 0.4, 0)), { tex: 'smoke', color: [SAND, 0xa08050], ms: 240, rate: 50, travel: 0.5, spread: 0.1, size: [0.35, 0.5], endSize: 1.2, gravity: 3, additive: false, alpha: [0.6, 0], intensity: 1 });
+    void vfx.stream(from, to.clone().add(V(0, 0.55, 0)), { tex: 'dot', color: [0xf0d8a0, 0xa07840], ms: 260, rate: 260, travel: 0.42, spread: 0.14, size: [0.1, 0.18], endSize: 0.12, gravity: 5, additive: false, alpha: [1, 0.8], intensity: 1.1 });
+    void vfx.stream(from, to.clone().add(V(0, 0.4, 0)), { tex: 'smoke', color: [SAND, 0x9a7440], ms: 260, rate: 70, travel: 0.5, spread: 0.12, size: [0.5, 0.7], endSize: 1.6, gravity: 3, additive: false, alpha: [0.75, 0], intensity: 1 });
     await vfx.wait(240);
   }
   await vfx.wait(200);
   // the face full of sand
-  vfx.burst(to, { count: 18, tex: 'smoke', color: [SAND, 0x9a7a48], speed: [0.8, 2.2], size: [0.5, 0.8], endSize: 1.6, life: [0.6, 1], drag: 2, additive: false, alpha: [0.75, 0] });
-  vfx.burst(to, { count: 30, tex: 'dot', color: [0xf0d8a0, 0xb08850], speed: [1, 3], size: [0.06, 0.1], life: [0.5, 0.9], gravity: 5, additive: false });
+  vfx.burst(to, { count: 26, tex: 'smoke', color: [SAND, 0x9a7440], speed: [1, 2.6], size: [0.7, 1.1], endSize: 2.2, life: [0.7, 1.1], drag: 2, additive: false, alpha: [0.85, 0] });
+  vfx.burst(to, { count: 40, tex: 'dot', color: [0xf0d8a0, 0xa07840], speed: [1, 3.5], size: [0.1, 0.16], life: [0.5, 0.9], gravity: 5, additive: false });
   if (!c.missed) {
     c.target.flash(0xd8b070, 400, 0.55);
     c.target.shake(0.06, 0.4);
@@ -59,7 +59,7 @@ registerMoveFx('EARTHQUAKE', async (c) => {
   vfx.prim.crack(c.userFeet, { radius: 2, ms: 1500, glow: 0xff9a40, glowIntensity: 1.5 });
   eruption(c, c.userFeet, 0.6);
   const ground = (p: THREE.Vector3) => p.clone().setY(p.y + 0.06);
-  for (let i = 0; i < 3; i++) vfx.prim.shockwave(ground(c.userFeet), { color: i ? 0xd8b070 : 0xfff0c0, radius: 3 + i * 2.5, facing: 'ground', ms: 600 + i * 200, thickness: 0.3, intensity: 1.4 });
+  for (let i = 0; i < 3; i++) vfx.prim.shockwave(ground(c.userFeet), { color: i ? 0xc89850 : 0xffe0a0, radius: 3 + i * 2.5, facing: 'ground', ms: 600 + i * 200, thickness: 0.22, intensity: 0.9 });
   // the tremor travels across the field: dirt spurts and rock chunks leap along the path
   const from = c.userFeet.clone();
   const to = c.missed ? c.aim(0).setY(c.foeFeet.y) : c.foeFeet.clone();
@@ -134,7 +134,12 @@ registerMoveFx('DIG', async (c) => {
     await vfx.wait(150);
     return;
   }
-  // strike: the ground under the target trembles and bursts open
+  // strike: the user is underground (hidden by the charge turn; hide it here too if it wasn't)
+  if (a.group.visible) {
+    vfx.dust(c.userFeet, DUST, 10);
+    a.group.visible = false;
+  }
+  // the ground under the target trembles and bursts open
   vfx.shot('target', c.side, 450);
   const spot = c.missed ? c.aim(0).setY(c.foeFeet.y) : c.foeFeet.clone();
   const burstAt = spot.clone().addScaledVector(c.dir, -0.85);

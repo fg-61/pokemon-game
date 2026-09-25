@@ -19,10 +19,10 @@ registerMoveFx('NIGHT_SHADE', async (c) => {
   vfx.shot('attacker', c.side, 450);
   stage.setTint(0x40305a, 0.6, 450);
   // the user becomes a looming shadow with burning eyes
-  const sil = silhouette(c.attacker, 0x100618, 0.92, 350, 1200, 350, stage);
+  const sil = silhouette(c.attacker, 0x100618, 0.92, 300, 1050, 300, stage);
   void vfx.tween(350, (k) => (c.attacker.scale = 1 + 0.12 * k));
   const aura = during(c, 900, () => wisps(c, c.userFeet.clone().add(V(0, 0.4, 0)), 2, Math.max(0.6, c.attacker.width * 0.5), 2));
-  await vfx.wait(400);
+  await vfx.wait(320);
   const hd = c.attacker.at(0.76);
   const { right } = camBasis(c);
   const eyeW = Math.min(0.26, c.attacker.width * 0.13);
@@ -31,12 +31,12 @@ registerMoveFx('NIGHT_SHADE', async (c) => {
     vfx.particle({ tex: 'glow', pos: p, life: 1.2, size: [0.2, 0.5], color: 0xff2a4a, intensity: 3.5, alpha: [1, 0], fadeIn: 0.1 });
     vfx.particle({ tex: 'star', pos: p.clone(), life: 0.5, size: [0.1, 0.9], color: 0xff6a8a, intensity: 2.6, alpha: [1, 0], fadeIn: 0.3 });
   }
-  await vfx.wait(350);
+  await vfx.wait(280);
   // a wavering ghostly beam
   vfx.shot('side', c.side, 350);
   const from = c.user.clone().addScaledVector(c.dir, 0.5).add(V(0, 0.2, 0));
   const to = c.aim(0.5);
-  const beam = vfx.prim.beam(from, to, { color: PURPLE, core: 0xe8d0ff, width: 0.32, holdMs: 550, growMs: 220, fadeMs: 300, noise: 0.85, wobble: 0.22, intensity: 2 });
+  const beam = vfx.prim.beam(from, to, { color: 0x6a30d0, core: 0xb088ff, width: 0.3, holdMs: 550, growMs: 220, fadeMs: 300, noise: 0.85, wobble: 0.22, intensity: 1.2 });
   const smoke = vfx.stream(from, to, { tex: 'wisp', color: [0x2a1040, 0x05020a], ms: 700, rate: 55, travel: 0.35, spread: 0.1, size: [0.5, 0.8], endSize: 1.4, additive: false, alpha: [0.6, 0], spin: 2, wave: 0.1 });
   await beam.arrived;
   if (!c.missed) {
@@ -65,8 +65,10 @@ registerMoveFx('LICK', async (c) => {
   const top = towardCam(c, c.aim(0.95), 0.7);
   const mid = mouth.clone().lerp(bottom, 0.5).add(V(0, -0.5, 0));
   const pts = [mouth, mid, bottom, bottom.clone().lerp(top, 0.5).addScaledVector(c.dir, -0.15), top];
-  const tongue = vfx.prim.ribbon(pts, { color: 0xe060b0, core: 0xffa8d8, width: 0.2, ms: 360, length: 1, holdMs: 200, fadeMs: 250, additive: false, opacity: 0.92, intensity: 1.1, e: ease.inOutQuad });
-  vfx.prim.ribbon(pts, { color: PURPLE, core: 0xffc0f0, width: 0.3, ms: 360, length: 1, holdMs: 200, fadeMs: 250, opacity: 0.35, intensity: 1.4, e: ease.inOutQuad });
+  const under = vfx.prim.ribbon(pts, { color: 0x4a1040, core: 0x4a1040, width: 0.34, ms: 360, length: 1, holdMs: 200, fadeMs: 250, additive: false, opacity: 0.5, intensity: 1, e: ease.inOutQuad });
+  under.mesh.renderOrder = 4;
+  const tongue = vfx.prim.ribbon(pts, { color: 0xd8509a, core: 0xff9ac8, width: 0.26, ms: 360, length: 1, holdMs: 200, fadeMs: 250, additive: false, opacity: 0.95, intensity: 1, e: ease.inOutQuad });
+  tongue.mesh.renderOrder = 6;
   const drool = during(c, 500, () => {
     if (Math.random() < 0.5) vfx.particle({ tex: 'drop', pos: tongue.headPos(), vel: V(0, -1, 0), acc: V(0, -8, 0), life: 0.5, size: [0.18, 0.1], color: 0xd070ff, intensity: 1.3, alpha: [0.9, 0.3] });
   });
@@ -87,10 +89,11 @@ registerMoveFx('LICK', async (c) => {
 registerMoveFx('CONFUSE_RAY', async (c) => {
   const { vfx } = c;
   const from = c.user.clone().addScaledVector(c.dir, 0.6).add(V(0, 0.3, 0));
-  const orb = vfx.prim.orb({ color: 0xffd040, core: 0xffffff, radius: 0.26, intensity: 2.2 });
+  const orb = vfx.prim.orb({ color: 0xc8a020, core: 0xfff0a0, radius: 0.26, intensity: 1.4 });
   orb.mesh.position.copy(from);
   await orb.grow(280, 1);
-  const trail = vfx.trail(() => orb.mesh.position, 1700, { tex: 'wisp', color: [0xffe080, PURPLE], size: [0.35, 0.5], endSize: 0.1, life: 0.45, speed: 0.2, rate: 45, intensity: 1.4 });
+  const trail = vfx.trail(() => orb.mesh.position, 1700, { tex: 'wisp', color: [0xe0c040, 0x7a40e0], size: [0.4, 0.6], endSize: 0.15, life: 0.5, speed: 0.2, rate: 50, intensity: 1.1 });
+  const eerie = vfx.trail(() => orb.mesh.position, 1700, { tex: 'wisp', color: [0x3a1a5a, 0x100418], size: [0.5, 0.7], endSize: 1, life: 0.5, speed: 0.3, rate: 25, additive: false, alpha: [0.45, 0] });
   // an eerie wobbling drift towards the target...
   const center = c.missed ? c.aim(0.5) : c.foe.clone();
   const side = new THREE.Vector3(-c.dir.z, 0, c.dir.x);
@@ -125,7 +128,7 @@ registerMoveFx('CONFUSE_RAY', async (c) => {
     c.stage.chromaPulse(0.01, 400);
     c.impact(0);
   } else vfx.burst(center, { count: 12, tex: 'spark', color: [0xffe080, PURPLE], speed: [1, 3], life: 0.4 });
-  await trail;
+  await Promise.all([trail, eerie]);
   await vfx.wait(300);
 });
 

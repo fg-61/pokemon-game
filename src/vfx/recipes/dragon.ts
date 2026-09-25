@@ -79,7 +79,7 @@ registerMoveFx('DRAGON_CLAW', async (c) => {
   await rush(c, { ms: 320, ghosts: 2, ghostColor: 0x9a7aff });
   c.attacker.setOutline(0);
   const at = c.aim(0.55);
-  await clawMarks(c, at, { color: VIOLET, core: 0xc8f8ff, count: 3, width: 0.11, len: 2.3, angle: -1.05, gap: 0.42, stagger: 45, bend: 0.2, intensity: 2.2 });
+  await clawMarks(c, at, { color: VIOLET, core: 0xb8a8ff, count: 3, width: 0.11, len: 2.3, angle: -1.05, gap: 0.42, stagger: 45, bend: 0.2, intensity: 1.3, edge: 0x14062a });
   if (c.missed) whiff(c, at);
   else {
     impactFx(c, at, { strength: 1.1, pal: DRAGONPAL, stop: true });
@@ -124,10 +124,30 @@ registerMoveFx('TWISTER', async (c) => {
   const start = c.userFeet.clone().addScaledVector(c.dir, 1.0);
   const to = c.missed ? c.aim(0).setY(c.foeFeet.y) : c.foeFeet.clone();
   // a violet-teal twister spins up in front of the user and rushes across the field
-  const tw = vfx.prim.vortex(start, { color: TEAL, color2: VIOLET, radius: 1.0, height: 3.2, ms: 1900, intensity: 1.7, speed: 1.8 });
+  const tw = vfx.prim.vortex(start, { color: TEAL, color2: VIOLET, radius: 1.1, height: 2.8, ms: 1900, intensity: 1.1, speed: 1.8 });
+  // a darker normal-blended shell gives the funnel body on bright arenas
+  const shell = vfx.prim.vortex(start, { color: 0x3a2a90, color2: 0x5a2aa0, radius: 1.25, height: 2.9, ms: 1900, intensity: 1, speed: 1.4, opacity: 0.55, additive: false });
   const center = start.clone();
   const swirl = during(c, 1700, () => {
     center.copy(tw.mesh.position).add(V(0, 1.2, 0));
+    // dark violet wind bands give the funnel body against bright arenas
+    const a0 = Math.random() * Math.PI * 2;
+    const h = Math.random() * 2.8;
+    const r0 = 0.35 + h * 0.3;
+    vfx.particle({
+      tex: 'wisp',
+      pos: tw.mesh.position.clone().add(V(Math.cos(a0) * r0, h, Math.sin(a0) * r0)),
+      vel: V(0, 1, 0),
+      swirl: { center: tw.mesh.position.clone(), speed: 6 },
+      life: 0.5,
+      size: [0.7, 1.1],
+      color: [0x5a3aa0, 0x2a1a60],
+      intensity: 1,
+      additive: false,
+      alpha: [0.45, 0],
+      fadeIn: 0.2,
+      spin: 4,
+    });
     for (let i = 0; i < 2; i++) {
       const a = Math.random() * Math.PI * 2;
       const r = 0.4 + Math.random() * 0.9;
@@ -148,11 +168,12 @@ registerMoveFx('TWISTER', async (c) => {
   await vfx.wait(250);
   await vfx.tween(520, (k) => {
     tw.mesh.position.lerpVectors(start, to, k);
+    shell.mesh.position.copy(tw.mesh.position);
     if (Math.random() < 0.5) vfx.dust(tw.mesh.position.clone(), 0xa89878, 2);
   }, ease.inOutQuad);
   if (!c.missed) {
     c.impact(0);
-    impactFx(c, c.aim(0.5), { strength: 0.8, pal: DRAGONPAL, ground: false });
+    impactFx(c, c.aim(0.5), { strength: 0.8, pal: { core: 0xc8f0ff, main: VIOLET, dark: 0x2a0a7a }, ground: false });
     // caught up and spun around
     const t = c.target;
     void vfx.tween(700, (k) => {
@@ -163,7 +184,7 @@ registerMoveFx('TWISTER', async (c) => {
       t.mesh.rotation.z = 0;
     });
   }
-  await Promise.all([tw.done, swirl]);
+  await Promise.all([tw.done, shell.done, swirl]);
   await vfx.wait(150);
 });
 
@@ -211,7 +232,7 @@ registerMoveFx('OUTRAGE', async (c) => {
     else {
       impactFx(c, at, { strength: last ? 1.6 : 1.0, pal: { core: 0xffe0f0, main: s % 2 ? 0xb05aff : 0xff4a6a, dark: 0x5a0a3a }, stop: last, flash: last ? 0.3 : 0 });
       if (last) {
-        vfx.prim.energyBlast(at, { color: 0xff3a6a, core: 0xffd0e0, radius: 2.4, ms: 450 });
+        vfx.prim.energyBlast(at, { color: 0xff3a6a, core: 0xff90b0, radius: 1.8, ms: 420, intensity: 1.1 });
         vfx.prim.crack(c.foeFeet, { radius: 1.6, ms: 1000, glow: 0xff3a6a, glowIntensity: 1.2 });
         speedLines(c, at, c.dir, { count: 12, speed: 12, color: 0xff8aa0 });
         vfx.shake(0.45, 500);
@@ -249,8 +270,8 @@ registerMoveFx('DRAGON_DANCE', async (c) => {
     return pts;
   };
   // two mystic dragons of energy spiral up around the user
-  const d1 = vfx.prim.ribbon(helix(0), { color: VIOLET, core: 0xf0e0ff, width: 0.13, ms: 1000, length: 0.45, fadeMs: 250, segments: 200, intensity: 2.2, e: ease.inOutQuad });
-  const d2 = vfx.prim.ribbon(helix(Math.PI), { color: 0xff4a6a, core: 0xffe0e8, width: 0.13, ms: 1000, length: 0.45, fadeMs: 250, segments: 200, intensity: 2.2, e: ease.inOutQuad });
+  const d1 = vfx.prim.ribbon(helix(0), { color: VIOLET, core: 0xc0a8ff, width: 0.13, ms: 1000, length: 0.45, fadeMs: 250, segments: 200, intensity: 1.2, e: ease.inOutQuad });
+  const d2 = vfx.prim.ribbon(helix(Math.PI), { color: 0xff3a5a, core: 0xff9aaa, width: 0.13, ms: 1000, length: 0.45, fadeMs: 250, segments: 200, intensity: 1.2, e: ease.inOutQuad });
   const heads = during(c, 1000, () => {
     for (const [d, col] of [
       [d1, 0xc8b0ff],

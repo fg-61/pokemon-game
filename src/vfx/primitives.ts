@@ -663,10 +663,15 @@ export class Primitives {
           float y = position.y;
           float ax = abs(position.x) * 2.0;
           float h = height * (0.88 + 0.12 * sin(position.x * width * 1.1 + time * 4.0)) * (1.0 - pow(ax, 5.0) * 0.55);
-          vec3 p;
-          p.x = position.x * width;
-          p.y = h * sin(y * 1.5708) * (1.0 - 0.18 * curl * y * y);
-          p.z = h * (curl * pow(y, 2.2) - (1.0 - y) * 0.45);
+          // integrate the curling profile: tangent leans forward more and more towards the lip
+          vec2 q = vec2(-0.45 * h, 0.0);
+          float L = h * 1.3;
+          for (int i = 0; i < 16; i++) {
+            float s = y * (float(i) + 0.5) / 16.0;
+            float th = 0.35 + curl * 2.5 * pow(smoothstep(0.4, 1.0, s), 1.5);
+            q += vec2(sin(th), cos(th)) * (L * y / 16.0);
+          }
+          vec3 p = vec3(position.x * width, q.y, q.x);
           vH = h;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }`,
@@ -704,8 +709,18 @@ export class Primitives {
       u,
       /** point on the crest line at x in [-0.5, 0.5] (world) */
       crest: (x: number) => {
-        const h = u.height.value;
-        return mesh.localToWorld(new THREE.Vector3(x * u.width.value, h * (1 - 0.18 * u.curl.value), h * u.curl.value));
+        const h = u.height.value * (1 - Math.pow(Math.abs(x) * 2, 5) * 0.55);
+        const L = h * 1.3;
+        let qz = -0.45 * h;
+        let qy = 0;
+        for (let i = 0; i < 16; i++) {
+          const s = (i + 0.5) / 16;
+          const e = Math.min(1, Math.max(0, (s - 0.4) / 0.6));
+          const th = 0.35 + u.curl.value * 2.5 * Math.pow(e * e * (3 - 2 * e), 1.5);
+          qz += Math.sin(th) * (L / 16);
+          qy += Math.cos(th) * (L / 16);
+        }
+        return mesh.localToWorld(new THREE.Vector3(x * u.width.value, qy, qz));
       },
       dispose: () => {
         off();
@@ -778,11 +793,9 @@ export class Primitives {
       color: o.color,
       emissive: new THREE.Color(o.color),
       emissiveIntensity: o.emissive ?? 0.55,
-      roughness: 0.15,
-      metalness: 0.1,
+      roughness: 0.12,
+      metalness: 0.2,
       flatShading: true,
-      transparent: true,
-      opacity: 0.9,
     });
     const up = (o.dir ?? new THREE.Vector3(0, 1, 0)).clone().normalize();
     const items: { m: THREE.Mesh; s: THREE.Vector3; d: THREE.Vector3 }[] = [];
@@ -914,11 +927,11 @@ export class Primitives {
     const geo = new THREE.TubeGeometry(curve, o.segments ?? Math.max(32, points.length * 16), 1, 8, false);
     const len = o.length ?? 0.5;
     const additive = o.additive ?? true;
-    const k = o.intensity ?? (additive ? 2 : 1);
+    const k = o.intensity ?? (additive ? 1.2 : 1);
     const mat = new THREE.ShaderMaterial({
       uniforms: {
         color: { value: hdr(o.color, k) },
-        core: { value: hdr(o.core ?? 0xffffff, k * 1.3) },
+        core: { value: hdr(o.core ?? 0xffffff, k * 1.1) },
         head: { value: 0 },
         tail: { value: -len },
         width: { value: o.width ?? 0.08 },
@@ -945,7 +958,7 @@ export class Primitives {
         void main() {
           if (vU > head || vU < tail) discard;
           float facing = abs(dot(normalize(vN), normalize(vV)));
-          vec3 c = mix(color, core, smoothstep(0.3, 0.95, facing) * (0.35 + 0.65 * vF));
+          vec3 c = mix(color, core, smoothstep(0.7, 1.0, facing) * (0.3 + 0.7 * vF));
           float a = alpha * (0.4 + 0.6 * facing) * smoothstep(0.0, 0.2, vF);
           gl_FragColor = vec4(c, a);
         }`,
@@ -1232,8 +1245,8 @@ export class Primitives {
   }
 
   /** Swirling tornado funnel standing on `pos` (Twister, Gust, Sand Tomb). Move `mesh.position` to make it travel. */
-  vortex(pos: THREE.Vector3, o: { color: THREE.ColorRepresentation; color2?: THREE.ColorRepresentation; radius?: number; height?: number; ms?: number; intensity?: number; speed?: number; opacity?: number }) {
-    const geo = new THREE.CylinderGeometry(1, 0.3, 1, 36, 8, true);
+  vortex(pos: THREE.Vector3, o: { color: THREE.ColorRepresentation; color2?: THREE.ColorRepresentation; radius?: number; height?: number; ms?: number; intensity?: number; speed?: number; opacity?: number; additive?: boolean }) {
+    const geo = new THREE.CylinderGeometry(1, 0.5, 1, 36, 8, true);
     geo.translate(0, 0.5, 0);
     const mk = (spin: number, bands: number, alphaK: number) =>
       new THREE.ShaderMaterial({
@@ -1255,14 +1268,14 @@ export class Primitives {
           void main(){
             float s = 0.5 + 0.5 * sin((vUv.x * bands + vUv.y * 2.2 - time * spin) * 6.28318);
             float s2 = 0.5 + 0.5 * sin((vUv.x * (bands + 2.0) - vUv.y * 1.3 - time * spin * 1.4) * 6.28318);
-            float st = pow(s, 5.0) + pow(s2, 9.0) * 0.6;
+            float st = pow(s, 3.0) + pow(s2, 6.0) * 0.7 + 0.12;
             float rim = 1.0 - abs(dot(normalize(vN), normalize(vV)));
-            float a = alpha * ak * st * (0.35 + 0.65 * rim) * smoothstep(0.0, 0.12, vUv.y) * smoothstep(1.0, 0.7, vUv.y);
+            float a = alpha * ak * st * (0.45 + 0.55 * rim) * smoothstep(0.0, 0.12, vUv.y) * smoothstep(1.0, 0.7, vUv.y);
             gl_FragColor = vec4(mix(color, color2, vUv.y), a);
           }`,
         transparent: true,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        blending: o.additive === false ? THREE.NormalBlending : THREE.AdditiveBlending,
         side: THREE.DoubleSide,
       });
     const outerM = mk(o.speed ?? 1.6, 3, o.opacity ?? 1);

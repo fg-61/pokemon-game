@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
-import { camBasis, during, hitStop, impactFx, rush, sideOf, speedLines, strokePoints, towardCam } from './common';
+import { camBasis, during, hitStop, impactFx, rush, sideOf, slashStroke, speedLines, strokePoints, towardCam } from './common';
 
 // fighting-type move recipes
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 /** hot orange-red fighting palette, a slightly brighter variant for slashes */
-const FIGHT = { core: 0xfff0d8, main: 0xff6a2a, dark: 0x7a1a10 };
+const FIGHT = { core: 0xffe8c0, main: 0xff5a20, dark: 0x7a1a10 };
 const CHOP = 0xffa050;
 
 function whiff(c: MoveFxContext, at = c.aim(0.5)) {
@@ -17,18 +17,20 @@ function whiff(c: MoveFxContext, at = c.aim(0.5)) {
 
 /** Karate-chop stroke through `at` at an on-screen angle, returns when it lands. */
 function chop(c: MoveFxContext, at: THREE.Vector3, angle: number, o: { len?: number; width?: number; bend?: number; ms?: number; color?: number } = {}) {
-  const r = c.vfx.prim.ribbon(strokePoints(c, at, angle, o.len ?? 2.6, o.bend ?? 0.25, 9), {
+  const r = slashStroke(c, strokePoints(c, at, angle, o.len ?? 2.6, o.bend ?? 0.25, 9), {
     color: o.color ?? CHOP,
-    core: 0xfff4e0,
+    core: 0xffe0b0,
     width: o.width ?? 0.13,
     ms: o.ms ?? 110,
     length: 0.85,
     holdMs: 80,
     fadeMs: 220,
+    intensity: 1.15,
+    edge: 0x3a0a04,
     e: ease.inQuad,
   });
   // motion blur fan behind the blade
-  c.vfx.prim.ribbon(strokePoints(c, at, angle, (o.len ?? 2.6) * 0.9, (o.bend ?? 0.25) + 0.3, 9), { color: FIGHT.main, core: CHOP, width: (o.width ?? 0.13) * 0.6, ms: o.ms ?? 110, length: 0.6, fadeMs: 160, opacity: 0.5, e: ease.inQuad });
+  c.vfx.prim.ribbon(strokePoints(c, at, angle, (o.len ?? 2.6) * 0.9, (o.bend ?? 0.25) + 0.3, 9), { color: FIGHT.main, core: CHOP, width: (o.width ?? 0.13) * 0.6, ms: o.ms ?? 110, length: 0.6, fadeMs: 160, opacity: 0.45, intensity: 1, e: ease.inQuad });
   return r.arrived;
 }
 
@@ -93,7 +95,7 @@ registerMoveFx('LOW_KICK', async (c) => {
     const t = i / 6;
     return base.clone().addScaledVector(right, s * (t - 0.5) * 2.6).add(V(0, 0.35 * Math.sin(t * Math.PI) - 0.1, 0));
   });
-  const r = vfx.prim.ribbon(pts, { color: CHOP, core: 0xfff4e0, width: 0.12, ms: 120, length: 0.8, fadeMs: 220, e: ease.inQuad });
+  const r = slashStroke(c, pts, { color: CHOP, core: 0xffe0b0, width: 0.12, ms: 120, length: 0.8, holdMs: 0, fadeMs: 220, intensity: 1.15, edge: 0x3a0a04, e: ease.inQuad });
   vfx.dust(c.foeFeet, 0xa89878, 10);
   await r.arrived;
   if (c.missed) whiff(c, at);
@@ -175,14 +177,14 @@ registerMoveFx('VITAL_THROW', async (c) => {
   // hurled up in a spin...
   const t = c.target;
   const lift = vfx.tween(420, (k) => {
-    t.hop = Math.sin(k * Math.PI * 0.5) * 1.6;
+    t.hop = Math.sin(k * Math.PI * 0.5) * 1.3;
     t.mesh.rotation.z = k * Math.PI * 1.5 * (c.side === 0 ? -1 : 1);
   }, ease.outQuad);
   const trail = vfx.trail(() => t.at(0.5).add(V(0, t.hop, 0)), 600, { tex: 'streak', color: [0xffe0c0, FIGHT.main], size: [0.4, 0.7], life: 0.2, speed: 0.3, rate: 50, intensity: 1.2 });
   await lift;
   // ...and slammed into the ground
   await vfx.tween(170, (k) => {
-    t.hop = 1.6 * (1 - k);
+    t.hop = 1.3 * (1 - k);
     t.mesh.rotation.z = (1.5 + 0.5 * k) * Math.PI * (c.side === 0 ? -1 : 1);
   }, ease.inQuad);
   t.hop = 0;

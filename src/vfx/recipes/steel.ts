@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
-import { camBasis, clawMarks, impactFx, rush, sideOf, strokePoints, towardCam } from './common';
+import { camBasis, clawMarks, impactFx, rush, sideOf, slashStroke, strokePoints, towardCam } from './common';
 
 // steel-type move recipes
 
@@ -27,13 +27,13 @@ function metalSparks(c: MoveFxContext, at: THREE.Vector3, n = 24) {
 
 registerMoveFx('METAL_CLAW', async (c) => {
   const { vfx } = c;
-  c.attacker.setOutline(1.3, SILVER);
+  c.attacker.setOutline(0.9, SILVER);
   glint(c, c.attacker.at(0.6).addScaledVector(c.dir, 0.4), 1);
   await vfx.wait(220);
   c.attacker.setOutline(0);
   await rush(c, { ms: 320 });
   const at = c.aim(0.55);
-  await clawMarks(c, at, { color: SILVER, core: 0xffffff, count: 3, width: 0.08, len: 1.9, angle: -1.0, stagger: 35, intensity: 2 });
+  await clawMarks(c, at, { color: 0x9ab8e8, core: 0xf0f6ff, count: 3, width: 0.08, len: 1.9, angle: -1.0, stagger: 35, intensity: 1.0, edge: 0x101828 });
   if (c.missed) whiff(c, at);
   else {
     impactFx(c, at, { strength: 0.9, pal: STEELPAL, ground: false });
@@ -49,7 +49,7 @@ registerMoveFx('METAL_CLAW', async (c) => {
 registerMoveFx('STEEL_WING', async (c) => {
   const { vfx } = c;
   // wings harden: a bright glint sweeps over the user
-  c.attacker.setOutline(1.6, SILVER);
+  c.attacker.setOutline(1.0, SILVER);
   c.attacker.flash(0xe0ecff, 300, 0.5);
   glint(c, c.attacker.at(0.7), 1.3);
   await vfx.wait(240);
@@ -57,7 +57,7 @@ registerMoveFx('STEEL_WING', async (c) => {
   c.attacker.setOutline(0);
   const at = c.aim(0.55);
   // a broad, flat wing stroke with a trailing twin edge
-  const r = vfx.prim.ribbon(strokePoints(c, at, c.side === 0 ? -0.25 : Math.PI + 0.25, 3.2, 0.55, 9), { color: SILVER, core: 0xffffff, width: 0.16, ms: 130, length: 0.9, holdMs: 90, fadeMs: 240, intensity: 2, e: ease.outCubic });
+  const r = slashStroke(c, strokePoints(c, at, c.side === 0 ? -0.25 : Math.PI + 0.25, 3.2, 0.55, 9), { color: 0x9ab8e8, core: 0xf0f6ff, width: 0.15, ms: 130, length: 0.9, holdMs: 90, fadeMs: 240, intensity: 1.0, edge: 0x101828 });
   vfx.prim.ribbon(strokePoints(c, at.clone().add(V(0, -0.25, 0)), c.side === 0 ? -0.25 : Math.PI + 0.25, 2.8, 0.45, 9), { color: 0x7890b8, core: SILVER, width: 0.07, ms: 150, length: 0.8, fadeMs: 200, e: ease.outCubic });
   await r.arrived;
   if (c.missed) whiff(c, at);
@@ -73,7 +73,7 @@ registerMoveFx('STEEL_WING', async (c) => {
 registerMoveFx('IRON_TAIL', async (c) => {
   const { vfx, stage } = c;
   // the tail turns to iron: glint + silver outline, then a leap
-  c.attacker.setOutline(1.8, SILVER);
+  c.attacker.setOutline(1.0, SILVER);
   c.attacker.flash(0xd0e0ff, 300, 0.55);
   glint(c, c.attacker.at(0.4).addScaledVector(c.dir, -0.3), 1.3);
   await vfx.wait(220);
@@ -92,7 +92,7 @@ registerMoveFx('IRON_TAIL', async (c) => {
     const a = Math.PI * (0.15 + 0.7 * t);
     return base.clone().addScaledVector(right, sgn * Math.cos(a) * 1.6).add(V(0, Math.sin(a) * 1.9 - t * 1.8, 0));
   });
-  const r = vfx.prim.ribbon(pts, { color: SILVER, core: 0xffffff, width: 0.24, ms: 150, length: 0.75, fadeMs: 260, intensity: 2, e: ease.inQuad });
+  const r = slashStroke(c, pts, { color: 0x9ab8e8, core: 0xf0f6ff, width: 0.22, ms: 150, length: 0.75, holdMs: 0, fadeMs: 260, intensity: 1.0, edge: 0x101828, e: ease.inQuad });
   vfx.prim.ribbon(pts.map((p) => p.clone().add(V(0, 0.2, 0))), { color: 0x6a80a8, core: SILVER, width: 0.12, ms: 170, length: 0.6, fadeMs: 200, opacity: 0.6, e: ease.inQuad });
   await r.arrived;
   if (c.missed) whiff(c, at);

@@ -279,7 +279,7 @@ export class PokemonSprite {
   async blink(times = 3, color: THREE.ColorRepresentation = 0xffffff) {
     (this.uniforms.flashColor.value as THREE.Color).set(color);
     for (let i = 0; i < times; i++) {
-      this.uniforms.flashAmt.value = 0.85;
+      this.uniforms.flashAmt.value = 0.55;
       await this.stage.wait(55);
       this.uniforms.flashAmt.value = 0;
       this.mesh.visible = false;

@@ -150,25 +150,31 @@ registerMoveFx('ROCK_TOMB', async (c) => {
   const N = 5;
   const tomb: { dispose: () => void; mesh: THREE.Mesh }[] = [];
   const a0 = Math.random() * Math.PI;
+  const falls: Promise<void>[] = [];
   for (let i = 0; i < N; i++) {
     const a = a0 + (i / N) * Math.PI * 2;
     const to = center.clone().add(V(Math.cos(a) * R, 0.45, Math.sin(a) * R));
-    const b = await fallBoulder(c, to, 0.5 + Math.random() * 0.12, 260, 6);
-    tomb.push(b);
-    crumble(c, to.clone().setY(center.y + 0.2), 0.9);
-    vfx.shake(0.22, 180);
-    vfx.prim.shockwave(to.clone().setY(center.y + 0.05), { color: 0xc8b090, radius: 1.4, facing: 'ground', ms: 320, intensity: 1 });
-    if (i === 2 && !c.missed) {
-      impactFx(c, c.aim(0.4), { strength: 1.0, pal: ROCKPAL, dust: DUST });
-      c.impact(0);
-    }
+    falls.push(
+      fallBoulder(c, to, 0.5 + Math.random() * 0.12, 260, 6).then((b) => {
+        tomb.push(b);
+        crumble(c, to.clone().setY(center.y + 0.2), 0.9);
+        vfx.shake(0.22, 180);
+        vfx.prim.shockwave(to.clone().setY(center.y + 0.05), { color: 0xc8b090, radius: 1.4, facing: 'ground', ms: 320, intensity: 1 });
+        if (i === 2 && !c.missed) {
+          impactFx(c, c.aim(0.4), { strength: 1.0, pal: ROCKPAL, dust: DUST });
+          c.impact(0);
+        }
+      }),
+    );
+    await vfx.wait(150);
   }
+  await Promise.all(falls);
   // sealed in: the stones settle with a heavy thud, then crumble away
   vfx.prim.crack(center, { radius: R * 1.6, ms: 1000 });
   vfx.dust(center, DUST, 16);
   vfx.shake(0.3, 300);
-  await vfx.wait(500);
-  await during(c, 300, (k) => tomb.forEach((b) => b.mesh.position.setY(b.mesh.position.y - 0.02 * k)));
+  await vfx.wait(380);
+  await during(c, 200, (k) => tomb.forEach((b) => b.mesh.position.setY(b.mesh.position.y - 0.02 * k)));
   tomb.forEach((b) => crumble(c, b.mesh.position, 0.5));
   await vfx.tween(220, (k) => tomb.forEach((b) => b.mesh.scale.multiplyScalar(1 - 0.25 * k)), ease.inQuad);
   tomb.forEach((b) => b.dispose());
