@@ -55,6 +55,9 @@ export function loadSheet(dex: number, facing: 'front' | 'back') {
 
 /** World units per sprite pixel. */
 export const PIXEL = 0.021;
+/** world-size cap of back sprites (~115 x 130 px frames); most are well below it */
+const BACK_MAX_H = 2.3;
+const BACK_MAX_W = 2.6;
 
 const VS = /* glsl */ `
   varying vec2 vUv;
@@ -133,6 +136,8 @@ export class PokemonSprite {
   private dispose: () => void;
   /** Extra scale applied on top of pixel size (enter/exit, evolution pulses). */
   scale = 1;
+  /** size cap factor for oversized back sprites (see load) */
+  private fit = 1;
   hop = 0;
 
   constructor(private stage: Stage, facing: 'front' | 'back') {
@@ -193,8 +198,11 @@ export class PokemonSprite {
     u.texel.value.set(1 / img.width, 1 / img.height);
     // back sprites are drawn a bit larger (closer to camera in the classic layout)
     const k = PIXEL * (this.facing === 'back' ? 0.95 : 1.3);
-    this.width = info.frameW * k;
-    this.height = info.frameH * k;
+    // ...but the biggest animated back sprites (Moltres, Gyarados, Wailord...) are capped so they neither swallow the
+    // foe nor spill over the player's HUD card
+    this.fit = this.facing === 'back' ? Math.min(1, BACK_MAX_H / (info.frameH * k), BACK_MAX_W / (info.frameW * k)) : 1;
+    this.width = info.frameW * k * this.fit;
+    this.height = info.frameH * k * this.fit;
     this.applyFrame();
     this.applySize();
   }
@@ -202,7 +210,7 @@ export class PokemonSprite {
   private applySize() {
     const s = this.scale;
     this.mesh.scale.set(this.width * s, this.height * s, 1);
-    const pad = (this.info?.bboxBottomPad ?? 2) * PIXEL;
+    const pad = (this.info?.bboxBottomPad ?? 2) * PIXEL * this.fit;
     this.mesh.position.y = (this.height * s) / 2 - pad * s + this.hop;
     this.shadow.scale.set(Math.max(0.8, this.width * 0.75) * s, Math.max(0.5, this.width * 0.32) * s, 1);
   }

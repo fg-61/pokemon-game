@@ -5,9 +5,13 @@ import type { Shot } from './stage';
 
 const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 
-/** Classic BW-style framing: player's back sprite big in the left foreground, foe on the right. */
+/**
+ * Classic BW-style framing: player's back sprite big in the left foreground, foe on the right (matching the HUD:
+ * foe card top-left, player card bottom-right). The camera sits 40% of the way from a pure side view to straight
+ * behind the player, so the foe never hides behind a large back sprite.
+ */
 export function wideShot(): Shot {
-  return { pos: v(-8.4, 3.9, 9.4), look: v(0.7, 0.2, -1.0), fov: 40 };
+  return { pos: v(-5.1, 3.9, 11.4), look: v(0.4, 0.5, -0.4), fov: 40 };
 }
 
 export function introShot(): Shot {

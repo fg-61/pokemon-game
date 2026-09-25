@@ -49,7 +49,8 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
 - [x] Kanto League (replaces the random gauntlet): the 8 FireRed Gym Leaders in order, then the Elite Four + Champion
       run, with their real parties (`trainers.json` from pret), FRLG trainer pics in the VS intro, SVG badges, local
       progress + Hall of Fame, 4 new arenas (quarry, cape, storm, indigo); difficulty curve tuned with `yarn sim --league`.
-- [ ] Next: big back sprites (Machoke, Gyarados...) overlap the player's HUD card — clamp the on-screen size.
+- [x] Battle framing: the wide shot put the foe straight behind the player (big back sprites hid it and spilled over
+      the HUD card) — now BW-style (player left, foe right); oversized back sprites are capped (`BACK_MAX_H/W`).
 - [ ] Next: hand-curate popular generated lines (Johto/Hoenn starters, pseudo-legendaries, legendaries) + signature VFX
       (plan: parallel agents per group writing their own recipe files; merge + `levels:tune` once at the end).
 - [ ] Phase 3: weather, held items, local 2-player versus, unlockables (see ROADMAP).
