@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { ease } from '../../render/clock';
 import type { PokemonSprite } from '../../render/pokemonSprite';
+import { focusShot, sideShot } from '../../render/shots';
 import { registerMoveFx, type MoveFxContext } from '../vfx';
 import { camBasis, during, healSparkles, hitStop, impactFx, motes, powderCloud, powderFall, pulledShot, rush, screenAngle, sideOf, slashStroke, softHit, strokePoints, towardCam, up } from './common';
 
@@ -591,26 +592,29 @@ registerMoveFx('SHOCK_WAVE', async (c) => {
   vfx.prim.shockwave(c.userFeet.clone().setY(c.userFeet.y + 0.05), { color: E.main, radius: 2.2, facing: 'ground', ms: 450, intensity: 1.2 });
   await Promise.all([flick, charge]);
   sp.setOutline(0);
-  // 2) a crackling ball homes in on a wide, curving arc (it never misses)
+  // 2) a crackling ball rides a wave of electricity to the target (it never misses): a damped sine in the
+  //    screen plane (perpendicular to the path as the side camera sees it) so the curve always reads on screen
   const from = sp.at(0.6).addScaledVector(c.dir, 0.5);
   const to = c.aim(0.5);
-  const fwd = to.clone().sub(from).normalize();
-  const sv = sideOf(fwd);
-  const bend = Math.random() < 0.5 ? 1 : -1;
-  const p1 = from.clone().addScaledVector(sv, 2.6 * bend).add(V3(0, 1.6, 0)).addScaledVector(fwd, 0.5);
-  const p2 = to.clone().addScaledVector(fwd, -1.6).addScaledVector(sv, -1.8 * bend).add(V3(0, 0.9, 0));
-  const bez = (t: number) => {
-    const s = 1 - t;
-    return from.clone().multiplyScalar(s * s * s).addScaledVector(p1, 3 * s * s * t).addScaledVector(p2, 3 * s * t * t).addScaledVector(to, t * t * t);
-  };
+  const shot = sideShot();
+  const camF = shot.look.clone().sub(shot.pos).normalize();
+  const perp = new THREE.Vector3().crossVectors(to.clone().sub(from).normalize(), camF).normalize();
+  if (perp.y < 0) perp.negate();
+  const amp = 1.3 * (Math.random() < 0.5 ? 1 : -1);
+  const wavePt = (t: number) =>
+    from
+      .clone()
+      .lerp(to, t)
+      .addScaledVector(perp, amp * Math.sin(t * Math.PI * 3) * Math.pow(1 - t, 0.8))
+      .add(V3(0, 0.45 * Math.sin(t * Math.PI), 0));
   const orb = vfx.prim.orb({ color: E.main, core: E.white, radius: 0.26, intensity: 1.4 });
   orb.mesh.position.copy(from);
   const hist: THREE.Vector3[] = [];
   let lastArc = -1000;
-  const path = Array.from({ length: 24 }, (_, i) => bez(i / 23));
-  vfx.prim.ribbon(path, { color: E.main, core: E.white, width: 0.07, ms: 620, length: 0.4, fadeMs: 200, intensity: 1.1, e: ease.inOutQuad });
+  const path = Array.from({ length: 48 }, (_, i) => wavePt(i / 47));
+  vfx.prim.ribbon(path, { color: E.main, core: E.white, width: 0.06, ms: 620, length: 0.85, fadeMs: 300, intensity: 1.1, e: ease.inOutQuad });
   await during(c, 620, (k, _dt, el) => {
-    const p = bez(ease.inOutQuad(k));
+    const p = wavePt(ease.inOutQuad(k));
     orb.mesh.position.copy(p);
     hist.push(p.clone());
     if (hist.length > 7) hist.shift();
@@ -618,7 +622,7 @@ registerMoveFx('SHOCK_WAVE', async (c) => {
       lastArc = el;
       vfx.prim.lightning(hist[0], p, { color: E.main, width: 0.1, jitter: 0.4, segments: 7, ms: 160, intensity: 1.2 });
     }
-    vfx.particle({ tex: 'glow', pos: p.clone(), life: 0.2, size: [0.7, 0.1], color: E.main, intensity: 0.9, alpha: [0.6, 0] });
+    vfx.particle({ tex: 'glow', pos: p.clone(), life: 0.15, size: [0.45, 0.1], color: E.main, intensity: 0.8, alpha: [0.45, 0] });
     if (Math.random() < 0.6) vfx.particle({ tex: 'spark', pos: p.clone(), vel: V3((Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3), life: 0.25, size: [0.14, 0.04], color: [E.white, E.main], intensity: 1.5 });
   });
   orb.dispose();
@@ -1055,25 +1059,29 @@ registerMoveFx('EXTRASENSORY', async (c) => {
 registerMoveFx('PSYCHO_BOOST', async (c) => {
   const { vfx, stage } = c;
   const sp = c.attacker;
-  pulledShot(c, 'user', 1.6, 1.2, 450);
-  stage.setTint(0x5a2a90, 0.5, 450);
-  // 1) a vast orb of psychic power gathers above the user
-  const orbAt = sp.at(1).add(V3(0, 0.9, 0)).addScaledVector(c.dir, 0.3);
-  const orb = vfx.prim.orb({ color: Y.main, core: Y.pale, radius: 0.85, intensity: 1.2 });
+  // 1) a vast sphere of psychic power gathers above the user; frame user + orb from either side
+  const orbAt = sp.at(1).add(V3(0, 0.95, 0)).addScaledVector(c.dir, 0.3);
+  const look = sp.at(0.55).lerp(orbAt, 0.5);
+  const fs = focusShot(c.side, 1.2);
+  const back = fs.pos.clone().sub(fs.look).normalize();
+  stage.director.move({ pos: look.clone().addScaledVector(back, 9.5), look, fov: 40 }, 0.45);
+  stage.setTint(0x5a2a90, 0.32, 450);
+  const orb = vfx.prim.psyOrb({ color: Y.main, dark: 0x4a1070, core: Y.pale, rim: Y.pink, radius: 0.8 });
   orb.mesh.position.copy(orbAt);
-  const grow = orb.grow(850, 1);
+  orb.mesh.scale.setScalar(0.01);
+  const grow = vfx.tween(850, (k) => orb.mesh.scale.setScalar(0.01 + k), ease.outBack);
   let lastRing = -1000;
   await during(c, 900, (k, _dt, el) => {
     sp.setOutline(1 + Math.random() * 0.8, Math.random() < 0.5 ? Y.pink : Y.violet);
     for (let i = 0; i < 3; i++) {
       const d = V3(Math.random() - 0.5, Math.random() - 0.3, Math.random() - 0.5).normalize();
-      const q = orbAt.clone().addScaledVector(d, 3 + Math.random() * 1.5);
-      vfx.particle({ tex: 'streak', pos: q, vel: orbAt.clone().sub(q).multiplyScalar(3.4), life: 0.28, size: [0.9, 0.3], color: [Y.pale, Y.pink], intensity: 1.2, alpha: [0, 1], rot: screenAngle(c, q, orbAt) });
+      const q = orbAt.clone().addScaledVector(d, 2.6 + Math.random() * 1.4);
+      vfx.particle({ tex: 'streak', pos: q, vel: orbAt.clone().sub(q).multiplyScalar(3.4), life: 0.28, size: [0.8, 0.25], color: [Y.pale, Y.pink], intensity: 1.2, alpha: [0, 1], rot: screenAngle(c, q, orbAt) });
     }
-    if (el - lastRing > 150) {
+    if (el - lastRing > 180) {
       lastRing = el;
-      vfx.particle({ tex: 'ring', pos: orbAt.clone(), life: 0.3, size: [3.2, 0.6], color: Math.floor(el / 150) % 2 ? Y.violet : Y.pink, intensity: 1.3, alpha: [0, 1] });
-      stage.shockwave(orbAt, 0.25 + k * 0.3, 180);
+      vfx.prim.shockwave(orbAt, { color: Math.floor(el / 180) % 2 ? Y.violet : Y.pink, startRadius: 2.6, radius: 0.9, ms: 260, thickness: 0.12, intensity: 1.1 });
+      stage.shockwave(orbAt, 0.15 + k * 0.2, 180);
     }
     if (Math.random() < 0.3) vfx.shake(0.04 + k * 0.08, 100);
   });
@@ -1081,36 +1089,54 @@ registerMoveFx('PSYCHO_BOOST', async (c) => {
   // 2) hurl it
   vfx.shot('side', c.side, 300);
   const to = c.aim(0.5);
-  stage.flash(Y.pale, 0.25, 180);
-  const tr = vfx.trail(() => orb.mesh.position, 420, { tex: 'glow', color: [Y.pink, Y.violet], size: [0.8, 1.2], endSize: 0.2, speed: 0.5, life: [0.25, 0.4], rate: 80, intensity: 0.9 });
+  stage.flash(Y.pale, 0.12, 160);
+  const flight = vfx.trail(() => orb.mesh.position, 420, { tex: 'spark', color: [Y.pale, Y.pink], size: [0.18, 0.32], speed: [0.5, 1.5], life: [0.25, 0.4], rate: 90, intensity: 1.3 });
   let lr = -1000;
-  await orb.fly(orbAt, to, 420, 0.4, ease.inQuad, (p) => {
+  const from = orb.mesh.position.clone();
+  await vfx.tween(420, (k) => {
+    const p = from.clone().lerp(to, k);
+    p.y += Math.sin(k * Math.PI) * 0.4;
+    orb.mesh.position.copy(p);
+    orb.mesh.scale.setScalar(1 - 0.35 * k);
     const t = c.stage.clock.time * 1000;
     if (t - lr > 70) {
       lr = t;
-      vfx.prim.shockwave(p.clone(), { color: Y.pink, radius: 1.4, ms: 260, thickness: 0.15, facing: c.dir, intensity: 1.2 });
+      vfx.prim.shockwave(p.clone(), { color: Y.pink, radius: 1.2, ms: 240, thickness: 0.14, facing: c.dir, intensity: 1.1 });
     }
-  });
-  orb.dispose();
-  void tr;
+  }, ease.inQuad);
+  void flight;
   sp.setOutline(0);
-  // 3) cataclysmic psychic detonation
+  // 3) the sphere implodes... then detonates
   pulledShot(c, 'foe', 1.9, 0.9, 250);
+  const z = camScale(c, to);
   const base = c.missed ? groundAt(c) : c.foeFeet.clone();
+  for (let i = 0; i < 2; i++) vfx.prim.shockwave(to, { color: i ? Y.violet : Y.pale, startRadius: 2.4 * z, radius: 0.2, ms: 140, thickness: 0.14, intensity: 1.2 });
+  await vfx.tween(140, (k) => orb.mesh.scale.setScalar(0.65 * (1 - 0.7 * k)), ease.inQuad);
+  orb.dispose();
   if (!c.missed) {
     c.impact(0);
-    impactFx(c, to, { strength: 1.6, pal: YPAL, stop: true, dust: 0xd8c0e8 });
+    impactFx(c, to, { strength: 1.4, pal: YPAL, stop: true, dust: 0xd8c0e8 });
     c.target.flash(0xffffff, 300, 1);
   }
-  stage.flash(0xffe0ff, 0.25, 260);
-  stage.chromaPulse(0.018, 500);
-  stage.shockwave(to, 1.2, 450);
-  vfx.shake(0.6, 800);
-  vfx.prim.energyBlast(to, { color: Y.main, core: Y.pale, radius: (c.missed ? 1.8 : 2.5) * camScale(c, to), ms: 700, intensity: 0.85 });
-  vfx.prim.pillar(base.clone().setY(base.y + 0.05), { color: Y.main, radius: 1.1, height: 9, ms: 1000, intensity: 0.5 });
-  for (let i = 0; i < 3; i++) stage.wait(i * 110).then(() => vfx.prim.shockwave(base.clone().setY(base.y + 0.06), { color: i % 2 ? Y.violet : Y.pink, radius: 3.5 + i, facing: 'ground', ms: 650, thickness: 0.2, intensity: 1.3 }));
-  vfx.burst(to, { count: 40, tex: 'spark', color: [Y.pale, Y.pink], speed: [5, 12], size: [0.14, 0.28], life: [0.4, 0.8], drag: 1.5, intensity: 1.5 });
-  vfx.burst(to, { count: 16, tex: 'ring', color: [Y.pink, Y.violet], speed: [2, 5], size: [0.4, 0.9], life: [0.4, 0.6], intensity: 1.2 });
+  stage.flash(Y.pale, 0.1, 200);
+  stage.chromaPulse(0.006, 300);
+  stage.shockwave(to, 0.8, 400);
+  vfx.shake(0.45, 650);
+  // a crisp psychic sphere expands through the target, gyroscope rings spin out
+  const blast = vfx.prim.psyOrb({ color: Y.main, dark: 0x4a1070, core: Y.pale, rim: Y.pink, radius: 1, rings: false });
+  blast.mesh.position.copy(to);
+  void vfx.tween(560, (k) => {
+    blast.mesh.scale.setScalar((0.3 + (c.missed ? 1.5 : 2.1) * ease.outCubic(k)) * z);
+    blast.u.alpha.value = 0.72 * (1 - k * k);
+  }, ease.linear).then(() => blast.dispose());
+  for (let i = 0; i < 4; i++) {
+    const n = V3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
+    stage.wait(i * 60).then(() => vfx.prim.shockwave(to, { color: i % 2 ? Y.violet : Y.pink, radius: (2.6 + i * 0.35) * z, ms: 520, thickness: 0.1, intensity: 1.2, facing: n }));
+  }
+  vfx.prim.pillar(base.clone().setY(base.y + 0.05), { color: Y.pink, radius: 0.4, height: 7, ms: 800, intensity: 0.5 });
+  for (let i = 0; i < 3; i++) stage.wait(i * 110).then(() => vfx.prim.shockwave(base.clone().setY(base.y + 0.06), { color: i % 2 ? Y.violet : Y.pink, radius: 3.2 + i, facing: 'ground', ms: 650, thickness: 0.16, intensity: 1.1 }));
+  vfx.burst(to, { count: 36, tex: 'spark', color: [Y.pale, Y.pink], speed: [5, 12], size: [0.14, 0.26], life: [0.4, 0.8], drag: 1.5, intensity: 1.4 });
+  vfx.burst(to, { count: 18, tex: 'star', color: [Y.pale, Y.lav], speed: [2, 6], size: [0.18, 0.32], life: [0.4, 0.7], drag: 2, intensity: 1.1, additive: false });
   const wob = c.missed ? Promise.resolve() : mindWobble(c, c.target, 700, Y.violet, 0.12);
   await Promise.all([wob, vfx.wait(750)]);
   // 4) recoil: the user's power ebbs (Sp. Atk falls)

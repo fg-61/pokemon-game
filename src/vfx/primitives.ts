@@ -325,6 +325,70 @@ export class Primitives {
     };
   }
 
+  /**
+   * Psychic plasma sphere (Psycho Boost): normal-blended swirling bands, a hot white center, a crisp glowing rim
+   * and two thin rings orbiting on tilted axes. Drive `u.alpha` / `mesh.scale`; call dispose() when finished.
+   */
+  psyOrb(o: { color: THREE.ColorRepresentation; dark?: THREE.ColorRepresentation; core?: THREE.ColorRepresentation; rim?: THREE.ColorRepresentation; radius?: number; rings?: boolean }) {
+    const r = o.radius ?? 0.8;
+    const u = {
+      color: { value: new THREE.Color(o.color) },
+      dark: { value: new THREE.Color(o.dark ?? 0x3a1060) },
+      core: { value: hdr(o.core ?? 0xffffff, 1.2) },
+      rim: { value: hdr(o.rim ?? o.color, 1.3) },
+      alpha: { value: 1 },
+      time: { value: 0 },
+    };
+    const mat = new THREE.ShaderMaterial({
+      uniforms: u,
+      vertexShader: /* glsl */ `
+        varying vec3 vN; varying vec3 vV; varying vec3 vP;
+        void main(){ vP = position; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalMatrix * normal; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: /* glsl */ `
+        uniform vec3 color; uniform vec3 dark; uniform vec3 core; uniform vec3 rim; uniform float alpha; uniform float time;
+        varying vec3 vN; varying vec3 vV; varying vec3 vP;
+        void main(){
+          float f = abs(dot(normalize(vN), normalize(vV)));
+          vec3 p = normalize(vP);
+          // swirling plasma bands
+          float sw = sin(p.y * 7.0 + sin(p.x * 5.0 + time * 3.0) * 2.2 + time * 4.0) * 0.5 + 0.5;
+          float sw2 = sin(p.z * 9.0 - sin(p.y * 4.0 - time * 2.0) * 2.0 - time * 5.0) * 0.5 + 0.5;
+          vec3 c = mix(dark, color, smoothstep(0.15, 0.85, max(sw * f, sw2 * 0.7)));
+          c = mix(c, core, pow(f, 9.0) * 0.8);
+          c += rim * pow(1.0 - f, 2.2);
+          gl_FragColor = vec4(c, alpha * (0.8 + 0.2 * f));
+        }`,
+      transparent: true,
+      depthWrite: false,
+    });
+    const mesh = this.add(new THREE.Mesh(new THREE.SphereGeometry(r, 36, 24), mat));
+    mesh.renderOrder = 5;
+    const rings: THREE.Mesh[] = [];
+    if (o.rings ?? true) {
+      for (let i = 0; i < 2; i++) {
+        const rm = new THREE.MeshBasicMaterial({ color: hdr(i ? (o.rim ?? o.color) : (o.core ?? 0xffffff), 1.1), transparent: true, opacity: 0.85, depthWrite: false, blending: THREE.AdditiveBlending });
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 1.45, r * 0.06, 8, 64), rm);
+        ring.rotation.set(i ? 1.1 : -0.5, i ? 0.4 : -0.9, 0);
+        mesh.add(ring);
+        rings.push(ring);
+      }
+    }
+    const off = this.stage.onUpdate((dt, t) => {
+      u.time.value = t;
+      rings.forEach((ring, i) => ring.rotateZ(dt * (i ? -5 : 6.5)));
+    });
+    return {
+      mesh,
+      u,
+      /** fade the rings (0..1) independently of the sphere */
+      setRings: (a: number) => rings.forEach((ring) => ((ring.material as THREE.MeshBasicMaterial).opacity = 0.85 * a)),
+      dispose: () => {
+        off();
+        this.remove(mesh);
+      },
+    };
+  }
+
   /** Vertical light pillar (evolution, Psychic, heal). */
   pillar(pos: THREE.Vector3, o: { color: THREE.ColorRepresentation; radius?: number; height?: number; ms?: number; intensity?: number }) {
     const geo = new THREE.CylinderGeometry(1, 1, 1, 32, 1, true);
@@ -637,15 +701,16 @@ export class Primitives {
   }
 
   /**
-   * Water wall (Surf). Local +z faces the travel direction; the recipe positions it and drives
-   * `u.height`, `u.curl`, `u.alpha`. Call dispose() when finished.
+   * Water wall (Surf): a curling, shaded sheet with flow streaks, a ragged foam lip and churn at the base.
+   * Local +z faces the travel direction; the recipe positions it and drives `u.height`, `u.curl`, `u.alpha`.
+   * `crest(x)` / `lip(x)` give world points on the top of the wave. Call dispose() when finished.
    */
   wave(o: { color: THREE.ColorRepresentation; core?: THREE.ColorRepresentation; dark?: THREE.ColorRepresentation; width?: number }) {
-    const geo = new THREE.PlaneGeometry(1, 1, 60, 24);
+    const geo = new THREE.PlaneGeometry(1, 1, 64, 40);
     geo.translate(0, 0.5, 0);
     const u = {
-      color: { value: hdr(o.color, 1.1) },
-      core: { value: hdr(o.core ?? 0xffffff, 1.5) },
+      color: { value: hdr(o.color, 1) },
+      core: { value: hdr(o.core ?? 0xffffff, 1.15) },
       dark: { value: hdr(o.dark ?? 0x0a3a8a, 1) },
       width: { value: o.width ?? 7 },
       height: { value: 0 },
@@ -653,80 +718,321 @@ export class Primitives {
       alpha: { value: 1 },
       time: { value: 0 },
     };
+    const STEPS = 20;
     const mat = new THREE.ShaderMaterial({
       uniforms: u,
       vertexShader: /* glsl */ `
         uniform float width; uniform float height; uniform float curl; uniform float time;
-        varying vec2 vUv; varying float vH;
+        varying vec2 vUv; varying float vH; varying vec3 vN; varying vec3 vV;
         void main(){
           vUv = uv;
           float y = position.y;
           float ax = abs(position.x) * 2.0;
-          float h = height * (0.88 + 0.12 * sin(position.x * width * 1.1 + time * 4.0)) * (1.0 - pow(ax, 5.0) * 0.55);
-          // integrate the curling profile: tangent leans forward more and more towards the lip
-          vec2 q = vec2(-0.45 * h, 0.0);
-          float L = h * 1.3;
-          for (int i = 0; i < 16; i++) {
-            float s = y * (float(i) + 0.5) / 16.0;
-            float th = 0.35 + curl * 2.5 * pow(smoothstep(0.4, 1.0, s), 1.5);
-            q += vec2(sin(th), cos(th)) * (L * y / 16.0);
+          // taller in the middle, rolling swells along the width
+          float h = height * (0.9 + 0.07 * sin(position.x * width * 0.9 + time * 3.0) + 0.03 * sin(position.x * width * 2.3 - time * 5.0))
+                  * (1.0 - pow(ax, 3.0) * 0.65);
+          // the ends curl later than the middle (a peeling wave)
+          float cl = curl * (1.0 - ax * ax * 0.45);
+          // integrate the profile: the tangent leans forward more and more towards the lip
+          vec2 q = vec2(-0.5 * h, 0.0);
+          float L = h * 1.35;
+          float th = 0.25;
+          for (int i = 0; i < ${STEPS}; i++) {
+            float s = y * (float(i) + 0.5) / ${STEPS}.0;
+            th = 0.25 + cl * 2.6 * pow(smoothstep(0.35, 1.0, s), 1.6);
+            q += vec2(sin(th), cos(th)) * (L * y / ${STEPS}.0);
           }
           vec3 p = vec3(position.x * width, q.y, q.x);
+          vec4 wp = modelMatrix * vec4(p, 1.0);
+          vN = normalize(mat3(modelMatrix) * vec3(0.0, -sin(th), cos(th)));
+          vV = cameraPosition - wp.xyz;
           vH = h;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+          gl_Position = projectionMatrix * viewMatrix * wp;
         }`,
       fragmentShader: /* glsl */ `
         uniform vec3 color; uniform vec3 core; uniform vec3 dark; uniform float alpha; uniform float time;
-        varying vec2 vUv; varying float vH;
+        varying vec2 vUv; varying float vH; varying vec3 vN; varying vec3 vV;
         float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
         float noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
           return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
         void main(){
-          float n = noise(vec2(vUv.x * 26.0, vUv.y * 4.0 - time * 3.5));
-          float n2 = noise(vec2(vUv.x * 40.0 + time, vUv.y * 9.0 - time * 5.0));
-          float band = 0.5 + 0.5 * sin(vUv.y * 38.0 - time * 9.0 + n * 3.0);
-          vec3 c = mix(dark, color, smoothstep(0.0, 0.8, vUv.y));
-          c *= 0.85 + 0.25 * band;
-          c += core * 0.4 * smoothstep(0.6, 0.85, n) * smoothstep(0.25, 0.85, vUv.y);
-          float foam = smoothstep(0.76, 0.88, vUv.y + (n2 - 0.5) * 0.16);
-          c = mix(c, core, foam);
-          float a = alpha * mix(0.82, 1.0, foam);
-          a *= smoothstep(0.0, 0.14, vUv.x) * smoothstep(1.0, 0.86, vUv.x);
-          a *= smoothstep(1.0, 0.92, vUv.y + (n2 - 0.5) * 0.14);
-          a *= smoothstep(0.0, 0.25, vH);
+          float y = vUv.y;
+          vec3 N = normalize(vN) * (gl_FrontFacing ? 1.0 : -1.0);
+          float facing = abs(dot(N, normalize(vV)));
+          float fres = pow(1.0 - facing, 2.5);
+          float n1 = noise(vec2(vUv.x * 30.0, y * 3.0 - time * 2.2));
+          float n2 = noise(vec2(vUv.x * 64.0 + time * 0.7, y * 11.0 - time * 4.5));
+          // water rushing up the face
+          float streak = smoothstep(0.55, 0.95, noise(vec2(vUv.x * 52.0, y * 1.4 - time * 1.8)));
+          vec3 c = mix(dark, color, smoothstep(0.02, 0.7, y));
+          // the thin upper face is lighter (light passing through)
+          c = mix(c, mix(color, core, 0.35), smoothstep(0.5, 0.82, y) * (0.55 + 0.45 * n1));
+          c *= gl_FrontFacing ? 1.0 : 0.78;
+          c += core * (0.16 * streak * smoothstep(0.1, 0.75, y) + 0.3 * fres);
+          // foam: a ragged band at the lip, churn at the base
+          float lip = smoothstep(0.8, 0.9, y + (n2 - 0.5) * 0.2);
+          float base = smoothstep(0.12, 0.0, y + (n1 - 0.5) * 0.12);
+          c = mix(c, core, max(lip, base * 0.75));
+          float a = alpha * mix(0.9, 1.0, lip);
+          float ex = vUv.x + (n1 - 0.5) * 0.06;
+          a *= smoothstep(0.0, 0.12, ex) * smoothstep(1.0, 0.88, ex);
+          a *= smoothstep(1.0, 0.93, y + (n2 - 0.5) * 0.14);
+          a *= smoothstep(0.0, 0.3, vH);
           gl_FragColor = vec4(c, a);
         }`,
       transparent: true,
-      depthWrite: false,
+      depthWrite: true,
       side: THREE.DoubleSide,
     });
     const mesh = this.add(new THREE.Mesh(geo, mat));
     mesh.renderOrder = 3;
     mesh.frustumCulled = false;
-    const off = this.stage.onUpdate((_dt, t) => (u.time.value = t));
+    // CPU copy of the vertex profile: local (z, y) points from the base (y=0) to fraction `y` of the sheet at x
+    const swell = (x: number) => 0.9 + 0.07 * Math.sin(x * u.width.value * 0.9 + u.time.value * 3) + 0.03 * Math.sin(x * u.width.value * 2.3 - u.time.value * 5);
+    const profileLocal = (x: number, y: number, steps = STEPS, out?: THREE.Vector2[]) => {
+      const ax = Math.abs(x) * 2;
+      const h = u.height.value * swell(x) * (1 - Math.pow(ax, 3) * 0.65);
+      const cl = u.curl.value * (1 - ax * ax * 0.45);
+      const L = h * 1.35;
+      const q = new THREE.Vector2(-0.5 * h, 0);
+      out?.push(q.clone());
+      for (let i = 0; i < steps; i++) {
+        const s = (y * (i + 0.5)) / steps;
+        const e = Math.min(1, Math.max(0, (s - 0.35) / 0.65));
+        const th = 0.25 + cl * 2.6 * Math.pow(e * e * (3 - 2 * e), 1.6);
+        q.x += Math.sin(th) * ((L * y) / steps);
+        q.y += Math.cos(th) * ((L * y) / steps);
+        out?.push(q.clone());
+      }
+      return q;
+    };
+    const profile = (x: number, y: number) => {
+      mesh.updateMatrixWorld();
+      const q = profileLocal(x, y);
+      return mesh.localToWorld(new THREE.Vector3(x * u.width.value, q.y, q.x));
+    };
+    // Body: a filled cross-section (front face up to the crest + a rounded back) so the wave has mass side-on.
+    const FRONT = 40;
+    const BACK = 14;
+    const fillPos = new Float32Array((1 + FRONT + 1 + BACK) * 3);
+    const fillY = new Float32Array(1 + FRONT + 1 + BACK);
+    const fillGeo = new THREE.BufferGeometry();
+    fillGeo.setAttribute('position', new THREE.BufferAttribute(fillPos, 3));
+    fillGeo.setAttribute('fy', new THREE.BufferAttribute(fillY, 1));
+    const idx: number[] = [];
+    for (let i = 1; i < 1 + FRONT + 1 + BACK - 1; i++) idx.push(0, i, i + 1);
+    fillGeo.setIndex(idx);
+    const fillMat = new THREE.ShaderMaterial({
+      uniforms: u,
+      vertexShader: /* glsl */ `
+        attribute float fy; varying float vY; varying vec3 vW;
+        void main(){ vY = fy; vec4 wp = modelMatrix * vec4(position, 1.0); vW = wp.xyz; gl_Position = projectionMatrix * viewMatrix * wp; }`,
+      fragmentShader: /* glsl */ `
+        uniform vec3 color; uniform vec3 core; uniform vec3 dark; uniform float alpha; uniform float time;
+        varying float vY; varying vec3 vW;
+        float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+        float noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+          return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
+        void main(){
+          vec2 w = vec2(vW.x + vW.z, vW.y);
+          float n = noise(w * vec2(3.0, 1.4) - vec2(0.0, time * 1.6));
+          float streak = smoothstep(0.6, 0.95, noise(w * vec2(9.0, 0.8) - vec2(0.0, time * 1.4)));
+          vec3 c = mix(dark, color, smoothstep(0.0, 0.85, vY));
+          c = mix(c, mix(color, core, 0.3), smoothstep(0.55, 1.0, vY) * (0.5 + 0.5 * n));
+          c += core * 0.14 * streak * smoothstep(0.1, 0.8, vY);
+          c = mix(c, core, smoothstep(0.1, 0.0, vY + (n - 0.5) * 0.1) * 0.7);
+          gl_FragColor = vec4(c, alpha * 0.93);
+        }`,
+      transparent: true,
+      depthWrite: true,
+      side: THREE.DoubleSide,
+    });
+    const fill = new THREE.Mesh(fillGeo, fillMat);
+    fill.renderOrder = 3;
+    fill.frustumCulled = false;
+    mesh.add(fill);
+    const updateFill = () => {
+      const pts: THREE.Vector2[] = [];
+      profileLocal(0, 1, FRONT, pts);
+      // front face up to the highest point; the curling lip beyond it stays a hollow tube
+      let top = 0;
+      for (let i = 1; i < pts.length; i++) if (pts[i].y > pts[top].y) top = i;
+      const crest = pts[top];
+      const h = Math.max(1e-3, crest.y);
+      const backZ = crest.x - 1.25 * h;
+      let k = 3;
+      const put = (z: number, y: number) => {
+        fillPos[k] = 0;
+        fillPos[k + 1] = y;
+        fillPos[k + 2] = z;
+        fillY[k / 3] = y / h;
+        k += 3;
+      };
+      for (let i = 0; i <= FRONT; i++) {
+        const p = pts[Math.min(i, top)];
+        put(p.x, p.y);
+      }
+      for (let i = 0; i <= BACK; i++) {
+        const t = i / BACK;
+        put(crest.x + (backZ - crest.x) * t, crest.y * (1 - t * t));
+      }
+      // fan anchor on the ground between the base and the back
+      fillPos[0] = 0;
+      fillPos[1] = 0;
+      fillPos[2] = (pts[0].x + backZ) / 2;
+      fillY[0] = 0;
+      fillGeo.attributes.position.needsUpdate = true;
+      (fillGeo.attributes.fy as THREE.BufferAttribute).needsUpdate = true;
+      fill.visible = h > 0.05;
+    };
+    const off = this.stage.onUpdate((_dt, t) => {
+      u.time.value = t;
+      updateFill();
+    });
     return {
       mesh,
       u,
-      /** point on the crest line at x in [-0.5, 0.5] (world) */
-      crest: (x: number) => {
-        const h = u.height.value * (1 - Math.pow(Math.abs(x) * 2, 5) * 0.55);
-        const L = h * 1.3;
-        let qz = -0.45 * h;
-        let qy = 0;
-        for (let i = 0; i < 16; i++) {
-          const s = (i + 0.5) / 16;
-          const e = Math.min(1, Math.max(0, (s - 0.4) / 0.6));
-          const th = 0.35 + u.curl.value * 2.5 * Math.pow(e * e * (3 - 2 * e), 1.5);
-          qz += Math.sin(th) * (L / 16);
-          qy += Math.cos(th) * (L / 16);
-        }
-        return mesh.localToWorld(new THREE.Vector3(x * u.width.value, qy, qz));
-      },
+      /** highest point of the profile at x in [-0.5, 0.5] (world) — where spray leaves the wave */
+      crest: (x: number) => profile(x, 0.72),
+      /** tip of the curling lip at x in [-0.5, 0.5] (world) */
+      lip: (x: number) => profile(x, 1),
       dispose: () => {
         off();
         this.remove(mesh);
       },
     };
+  }
+
+  /**
+   * Rainbow aurora beam (Aurora Beam): a pastel body whose hues flow along its length, wrapped in waving
+   * aurora curtains (bright lower edge, rays fading upwards). Normal-blended so the hues survive bloom on
+   * bright arenas. Grows over `growMs`, holds `holdMs`, fades `fadeMs`.
+   */
+  aurora(
+    from: THREE.Vector3,
+    to: THREE.Vector3,
+    o: { width?: number; curtain?: number; curtains?: number; hue?: number; intensity?: number; growMs?: number; holdMs?: number; fadeMs?: number },
+  ) {
+    const len = from.distanceTo(to);
+    const group = this.add(new THREE.Group());
+    group.position.copy(from);
+    group.lookAt(to);
+    const HUE = /* glsl */ `
+      vec3 hue(float h){ return clamp(abs(mod(h * 6.0 + vec3(0.0, 4.0, 2.0), 6.0) - 3.0) - 1.0, 0.0, 1.0); }
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+      float noise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }`;
+    const shared = {
+      time: { value: 0 },
+      reach: { value: 0 },
+      alpha: { value: 1 },
+      hue0: { value: o.hue ?? 0 },
+      len: { value: len },
+      intensity: { value: o.intensity ?? 1.1 },
+    };
+    // body: open tube along +z (uv.y = along)
+    const tubeGeo = new THREE.CylinderGeometry(1, 1, 1, 24, 1, true);
+    tubeGeo.translate(0, 0.5, 0);
+    tubeGeo.rotateX(Math.PI / 2);
+    const width = o.width ?? 0.2;
+    const body = new THREE.Mesh(
+      tubeGeo,
+      new THREE.ShaderMaterial({
+        uniforms: shared,
+        vertexShader: /* glsl */ `
+          varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+          void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalMatrix * normal; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`,
+        fragmentShader: /* glsl */ `
+          uniform float time; uniform float reach; uniform float alpha; uniform float hue0; uniform float len; uniform float intensity;
+          varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+          ${HUE}
+          void main(){
+            float s = vUv.y;
+            if (s > reach) discard;
+            float facing = abs(dot(normalize(vN), normalize(vV)));
+            vec3 c = hue(hue0 + s * len * 0.11 - time * 0.9);
+            c = mix(c, vec3(1.0), 0.2 + 0.6 * pow(facing, 5.0));
+            float a = alpha * (0.3 + 0.65 * facing) * smoothstep(reach, reach - 0.02, s) * smoothstep(0.0, 0.03, s);
+            gl_FragColor = vec4(c * intensity, a);
+          }`,
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      }),
+    );
+    body.scale.set(width, width, len);
+    body.renderOrder = 5;
+    group.add(body);
+    // curtains: strips along the beam; uv.x = across (0 = bright lower edge), uv.y = along
+    const n = o.curtains ?? 2;
+    const curtainH = o.curtain ?? 1.1;
+    const curtainGeo = new THREE.PlaneGeometry(1, 1, 1, 160);
+    for (let i = 0; i < n; i++) {
+      const mat = new THREE.ShaderMaterial({
+        uniforms: { ...shared, phase: { value: (i / n) * Math.PI * 2 }, height: { value: curtainH }, hueOff: { value: i * 0.37 } },
+        vertexShader: /* glsl */ `
+          uniform float time; uniform float len; uniform float phase; uniform float height;
+          varying vec2 vUv;
+          void main(){
+            vUv = uv;
+            float s = uv.y;
+            float z = s * len;
+            // the curtain leans around the beam and waves; it hangs from just below the axis
+            float ang = phase + 0.9 * sin(z * 0.7 - time * 2.0 + phase) + z * 0.35;
+            vec2 side = vec2(cos(ang), sin(ang));
+            vec2 up = vec2(-sin(ang), cos(ang));
+            float sway = sin(z * 1.4 - time * 3.2 + phase * 2.0) * 0.18;
+            float h = height * (0.7 + 0.3 * sin(z * 2.2 + time * 2.6 + phase)) * smoothstep(0.0, 0.12, s);
+            vec2 p = side * sway + up * (uv.x - 0.12) * h;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p, z, 1.0);
+          }`,
+        fragmentShader: /* glsl */ `
+          uniform float time; uniform float reach; uniform float alpha; uniform float hue0; uniform float hueOff; uniform float intensity;
+          varying vec2 vUv;
+          ${HUE}
+          void main(){
+            float s = vUv.y;
+            if (s > reach) discard;
+            float v = vUv.x;
+            // vertical rays: streaks that shimmer along the curtain
+            float rays = 0.6 * noise(vec2(s * 60.0 - time * 1.5, 0.5)) + 0.4 * noise(vec2(s * 160.0 - time * 7.0, v * 2.0));
+            rays = smoothstep(0.25, 0.85, rays);
+            float hh = hue0 + hueOff + s * 0.9 - time * 0.5;
+            vec3 c = mix(hue(hh), hue(hh + 0.3), smoothstep(0.15, 0.95, v));
+            // bright, nearly white lower edge like a real aurora
+            c = mix(c, vec3(1.0), 0.5 * (1.0 - smoothstep(0.0, 0.2, v)));
+            float a = alpha * smoothstep(0.0, 0.06, v) * pow(1.0 - v, 0.85) * (0.2 + 0.95 * rays);
+            a *= smoothstep(reach, reach - 0.05, s) * smoothstep(0.0, 0.06, s);
+            gl_FragColor = vec4(c * intensity, a * 0.95);
+          }`,
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      });
+      const m = new THREE.Mesh(curtainGeo, mat);
+      m.renderOrder = 5;
+      m.frustumCulled = false;
+      group.add(m);
+    }
+    const off = this.stage.onUpdate((_dt, t) => (shared.time.value = t));
+    const growMs = o.growMs ?? 200;
+    let arrive!: () => void;
+    const arrived = new Promise<void>((r) => (arrive = r));
+    const done = (async () => {
+      await this.stage.tween(growMs, (k) => (shared.reach.value = k), ease.outCubic);
+      arrive();
+      await this.stage.wait(o.holdMs ?? 600);
+      await this.stage.tween(o.fadeMs ?? 280, (k) => {
+        shared.alpha.value = 1 - k;
+        body.scale.x = body.scale.y = width * (1 - 0.6 * k);
+      });
+      off();
+      curtainGeo.dispose();
+      this.remove(group);
+    })();
+    /** point on the beam axis at fraction f (world) */
+    const at = (f: number) => from.clone().lerp(to, f);
+    return { group, u: shared, done, arrived, at };
   }
 
   /** Flat glassy hex-grid panel (Reflect, Light Screen). `normal` = facing direction. */

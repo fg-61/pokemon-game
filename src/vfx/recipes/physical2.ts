@@ -1811,48 +1811,74 @@ function spurt(c: MoveFxContext, at: THREE.Vector3, k = 1) {
 registerMoveFx('MAGNITUDE', async (c) => {
   const { vfx, stage } = c;
   const sp = c.attacker;
+  // the engine's roll (base power 10..150) → "Magnitude 4..10"; the whole effect scales with it
+  const bp = Math.round(c.power * 150);
+  const mag = bp <= 10 ? 4 : bp <= 30 ? 5 : bp <= 50 ? 6 : bp <= 70 ? 7 : bp <= 90 ? 8 : bp <= 110 ? 9 : 10;
+  const m = (mag - 4) / 6;
+  const big = mag >= 9;
   vfx.shot('side', c.side, 450);
   const ground = (p: THREE.Vector3) => p.clone().setY(p.y + 0.06);
-  // the magnitude builds: three stomps, each stronger than the last
-  for (let i = 0; i < 3; i++) {
-    await sp.jump(0.35 + i * 0.2, 220 + i * 40);
-    const k = (i + 1) / 3;
-    vfx.shake(0.08 + 0.14 * i, 300);
-    vfx.prim.shockwave(ground(c.userFeet), { color: i === 2 ? 0xffe0a0 : 0xc89850, radius: 2 + i * 1.3, facing: 'ground', ms: 450 + i * 100, thickness: 0.2, intensity: 0.9 });
-    vfx.dust(c.userFeet, DUST, 6 + i * 5);
-    if (i === 2) {
-      vfx.prim.crack(c.userFeet, { radius: 1.8, ms: 1400, glow: 0xff9a40, glowIntensity: 1.3 });
-      stage.shockwave(c.userFeet, 0.5, 350);
-      spurt(c, c.userFeet, 0.6);
-    } else await vfx.wait(90 * k);
+  // the magnitude builds: 1-3 stomps, heavier for bigger rolls
+  const stomps = mag <= 5 ? 1 : mag <= 7 ? 2 : 3;
+  for (let i = 0; i < stomps; i++) {
+    const f = (i + 1) / stomps;
+    await sp.jump(0.25 + 0.4 * m * f + 0.08 * i, 200 + 40 * i);
+    vfx.shake(0.05 + 0.25 * m * f, 300);
+    vfx.prim.shockwave(ground(c.userFeet), { color: i === stomps - 1 ? 0xffe0a0 : 0xc89850, radius: 1.5 + (1 + 2.5 * m) * f, facing: 'ground', ms: 450 + 100 * f, thickness: 0.2, intensity: 0.9 });
+    vfx.dust(c.userFeet, DUST, Math.round(5 + 12 * m * f));
+    if (i === stomps - 1) {
+      vfx.prim.crack(c.userFeet, { radius: 0.9 + 1.4 * m, ms: 1400, glow: 0xff9a40, glowIntensity: 0.5 + 0.9 * m });
+      stage.shockwave(c.userFeet, 0.25 + 0.4 * m, 350);
+      spurt(c, c.userFeet, 0.3 + 0.5 * m);
+    } else await vfx.wait(80);
   }
   // the tremor rolls across the field and bursts up under the target
   const from = c.userFeet.clone();
   const to = c.missed ? c.aim(0).setY(c.foeFeet.y) : c.foeFeet.clone();
   const side = sideOf(c.dir);
+  const lane = 0.4 + 1.6 * m;
   let lastS = 0;
-  vfx.shake(0.35, 900);
-  await during(c, 380, (k) => {
+  vfx.shake(0.1 + 0.45 * m, 600 + 600 * m);
+  if (big) {
+    stage.flash(0xffe8c0, 0.1, 250);
+    stage.chromaPulse(0.006, 400);
+  }
+  await during(c, 420 - 100 * m, (k) => {
     const p = from.clone().lerp(to, k);
-    if (k - lastS > 0.14) {
+    if (k - lastS > 0.16 - 0.06 * m) {
       lastS = k;
-      spurt(c, p.clone().addScaledVector(side, (Math.random() - 0.5) * 1.2), 0.5);
-      vfx.prim.shockwave(ground(p), { color: 0xc89850, radius: 1.2, facing: 'ground', ms: 350, thickness: 0.25, intensity: 0.8 });
+      const q = p.clone().addScaledVector(side, (Math.random() - 0.5) * lane);
+      spurt(c, q, 0.25 + 0.5 * m);
+      vfx.prim.shockwave(ground(p), { color: 0xc89850, radius: 0.8 + 1.4 * m, facing: 'ground', ms: 350, thickness: 0.25, intensity: 0.8 });
+      if (Math.random() < m - 0.3) vfx.prim.crack(q, { radius: 0.5 + 0.8 * m, ms: 1100, glow: 0xff9a40, glowIntensity: 0.9 });
     }
   });
-  vfx.prim.crack(to, { radius: 2.1, ms: 1300, glow: 0xff9a40, glowIntensity: 1.2 });
-  spurt(c, to, 1.1);
-  vfx.prim.debris({ from: to.clone().add(V(0, 0.15, 0)), count: 10, color: 0x8a6a44, size: 0.13, speed: 3, up: 6, ms: 1100 });
+  // a huge roll heaves the whole arena: fissures and eruptions all around
+  if (big) {
+    const mid = c.userFeet.clone().lerp(c.foeFeet, 0.5).setY(Math.min(c.userFeet.y, c.foeFeet.y));
+    for (let i = 0; i < (mag === 10 ? 7 : 4); i++) {
+      const a = Math.random() * Math.PI * 2;
+      const p = mid.clone().add(V(Math.cos(a), 0, Math.sin(a)).multiplyScalar(2 + Math.random() * 3));
+      stage.wait(i * 70).then(() => {
+        vfx.prim.crack(p, { radius: 0.8 + Math.random() * 0.8, ms: 1200, glow: 0xff9a40, glowIntensity: 1 });
+        spurt(c, p, 0.6 + Math.random() * 0.4);
+      });
+    }
+  }
+  vfx.prim.crack(to, { radius: 1 + 1.4 * m, ms: 1300, glow: 0xff9a40, glowIntensity: 0.5 + 0.9 * m });
+  spurt(c, to, 0.5 + 0.8 * m);
+  vfx.prim.debris({ from: to.clone().add(V(0, 0.15, 0)), count: Math.round(3 + 13 * m), color: 0x8a6a44, size: 0.1 + 0.06 * m, speed: 2 + 2 * m, up: 3.5 + 4 * m, ms: 1100 });
   if (!c.missed) {
-    impactFx(c, c.aim(0.35), { strength: 1.3, pal: GROUNDPAL, dust: DUST });
+    impactFx(c, c.aim(0.35), { strength: 0.6 + 0.9 * m, pal: GROUNDPAL, dust: DUST, stop: m > 0.6 });
     const t = c.target;
+    const hops = mag <= 5 ? 1 : 2;
     void (async () => {
-      for (let i = 0; i < 2; i++) await t.jump(0.35 - i * 0.15, 200);
+      for (let i = 0; i < hops; i++) await t.jump((0.12 + 0.35 * m) * (1 - i * 0.45), 200);
     })();
     c.impact(0);
   }
   vfx.shot('wide', c.side, 600);
-  await vfx.wait(750);
+  await vfx.wait(600 + 250 * m);
 });
 
 registerMoveFx('MUD_SHOT', async (c) => {

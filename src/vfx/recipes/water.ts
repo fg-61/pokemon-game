@@ -230,72 +230,124 @@ registerMoveFx('HYDRO_CANNON', async (c) => {
 // --------------------------------------------------------------------------------------- SURF
 
 registerMoveFx('SURF', async (c) => {
-  const { vfx } = c;
-  vfx.shot('side', c.side, 500);
-  const ground = Math.min(c.userFeet.y, c.foeFeet.y) - 0.3;
-  const start = c.userFeet.clone().setY(ground).addScaledVector(c.dir, -1.8);
-  const end = c.foeFeet.clone().setY(ground).addScaledVector(c.dir, 0.4);
-  const wave = vfx.prim.wave({ color: W.main, core: W.foam, dark: W.deep, width: 9.5 });
+  const { vfx, stage } = c;
+  const sp = c.attacker;
+  // film the wave side-on (camera perpendicular to its path, on the camera's side) so the curl reads as a silhouette
+  const mid = c.userFeet.clone().lerp(c.foeFeet, 0.5);
+  const perp = sideOf(c.dir);
+  if (perp.dot(stage.camera.position.clone().sub(mid)) < 0) perp.negate();
+  stage.director.move({ pos: mid.clone().addScaledVector(perp, 10.5).add(new THREE.Vector3(0, 2.6, 0)), look: mid.clone().add(new THREE.Vector3(0, 1.3, 0)), fov: 44 }, 0.45);
+  const ground = Math.min(c.userFeet.y, c.foeFeet.y) - 0.25;
+  const hitAt = c.aim(0.5);
+  const landAt = c.missed ? hitAt.clone().setY(ground) : c.foeFeet.clone().setY(ground);
+  const start = c.userFeet.clone().setY(ground).addScaledVector(c.dir, -1.5);
+  // 1) water wells up around the user while the camera settles
+  sp.setOutline(1.2, W.main);
+  let lastRing = -1000;
+  await during(c, 420, (k, dt, el) => {
+    if (el - lastRing > 130) {
+      lastRing = el;
+      vfx.prim.shockwave(c.userFeet.clone().setY(c.userFeet.y + 0.05), { color: W.light, radius: 1.3 + k * 1.3, facing: 'ground', ms: 450, thickness: 0.2, intensity: 1 });
+    }
+    for (let i = 0; i < Math.round(70 * dt + Math.random()); i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = 0.9 + Math.random() * 0.9;
+      vfx.particle({ tex: 'drop', pos: c.userFeet.clone().add(new THREE.Vector3(Math.cos(a) * r, 0.1, Math.sin(a) * r)), vel: new THREE.Vector3(0, 2 + Math.random() * 2.5 * (0.5 + k), 0), acc: new THREE.Vector3(0, -7, 0), life: 0.5, size: [0.15, 0.06], color: [W.light, W.main], intensity: 1.05, additive: false, alpha: [0.9, 0.2] });
+    }
+  });
+  // 2) a wall of water rises behind the user and lifts it onto the crest
+  const H = 3.1;
+  const wave = vfx.prim.wave({ color: W.main, core: W.foam, dark: W.deep, width: 6.4 });
   wave.mesh.position.copy(start);
   wave.mesh.lookAt(start.clone().add(c.dir));
-  const crestSpray = (amt: number) => {
-    for (let i = 0; i < Math.round(8 * amt); i++) {
-      const x = Math.random() - 0.5;
-      const p = wave.crest(x * 0.85);
-      if (Math.random() < 0.35) vfx.particle({ tex: 'smoke', pos: p, vel: c.dir.clone().multiplyScalar(2 + Math.random() * 2).add(new THREE.Vector3(0, 1 + Math.random(), 0)), acc: new THREE.Vector3(0, -5, 0), life: 0.4, size: [0.3, 0.8], color: [W.foam, W.light], intensity: 1.1, additive: false, alpha: [0.7, 0], spin: 2 });
-      vfx.particle({ tex: 'drop', pos: p, vel: c.dir.clone().multiplyScalar(3 + Math.random() * 2).add(new THREE.Vector3(0, 2 + Math.random() * 2, 0)), acc: new THREE.Vector3(0, -12, 0), life: 0.5, size: [0.16, 0.06], color: [W.foam, W.light], intensity: 1.1, additive: false });
+  // place the end so the fully curled lip comes down on the target
+  wave.u.height.value = H * 0.85;
+  wave.u.curl.value = 1.25;
+  const reach = wave.lip(0).sub(start).dot(c.dir);
+  const end = landAt.clone().addScaledVector(c.dir, -reach);
+  wave.u.height.value = 0;
+  wave.u.curl.value = 0.2;
+  const ride = (lift: number, fwd: number) => sp.body.position.copy(c.dir).multiplyScalar(fwd).setY(lift);
+  const spray = (amt: number) => {
+    for (let i = 0; i < Math.round(7 * amt + Math.random()); i++) {
+      const x = (Math.random() - 0.5) * 0.85;
+      const p = Math.random() < 0.5 ? wave.crest(x) : wave.lip(x);
+      const v = c.dir.clone().multiplyScalar(2 + Math.random() * 2.5).add(new THREE.Vector3(0, 1.5 + Math.random() * 2, 0));
+      if (Math.random() < 0.4) vfx.particle({ tex: 'smoke', pos: p, vel: v.clone().multiplyScalar(0.6), acc: new THREE.Vector3(0, -3, 0), drag: 1, life: 0.5, size: [0.4, 1.1], color: [W.foam, W.light], intensity: 1.05, additive: false, alpha: [0.75, 0], spin: 2 });
+      vfx.particle({ tex: 'drop', pos: p, vel: v, acc: new THREE.Vector3(0, -12, 0), life: 0.55, size: [0.17, 0.07], color: [W.foam, W.light], intensity: 1.05, additive: false });
     }
   };
-  // rise behind the user
-  c.attacker.jump(0.9, 700);
-  await during(c, 480, (k) => {
-    wave.u.height.value = 2.8 * ease.outCubic(k);
-    wave.u.curl.value = 0.3 + 0.2 * k;
-    crestSpray(0.5);
-  });
-  // sweep across the arena
-  let crashed = false;
-  const sweepMs = 950;
-  await during(c, sweepMs, (k) => {
-    const kk = ease.inOutQuad(k);
-    const p = start.clone().lerp(end, kk);
-    wave.mesh.position.copy(p);
-    wave.u.height.value = 2.8 + 0.5 * Math.sin(k * Math.PI);
-    wave.u.curl.value = 0.5 + 0.5 * k;
-    crestSpray(1);
-    // churned foam along the base
-    if (Math.random() < 0.8) {
-      const b = wave.mesh.localToWorld(new THREE.Vector3((Math.random() - 0.5) * 8, 0.2, 0.3));
-      vfx.particle({ tex: 'smoke', pos: b, vel: c.dir.clone().multiplyScalar(2).add(new THREE.Vector3(0, 0.8, 0)), life: 0.5, size: [0.5, 1.1], color: [W.foam, W.light], additive: false, alpha: [0.5, 0], intensity: 1 });
+  const churn = (amt: number) => {
+    for (let i = 0; i < Math.round(3 * amt + Math.random()); i++) {
+      const b = wave.mesh.localToWorld(new THREE.Vector3((Math.random() - 0.5) * 5.5, 0.3, 0.2 + Math.random() * 0.4));
+      vfx.particle({ tex: 'smoke', pos: b, vel: c.dir.clone().multiplyScalar(2.5).add(new THREE.Vector3(0, 0.5, 0)), drag: 1.5, life: 0.45, size: [0.5, 1.0], color: [W.foam, W.light], additive: false, alpha: [0.45, 0], intensity: 1 });
     }
-    if (!crashed && kk > 0.82) {
+  };
+  await during(c, 520, (k) => {
+    wave.u.height.value = H * ease.outCubic(k);
+    wave.u.curl.value = 0.2 + 0.25 * k;
+    ride(1.25 * ease.outBack(k), 0);
+    spray(0.3 + 0.7 * k);
+    churn(k);
+  });
+  // 3) it surges across the field: the user rides the crest, then leaps home as the wave breaks
+  let crashed = false;
+  let leap: Promise<void> | null = null;
+  let carried = 0;
+  await during(c, 900, (k) => {
+    const kk = ease.inOutQuad(k);
+    wave.mesh.position.copy(start).lerp(end, kk);
+    wave.u.height.value = H * (1 + 0.08 * Math.sin(k * Math.PI));
+    wave.u.curl.value = 0.45 + 0.8 * ease.inQuad(k);
+    if (k < 0.42) {
+      carried = wave.mesh.position.clone().sub(start).dot(c.dir);
+      ride(1.25 + 0.08 * Math.sin(k * 30), carried);
+    } else if (!leap) {
+      const from = carried;
+      leap = stage.tween(420, (t) => ride(1.25 * (1 - t) + Math.sin(t * Math.PI) * 0.9, from * (1 - t)), ease.inOutQuad);
+    }
+    spray(1);
+    churn(1);
+    if (!crashed && kk > 0.86) {
       crashed = true;
       if (!c.missed) {
         c.impact(0);
-        c.target.flash(W.light, 300, 0.7);
+        c.target.flash(W.light, 350, 0.7);
         c.target.shake(0.2, 0.5);
       }
-      vfx.shake(0.4, 600);
-      c.stage.flash(W.foam, 0.25, 220);
+      vfx.shake(0.45, 600);
+      stage.flash(W.foam, 0.18, 220);
+      stage.shockwave(hitAt, 0.6, 350);
     }
   });
-  // crash down onto the target
-  const hitAt = c.aim(0.5);
-  splash(c, hitAt, 1.5, c.dir.clone());
-  for (let i = 0; i < 40; i++) {
+  sp.setOutline(0);
+  // 4) the lip crashes down: a burst of spray and foam over the target
+  splash(c, hitAt, 1.6, c.dir.clone());
+  for (let i = 0; i < 44; i++) {
     const d = new THREE.Vector3((Math.random() - 0.5) * 1.4, 1, (Math.random() - 0.5) * 1.4).addScaledVector(c.dir, 0.6).normalize();
     const big = i % 3 === 0;
-    vfx.particle({ tex: big ? 'smoke' : 'drop', pos: c.foeFeet.clone().add(new THREE.Vector3((Math.random() - 0.5) * 2, 0.5, (Math.random() - 0.5) * 2)), vel: d.multiplyScalar(4 + Math.random() * 5), acc: new THREE.Vector3(0, -11, 0), drag: 1, life: 0.8, size: big ? [0.7, 1.4] : [0.3, 0.12], color: big ? [W.foam, W.light] : [W.light, W.main], intensity: 1.05, additive: false, alpha: [0.85, 0], spin: 2 });
+    vfx.particle({ tex: big ? 'smoke' : 'drop', pos: landAt.clone().add(new THREE.Vector3((Math.random() - 0.5) * 2.4, 0.6, (Math.random() - 0.5) * 2.4)), vel: d.multiplyScalar(4 + Math.random() * 5), acc: new THREE.Vector3(0, -11, 0), drag: 1, life: 0.8, size: big ? [0.8, 1.6] : [0.3, 0.12], color: big ? [W.foam, W.light] : [W.light, W.main], intensity: 1.05, additive: false, alpha: [0.85, 0], spin: 2 });
   }
-  await during(c, 420, (k) => {
-    wave.u.height.value = 2.9 * (1 - ease.inQuad(k));
-    wave.u.curl.value = 1.0 + 0.3 * k;
-    wave.u.alpha.value = 1 - k;
-    wave.mesh.position.addScaledVector(c.dir, 0.03);
+  await during(c, 460, (k) => {
+    wave.u.height.value = H * (1 - ease.inQuad(k));
+    wave.u.curl.value = 1.25 + 0.45 * k;
+    wave.u.alpha.value = 1 - ease.inQuad(k);
+    wave.mesh.position.addScaledVector(c.dir, 0.035);
+    spray(0.6 * (1 - k));
+    churn(1 - k);
   });
   wave.dispose();
-  for (let i = 0; i < 3; i++) c.stage.wait(i * 140).then(() => vfx.prim.shockwave(c.foeFeet.clone().setY(c.foeFeet.y + 0.05), { color: W.light, radius: 2 + i * 1.2, facing: 'ground', ms: 600, thickness: 0.18, intensity: 1.2 }));
-  await vfx.wait(450);
+  // 5) the water washes out across the ground and drains away
+  const feet = landAt.clone().setY(c.foeFeet.y + 0.05);
+  for (let i = 0; i < 3; i++) stage.wait(i * 140).then(() => vfx.prim.shockwave(feet, { color: W.light, radius: 2.2 + i * 1.2, facing: 'ground', ms: 650, thickness: 0.18, intensity: 1.1 }));
+  for (let i = 0; i < 26; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const d = new THREE.Vector3(Math.cos(a), 0, Math.sin(a)).addScaledVector(c.dir, 0.7).normalize();
+    vfx.particle({ tex: 'smoke', pos: feet.clone().add(new THREE.Vector3(0, 0.15, 0)), vel: d.multiplyScalar(2.5 + Math.random() * 3), drag: 2.2, life: 0.9, size: [0.7, 1.8], color: [W.foam, W.light], intensity: 1, additive: false, alpha: [0.55, 0], spin: 1 });
+  }
+  if (leap) await leap;
+  ride(0, 0);
+  await vfx.wait(380);
   vfx.shot('wide', c.side, 500);
 });
 
