@@ -22,7 +22,7 @@ const STATUS_LABEL: Record<StatusCond, [string, string]> = {
 
 export function typeBadge(type: string) {
   const c = TYPE_COLOR[type as PokeType] ?? '#888';
-  return h('span', { class: 'type-badge', style: `background:${c}` }, type);
+  return h('span', { class: 'type-badge', style: `background-color:${c}` }, type);
 }
 
 export function iconUrl(speciesKey: string) {

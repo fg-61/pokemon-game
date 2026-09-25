@@ -1,9 +1,11 @@
 import { audio } from '../audio/audio';
 import { SPECIES } from '../data/gamedata';
+import { TYPE_COLOR } from '../data/typeColors';
 import { ROSTER } from '../data/roster';
 import { champion, ELITE_FOUR, GYMS, gymOpen, leagueOpen, type BadgeShape, type LeagueProgress, type LeagueStop } from '../game/league';
 import { assetUrl } from '../render/pokemonSprite';
 import { h } from './dom';
+import { menuFx } from './fx';
 import { iconUrl, typeBadge } from './hud';
 import { t } from './i18n';
 
@@ -103,6 +105,7 @@ export function leagueScreen(parent: HTMLElement, o: { progress: LeagueProgress;
       'div',
       {
         class: `gym-card ${state}`,
+        style: `--t1:${TYPE_COLOR[g.type]}`,
         onclick: () => {
           if (!open) return audio.playSfx('uiError');
           audio.playSfx('uiSelect');
@@ -143,7 +146,7 @@ export function leagueScreen(parent: HTMLElement, o: { progress: LeagueProgress;
       [...ELITE_FOUR, blue].map((st) =>
         h(
           'div',
-          { class: `elite-card ${st.kind}` },
+          { class: `elite-card ${st.kind}`, style: `--t1:${st.kind === 'champion' ? '#ffd35a' : TYPE_COLOR[st.type]}` },
           h('img', { class: 'pic', src: trainerPic(st), alt: st.name }),
           h('small', null, st.kind === 'champion' ? t('championTitle') : t('eliteFour')),
           h('b', null, st.name),
@@ -166,6 +169,7 @@ export function leagueScreen(parent: HTMLElement, o: { progress: LeagueProgress;
   );
 
   root.append(
+    menuFx(),
     h(
       'div',
       { class: 'select-head' },

@@ -61,6 +61,12 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
       Kyogre/Ludicolo/Kingdra/Vaporeon rain, Tyranitar/Aggron sand, Castform). 50 curated + 165 generated lines; all
       levels re-tuned (6x60k battles, rms 1.6%); League curve re-checked. New recipes in `src/vfx/recipes/signature.ts`.
 - [x] Original Gym Leader and Champion music themes.
+- [x] UI redesign to match the VFX: shared tokens (glass panels, gold/cyan glows, shine sweeps, styled scrollbars,
+      range sliders, selects), `menuFx()` backdrop (energy haze, vignette, rising sparks) on menu screens, title with
+      light rays + shining logo + icon menu (`src/ui/icons.ts`), team-select cards tinted by type with 3D tilt, mouse
+      sheen, pedestal, holographic legendary frame; hero detail panel (artwork on pulsing rings, evolution path, stat
+      bars + total, move cards with physical/special/status icons); pedestal team slots; modals with header/close;
+      results with rays, artwork and stat tiles; League cards tinted by type.
 - [x] Fix: a Pokémon that couldn't act mid-Fly / Dig (sleep, paralysis, confusion) stayed semi-invulnerable and its
       sprite hidden — the charge is now cancelled and the sprite lands back (`present()` restores hidden sprites).
 - [ ] Next ideas: held items (Leftovers, type boosters) chosen in team select; more League flavour (trainer-class

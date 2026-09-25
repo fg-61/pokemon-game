@@ -13,6 +13,8 @@ import { assetUrl } from '../render/pokemonSprite';
 import { clear, h } from './dom';
 import { iconUrl, shade, typeBadge } from './hud';
 import { getLang, setLang, t, type Lang } from './i18n';
+import { menuFx } from './fx';
+import { ICONS } from './icons';
 import { badgeCase } from './league';
 
 const dexOf = (key: string) => SPECIES[key].dex;
@@ -29,7 +31,15 @@ function modal(parent: HTMLElement, title: string, ...body: (HTMLElement | strin
   };
   const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close();
   addEventListener('keydown', onKey);
-  bg.appendChild(h('div', { class: 'modal panel' }, h('h3', null, title), ...body, h('div', { style: 'text-align:right;margin-top:14px' }, h('button', { class: 'btn', onclick: close }, t('close')))));
+  bg.appendChild(
+    h(
+      'div',
+      { class: 'modal panel' },
+      h('div', { class: 'modal-head' }, h('h3', null, title), h('button', { class: 'icon-x', title: t('close'), onclick: close, html: ICONS.close })),
+      h('div', { class: 'modal-body' }, ...body),
+      h('div', { class: 'modal-foot' }, h('button', { class: 'btn', onclick: close }, t('close'))),
+    ),
+  );
   bg.addEventListener('pointerdown', (e) => e.target === bg && close());
   parent.appendChild(bg);
 }
@@ -73,6 +83,7 @@ export function openHelp(parent: HTMLElement) {
 
 // ------------------------------------------------------------------ title
 
+
 function recordsLine(): HTMLElement[] {
   const r = loadRecords();
   const lg = loadLeague();
@@ -92,16 +103,25 @@ export function titleScreen(parent: HTMLElement, onPick: (mode: 'league' | 'quic
   const root = h('div', { class: 'screen title-screen' });
   const render = () => {
     clear(root);
+    const item = (icon: keyof typeof ICONS, label: string, desc: string | null, onclick: () => void, primary = false) =>
+      h(
+        'button',
+        { class: `menu-btn ${primary ? 'primary' : ''}`, onclick, onmouseenter: () => audio.playSfx('uiHover', { volume: 0.25 }) },
+        h('span', { class: 'ic', html: ICONS[icon] }),
+        h('span', { class: 'tx' }, h('b', null, label), desc ? h('small', null, desc) : null),
+        h('span', { class: 'go', html: ICONS.chevron }),
+      );
     const menu = h(
       'div',
       { class: 'menu' },
-      h('button', { class: 'btn primary', onclick: () => go('league') }, t('league'), h('small', null, t('leagueDesc'))),
-      h('button', { class: 'btn', onclick: () => go('quick') }, t('quick'), h('small', null, t('quickDesc'))),
-      h('button', { class: 'btn', onclick: () => (audio.playSfx('uiSelect'), openHelp(root)) }, t('howTo')),
-      h('button', { class: 'btn', onclick: () => (audio.playSfx('uiSelect'), openSettings(root, render)) }, t('settings')),
+      item('trophy', t('league'), t('leagueDesc'), () => go('league'), true),
+      item('bolt', t('quick'), t('quickDesc'), () => go('quick')),
+      item('book', t('howTo'), null, () => (audio.playSfx('uiSelect'), openHelp(root))),
+      item('gear', t('settings'), null, () => (audio.playSfx('uiSelect'), openSettings(root, render))),
     );
     root.append(
-      h('div', { class: 'logo' }, h('h1', null, 'EVO CLASH'), h('h2', null, 'POKéMON BATTLE ARENA'), h('p', null, t('subtitle'))),
+      menuFx(),
+      h('div', { class: 'logo' }, h('div', { class: 'logo-rays' }), h('h1', null, 'EVO CLASH'), h('h2', null, 'POKéMON BATTLE ARENA'), h('p', null, t('subtitle'))),
       menu,
       ...recordsLine(),
       h(
@@ -139,18 +159,45 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
   const grid = h('div', { class: 'roster-grid' });
   const detail = h('div', { class: 'detail panel' });
   const slots = h('div', { class: 'team-slots' });
-  const goBtn = h('button', { class: 'btn primary', disabled: true, onclick: () => done() }, t('battle'));
+  const goBtn = h('button', { class: 'btn primary go-btn', disabled: true, onclick: () => done() }, h('span', { class: 'ic', html: ICONS.swords }), t('battle'));
 
   const cards = new Map<string, HTMLElement>();
   const searchText = new Map<string, string>();
+  // 3D tilt + moving sheen on the hovered card
+  let tilted: HTMLElement | null = null;
+  grid.addEventListener('pointermove', (e) => {
+    const card = (e.target as HTMLElement).closest('.mon-card') as HTMLElement | null;
+    if (tilted && tilted !== card) {
+      tilted.style.removeProperty('--rx');
+      tilted.style.removeProperty('--ry');
+    }
+    tilted = card;
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    card.style.setProperty('--rx', `${((0.5 - y) * 12).toFixed(2)}deg`);
+    card.style.setProperty('--ry', `${((x - 0.5) * 14).toFixed(2)}deg`);
+    card.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
+    card.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+  });
+  grid.addEventListener('pointerleave', () => {
+    tilted?.style.removeProperty('--rx');
+    tilted?.style.removeProperty('--ry');
+    tilted = null;
+  });
   for (const line of ROSTER) {
     const base = SPECIES[line.stages[0].species];
     const last = SPECIES[line.stages[line.stages.length - 1].species];
     const branch = line.tags?.includes('branch');
+    const legendary = line.tags?.includes('legendary');
+    const t1 = TYPE_COLOR[base.types[0] as PokeType] ?? '#888';
+    const t2 = TYPE_COLOR[(base.types[1] ?? base.types[0]) as PokeType] ?? t1;
     const card = h(
       'div',
       {
-        class: `mon-card ${line.tags?.includes('legendary') ? 'legendary' : ''}`,
+        class: `mon-card ${legendary ? 'legendary' : ''}`,
+        style: `--t1:${t1};--t2:${t2};--i:${Math.min(cards.size, 30)}`,
         onclick: () => toggle(line),
         onmouseenter: () => {
           audio.playSfx('uiHover', { volume: 0.25 });
@@ -158,7 +205,8 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
         },
       },
       h('div', { class: 'dexno' }, `#${String(base.dex).padStart(3, '0')}`),
-      h('div', { class: 'art' }, h('img', { src: assetUrl(base.dex, 'frlg-front.png'), alt: base.name, loading: 'lazy' })),
+      legendary ? h('div', { class: 'legend-star', title: t('legendary') }, '★') : null,
+      h('div', { class: 'art' }, h('i', { class: 'pedestal' }), h('img', { src: assetUrl(base.dex, 'frlg-front.png'), alt: base.name, loading: 'lazy' })),
       h('div', { class: 'name' }, base.name, branch ? h('small', null, ` → ${last.name}`) : null),
       h('div', { class: 'role' }, line.role),
       h('div', { class: 'types' }, base.types.map(typeBadge)),
@@ -216,37 +264,51 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
     region = regionSel.value;
     applyFilter();
   };
-  const filterBar = h('div', { class: 'filter-bar' }, search, typeSel, regionSel, countEl);
+  const filterBar = h('div', { class: 'filter-bar' }, h('label', { class: 'search-wrap' }, h('span', { class: 'ic', html: ICONS.search }), search), typeSel, regionSel, countEl);
 
   const renderDetail = () => {
     clear(detail);
     const st = focus.stages[focusStage];
     const sp = SPECIES[st.species];
     const stats = calcStats(sp.base, focus.level);
+    const t1 = TYPE_COLOR[sp.types[0] as PokeType] ?? '#888';
+    const t2 = TYPE_COLOR[(sp.types[1] ?? sp.types[0]) as PokeType] ?? t1;
+    detail.style.setProperty('--t1', t1);
+    detail.style.setProperty('--t2', t2);
+    const total = STAT_KEYS.reduce((a, k) => a + sp.base[k], 0);
     detail.append(
       h(
         'div',
-        { class: 'top' },
-        h('img', { src: assetUrl(sp.dex, 'artwork.png'), alt: sp.name }),
+        { class: 'hero' },
+        h('div', { class: 'spot' }, h('i'), h('i'), h('i')),
+        h('img', { class: 'hero-art', src: assetUrl(sp.dex, 'artwork.png'), alt: sp.name }),
         h(
           'div',
-          null,
-          h('h3', null, sp.name, ' ', h('small', { style: 'color:var(--muted);font-size:13px' }, `#${String(sp.dex).padStart(3, '0')} · ${t('level')}${focus.level}`)),
-          h('div', { style: 'display:flex;gap:4px;margin:4px 0' }, sp.types.map(typeBadge)),
-          h('div', { style: 'font-size:12px;color:var(--muted)' }, `${t('ability')}: ${prettify(sp.abilities[0])}`),
-          h('div', { style: 'font-size:12px;margin-top:4px' }, h('b', null, focus.role), ' — ', focus.blurb),
+          { class: 'hero-info' },
+          h('div', { class: 'dexline' }, `#${String(sp.dex).padStart(3, '0')}`, h('span', { class: 'lv' }, `${t('level')}${focus.level}`)),
+          h('h3', null, sp.name),
+          h('div', { class: 'types' }, sp.types.map(typeBadge)),
+          h('div', { class: 'ability' }, h('small', null, t('ability')), prettify(sp.abilities[0])),
         ),
       ),
-      h('div', { class: 'stage-tabs' }, focus.stages.map((s, i) => h('button', { class: i === focusStage ? 'on' : '', onclick: () => ((focusStage = i), renderDetail()) }, h('img', { src: iconUrl(s.species) }), `${t('stage')} ${i + 1}`))),
+      h('div', { class: 'blurb' }, h('b', null, focus.role), focus.blurb),
       h(
         'div',
-        null,
-        STAT_KEYS.map((k) =>
-          h('div', { class: 'stat-row' }, h('span', null, STAT_NAMES[k]), h('b', null, String(sp.base[k])), h('div', { class: 'bar' }, h('i', { style: `width:${Math.min(100, (sp.base[k] / 150) * 100)}%;background:${STAT_COLORS[k]}` }))),
-        ),
-        h('div', { style: 'font-size:11px;color:var(--muted);margin-top:4px' }, `${t('hp')} ${stats.hp} · Atk ${stats.atk} · Def ${stats.def} · SpA ${stats.spa} · SpD ${stats.spd} · Spe ${stats.spe}`),
+        { class: 'evo-path' },
+        focus.stages.flatMap((s, i) => [
+          i > 0 ? h('span', { class: 'evo-arrow', html: ICONS.chevron }) : null,
+          h('button', { class: i === focusStage ? 'on' : '', onclick: () => ((focusStage = i), audio.playSfx('uiMove'), renderDetail()) }, h('img', { src: assetUrl(SPECIES[s.species].dex, 'frlg-front.png') }), h('span', null, SPECIES[s.species].name)),
+        ]),
       ),
-      h('div', { style: 'font-weight:700;font-size:13px' }, t('moves')),
+      h(
+        'div',
+        { class: 'stats' },
+        STAT_KEYS.map((k) =>
+          h('div', { class: 'stat-row' }, h('span', null, STAT_NAMES[k]), h('b', null, String(sp.base[k])), h('div', { class: 'bar' }, h('i', { style: `width:${Math.min(100, (sp.base[k] / 160) * 100)}%;--c:${STAT_COLORS[k]}` }))),
+        ),
+        h('div', { class: 'stat-total' }, h('span', null, t('total')), h('b', null, String(total)), h('small', null, `${t('hp')} ${stats.hp} · Atk ${stats.atk} · Def ${stats.def} · SpA ${stats.spa} · SpD ${stats.spd} · Spe ${stats.spe}`)),
+      ),
+      h('div', { class: 'section-title' }, t('moves')),
       h(
         'div',
         { class: 'move-list' },
@@ -255,13 +317,14 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
           const c = TYPE_COLOR[mv.type as PokeType] ?? '#888';
           return h(
             'div',
-            { class: 'move-chip', style: `background:linear-gradient(160deg, ${c}, ${shade(c, -0.4)})`, title: mv.description },
+            { class: 'move-chip', style: `--mc:${c};--mc2:${shade(c, -0.45)}`, title: mv.description },
+            h('span', { class: `cat ${mv.category}`, title: t(mv.category), html: ICONS[mv.category as 'physical' | 'special' | 'status'] }),
             h('b', null, mv.name),
-            h('span', null, `${mv.type} · ${t(mv.category)} · ${mv.power > 1 ? mv.power : '—'} / ${mv.accuracy || '∞'}`),
+            h('span', { class: 'mmeta' }, h('em', null, mv.type), `${mv.power > 1 ? mv.power : '—'} / ${mv.accuracy || '∞'}`),
           );
         }),
       ),
-      h('div', { class: 'dex' }, `“${sp.dexEntry.replace(/POKéMON/g, 'Pokémon')}” — FireRed Pokédex`),
+      h('div', { class: 'dex' }, `“${sp.dexEntry.replace(/POKéMON/g, 'Pokémon')}”`, h('small', null, 'FireRed Pokédex')),
     );
   };
 
@@ -277,7 +340,15 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
     clear(slots);
     for (let i = 0; i < 3; i++) {
       const id = picked[i];
-      slots.appendChild(h('div', { class: `team-slot ${id ? 'filled' : ''}` }, id ? h('img', { src: iconUrl(ROSTER.find((l) => l.id === id)!.stages[0].species) }) : null));
+      const sp = id ? ROSTER.find((l) => l.id === id)!.stages[0].species : null;
+      slots.appendChild(
+        h(
+          'div',
+          { class: `team-slot ${sp ? 'filled' : ''}`, onclick: () => sp && toggle(ROSTER.find((l) => l.id === id)!) },
+          sp ? h('img', { src: assetUrl(SPECIES[sp].dex, 'frlg-front.png') }) : h('span', { class: 'slot-num' }, String(i + 1)),
+          sp ? h('span', { class: 'slot-name' }, SPECIES[sp].name) : null,
+        ),
+      );
     }
     cards.forEach((c, id) => {
       const idx = picked.indexOf(id);
@@ -330,10 +401,21 @@ export function teamSelect(parent: HTMLElement, opts: { title: string; onDone: (
   addEventListener('keydown', onKey);
 
   root.append(
-    h('div', { class: 'select-head' }, h('div', null, h('h2', null, t('chooseTeam')), h('p', null, `${opts.title} · ${t('chooseTeamHint')}`)), h('button', { class: 'btn', onclick: () => (cleanup(), audio.playSfx('uiBack'), opts.onBack()) }, t('back'))),
+    menuFx(),
+    h(
+      'div',
+      { class: 'select-head' },
+      h('div', null, h('h2', null, t('chooseTeam')), h('p', null, h('span', { class: 'mode-chip' }, opts.title), ` ${t('chooseTeamHint')}`)),
+      h('button', { class: 'btn ghost', onclick: () => (cleanup(), audio.playSfx('uiBack'), opts.onBack()) }, h('span', { class: 'ic', html: ICONS.back }), t('back')),
+    ),
     filterBar,
     h('div', { class: 'select-body' }, grid, detail),
-    h('div', { class: 'select-foot' }, h('div', { style: 'display:flex;gap:10px;align-items:center' }, h('b', null, t('team')), slots), h('div', { style: 'display:flex;gap:10px' }, h('button', { class: 'btn', onclick: randomize }, '🎲 ', t('random')), goBtn)),
+    h(
+      'div',
+      { class: 'select-foot' },
+      h('div', { class: 'team-bar' }, h('b', null, t('team')), slots),
+      h('div', { class: 'foot-btns' }, h('button', { class: 'btn ghost', onclick: randomize }, h('span', { class: 'ic', html: ICONS.dice }), t('random')), goBtn),
+    ),
   );
   cards.get(focus.id)?.classList.add('focus');
   renderDetail();
@@ -360,21 +442,29 @@ export function resultsScreen(
   const btn = (label: string, fn: () => void, primary = false) => h('button', { class: `btn ${primary ? 'primary' : ''}`, onclick: () => (audio.playSfx('uiSelect'), bg.remove(), fn()) }, label);
   const mins = Math.floor(outcome.time / 60);
   const secs = Math.round(outcome.time % 60);
+  const tile = (icon: keyof typeof ICONS, value: string, label: string) => h('div', { class: 'res-tile' }, h('span', { class: 'ic', html: ICONS[icon] }), h('b', null, value), h('small', null, label));
   bg.appendChild(
     h(
       'div',
-      { class: 'results panel' },
-      h('h2', { class: outcome.won ? 'win' : 'lose' }, outcome.won ? t('youWin') : t('youLose')),
-      o.champion ? h('div', { style: 'font-size:20px;color:var(--gold);font-weight:800;margin-top:6px' }, '🏆 ', t('champion')) : null,
+      { class: `results panel ${outcome.won ? 'win' : 'lose'}` },
+      outcome.won ? h('div', { class: 'res-rays' }) : null,
+      h('h2', null, outcome.won ? t('youWin') : t('youLose')),
+      o.champion ? h('div', { class: 'res-champ' }, h('span', { html: ICONS.trophy }), t('champion')) : null,
       o.extra ?? null,
-      h('div', { class: 'team' }, outcome.finalSpecies.map((k) => h('img', { src: assetUrl(SPECIES[k].dex, 'frlg-front.png'), title: SPECIES[k].name }))),
       h(
-        'table',
-        null,
-        h('tr', null, h('td', null, t('perfects')), h('td', null, String(outcome.perfects))),
-        h('tr', null, h('td', null, t('evolutions')), h('td', null, String(outcome.evolutions))),
-        h('tr', null, h('td', null, t('damage')), h('td', null, String(outcome.damage))),
-        h('tr', null, h('td', null, t('duration')), h('td', null, `${mins}:${String(secs).padStart(2, '0')}`)),
+        'div',
+        { class: 'team' },
+        outcome.finalSpecies.map((k, i) =>
+          h('div', { class: 'res-mon', style: `animation-delay:${0.15 + i * 0.12}s` }, h('img', { src: assetUrl(SPECIES[k].dex, 'artwork.png'), alt: SPECIES[k].name }), h('span', null, SPECIES[k].name)),
+        ),
+      ),
+      h(
+        'div',
+        { class: 'res-stats' },
+        tile('target', String(outcome.perfects), t('perfects')),
+        tile('spark', String(outcome.evolutions), t('evolutions')),
+        tile('burst', String(outcome.damage), t('damage')),
+        tile('clock', `${mins}:${String(secs).padStart(2, '0')}`, t('duration')),
       ),
       h('div', { class: 'btns' }, o.hasNext && outcome.won ? btn(t('next'), o.onNext, true) : null, !outcome.won ? btn(o.retryLabel ?? t('retry'), o.onRetry, true) : null, btn(o.backLabel ?? t('toTitle'), o.onTitle)),
     ),
