@@ -1,9 +1,8 @@
-import '@fontsource/pixelify-sans/400.css';
-import '@fontsource/pixelify-sans/700.css';
-import '@fontsource/rubik/400.css';
-import '@fontsource/rubik/600.css';
-import '@fontsource/rubik/700.css';
-import '@fontsource/rubik/800.css';
+import '@fontsource/lilita-one/400.css';
+import '@fontsource/fredoka/400.css';
+import '@fontsource/fredoka/500.css';
+import '@fontsource/fredoka/600.css';
+import '@fontsource/fredoka/700.css';
 import './ui/style.css';
 import { audio } from './audio/audio';
 import type { Difficulty } from './battle/ai';

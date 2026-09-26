@@ -74,6 +74,13 @@ Useful in the terminal (you have a real GPU there, so the game runs at full spee
       (`yarn assets:items`); picker on each team slot (suggested item by default), item icon on the HUD card, item
       popups; AI trainers and the sim/tuner hold suggested items. Levels re-tuned with items (rms 1.7%), League curve
       re-tuned (Brock 89% … Giovanni 60%, Elite Four 60-70%, Champion 59%).
+- [x] Fonts + in-battle HUD redesign: the pixel font is gone — Lilita One (display: titles, names, every number) +
+      Fredoka (UI text), bundled with @fontsource. Info cards (FRLG portrait in a type-colored ring, thick HP bar,
+      glowing ATB/EVO), dark-glass message box, type-colored move cards (category icon, power/accuracy/PP, ×2/×½/×0
+      chip with the full text in the tooltip), icon Evolve/Switch buttons, party picker with sprites and types, slanted
+      move banner, outlined damage numbers, ability/item toasts, VS intro with speed lines and pedestals, opponent
+      plate in the top-right corner. The HUD chrome zooms ×1.25 / ×1.6 on big screens (`--pop` scales the
+      world-anchored numbers and the QTE ring). Gallery check: force every component on screen via `window.__battle.hud`.
 - [ ] Next ideas: more League flavour (trainer-class battles before each gym, rival battles along the way, leader
       quotes); Present scaling with its roll; mobile layout; local 2-player versus.
 - [ ] Phase 3 rest: local 2-player versus, unlockables (see ROADMAP).

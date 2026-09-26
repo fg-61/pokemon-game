@@ -176,6 +176,31 @@ yazar; `roster.ts` birleştirmesi ve denge (levels:tune + sim) en sonda tek sefe
 - **Hava durumu** (Faz 3): tüm Gen 3 kuralları, yetenekler, AI, HUD, arena efektleri.
 - **31 popüler hat** elle düzenlendi (araştırma agent'ı FireRed yasallığını kontrol etti), hava takımları; seviyeler
   yeniden dengelendi. Paralel agent'lar: hava VFX'i, imza hareketi VFX'leri, moveset araştırması.
+- **Tutulan eşyalar** (Faz 3): 28 FireRed eşyası, takım seçiminde eşya seçici, AI eşyaları; denge yeniden ayarlandı.
+
+## 15. Kullanıcı
+> Ana giriş ekranını, seçme ekranını, scrolları karakter kartlarını, seçtiğinde açılan ekranı vesaire ne varsa onları
+> da uygun şekilde yapar mısın? Oyunun güzel görüntüsüne uygun olsun. O vfxlere yakışır olsun. Sonrada diğer işinden
+> devam et
+
+### Asistan
+- Menüler VFX'e uygun yeniden tasarlandı: cam paneller, altın/camgöbeği parıltılar, ışık süpürmeleri, ikonlu ana menü,
+  tipe göre renklenen 3B eğilen kartlar, detay paneli, kaydırma çubukları, modallar, sonuç ekranı, Lig kartları.
+
+## 16. Kullanıcı
+> Oyun içi pokemon harici ve arka planlar harici kısımları görsel olarak revize eder misin tüm komponentlere bak.
+> İstersen öncesinde bir piyasa araştırması yap nasıl güzel bir görüntü ortaya koyabilirim diye. Bir de metin olarak
+> farklı bir font kullanabilir misin 2 3 gibi sayılar kötü görünüyor.
+
+### Asistan
+- Kısa bir araştırma (Pokémon SV arayüzü, HUD tasarım rehberleri, oyun fontları): üç katmanlı tipografi, VFX üstünde
+  okunurluk için kontur/panel, az sayıda "yüksek sesli" öğe (HP, sıra, evrim hazır), köşelere yerleştirilmiş HUD.
+- Piksel font kaldırıldı: başlıklar ve sayılar **Lilita One**, arayüz metni **Fredoka** (ikisi de @fontsource ile
+  çevrimdışı paketlendi).
+- Savaş HUD'unun tamamı yenilendi: bilgi kartları (FRLG portre, tip renkli halka, kalın HP çubuğu, parlayan ATB/EVO),
+  koyu cam mesaj kutusu, kategori ikonlu tip renkli hamle kartları (güç/isabet/PP, ×2/×½ etkinlik çipi), ikonlu
+  Evrim/Değiştir butonları, sprite'lı takım seçici, eğik hamle şeridi, konturlu hasar sayıları, bildirim kutuları,
+  VS girişi (hız çizgileri, kaide), sağ üst köşede rakip plakası; büyük ekranlarda HUD ölçekleniyor.
 
 ---
 

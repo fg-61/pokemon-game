@@ -10,10 +10,10 @@ import { TYPE_COLOR } from '../data/typeColors';
 import type { PokeType } from '../data/types';
 import { Arena, ENEMY_POS, PLAYER_POS, THEMES } from '../render/arena';
 import { ease, setBaseSpeed } from '../render/clock';
-import { loadSheet, PokemonSprite } from '../render/pokemonSprite';
+import { assetUrl, loadSheet, PokemonSprite } from '../render/pokemonSprite';
 import { introShot, wideShot } from '../render/shots';
 import type { Stage } from '../render/stage';
-import { Hud, iconUrl } from '../ui/hud';
+import { Hud } from '../ui/hud';
 import { statName, t } from '../ui/i18n';
 import { playEvolutionFx } from '../vfx/evolution';
 import { playMoveFx } from '../vfx/playMove';
@@ -23,6 +23,7 @@ import { boostFx, healFx, residualFx, returnFx, sendOutFx, statusFx } from '../v
 import type { Vfx } from '../vfx/vfx';
 import { settings } from './settings';
 import type { Trainer } from './trainers';
+import { ICONS } from '../ui/icons';
 
 export interface BattleSetup {
   playerName: string;
@@ -122,7 +123,7 @@ export class BattleController {
     const sideLabel = setup.round ? t('round', setup.round.i, setup.round.n) : setup.trainer.name;
     const quitBtn = document.createElement('button');
     quitBtn.className = 'icon-btn interactive';
-    quitBtn.textContent = '✕';
+    quitBtn.innerHTML = ICONS.close;
     quitBtn.title = t('quit');
     quitBtn.onclick = () => {
       if (confirm(t('quit') + '?')) this.quit = true;
@@ -153,7 +154,7 @@ export class BattleController {
     this.stage.director.move(wideShot(), 3.2, ease.inOutCubic);
     this.stage.director.sway = 1;
     for (const side of [0, 1] as Side[]) this.hud.cards[side].setTeam(b.sides[side].team);
-    const icons = (lines: string[]) => lines.map((l) => iconUrl(getLine(l).stages[0].species));
+    const icons = (lines: string[]) => lines.map((l) => assetUrl(SPECIES[getLine(l).stages[0].species].dex, 'frlg-front.png'));
     const vs = this.hud.vsIntro(
       { name: this.setup.playerName, icons: icons(this.setup.playerLines), pic: this.setup.trainer.pic ? 'assets/trainers/red.png' : undefined },
       { name: this.setup.trainer.name, icons: icons(this.setup.trainer.lines), pic: this.setup.trainer.pic },

@@ -123,7 +123,7 @@ export function titleScreen(parent: HTMLElement, onPick: (mode: 'league' | 'quic
     );
     root.append(
       menuFx(),
-      h('div', { class: 'logo' }, h('div', { class: 'logo-rays' }), h('h1', null, 'EVO CLASH'), h('h2', null, 'POKéMON BATTLE ARENA'), h('p', null, t('subtitle'))),
+      h('div', { class: 'logo' }, h('div', { class: 'logo-rays' }), h('h1', null, 'EVO CLASH'), h('h2', null, 'POKÉMON BATTLE ARENA'), h('p', null, t('subtitle'))),
       menu,
       ...recordsLine(),
       h(

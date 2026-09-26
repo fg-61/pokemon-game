@@ -144,15 +144,15 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.28.2.tgz#b21affb804cc167c133d95f45b3a1dc1323b9a87"
   integrity sha512-5ebpxr3nWMzrL/rnUI755Jkuee0bHL/Gq0WTF9lvcpv73wAp5eu8MfBUgWK9bhWvZjj7yX8etf/8tI8Ney695g==
 
-"@fontsource/pixelify-sans@^5.3.0":
+"@fontsource/fredoka@^5.3.0":
   version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/pixelify-sans/-/pixelify-sans-5.3.0.tgz#b64352ebeb46babe06838832fbd18a4b29ed7f8f"
-  integrity sha512-4RCe9nXbi7wUu5+H0FNX1sgPZ2kJ1MmY1uTkEfvQIzzqhoS8zGKJaJfdK8oreE0OU+5gM+NdurFi3H3FJRBvyw==
+  resolved "https://registry.yarnpkg.com/@fontsource/fredoka/-/fredoka-5.3.0.tgz#6cb66cf0994ca800efdae6a9a1e9516f45f513e2"
+  integrity sha512-s2IhjQ50wDnKkkaKmjhtL0rxQg6ITsVusiipM3m7zUwVZZbbCKsscNDkngwp28xVzfIt7neWrkgU1qKqyTycQg==
 
-"@fontsource/rubik@^5.3.0":
+"@fontsource/lilita-one@^5.3.0":
   version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/rubik/-/rubik-5.3.0.tgz#da9fc83b4e530bbbb7cfb375be0272d2b8926e7b"
-  integrity sha512-Nks2mn7vlE1jZVHuVgoKU2Ejqjvd+GJzLRdraCjo1xc79oo7O6vJ8pcvSfmKPGX3/Ln7nt09XWFzPeu2jWf0xQ==
+  resolved "https://registry.yarnpkg.com/@fontsource/lilita-one/-/lilita-one-5.3.0.tgz#dccf1659b1496bfbd6fa181fcf25f97eeeae8211"
+  integrity sha512-bNW3tD+m5pOsAQpW/NvtRbFthFe+B73hDJK2DLLCFCtF+1p+UMBgo7ibxdcb9Sftr06LKAVbt080wiMdSqGbOg==
 
 "@img/colour@^1.1.0":
   version "1.1.0"

@@ -13,10 +13,13 @@ export const ICONS = {
   close: svg('<path d="M6 6l12 12M18 6 6 18"/>'),
   dice: svg('<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/><circle cx="9" cy="15" r="1" fill="currentColor"/>'),
   swords: svg('<path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2"/><path d="M14.5 6.5 18 3h3v3l-3.5 3.5M5 14l4 4M7 17l-3 3M3 19l2 2"/>'),
+  swap: svg('<path d="M4 8h13l-3-3M20 16H7l3 3"/>'),
+  evolve: svg('<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m12 8 1.6 2.4L16 12l-2.4 1.6L12 16l-1.6-2.4L8 12l2.4-1.6L12 8Z" fill="currentColor"/>'),
   // move categories
   physical: svg('<path d="m12 2 2.2 5.8L20 6l-2.6 5.2L22 14l-6 1 1 6-5-3.5L7 21l1-6-6-1 4.6-2.8L4 6l5.8 1.8L12 2Z"/>', true),
   special: svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/>'),
   status: svg('<path d="M12 3 4 7v5c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V7l-8-4Z"/>'),
+  power: svg('<path d="M5 20v-5M12 20V10M19 20V4"/>'),
   // results
   target: svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>'),
   spark: svg('<path d="M12 2v5M12 17v5M2 12h5M17 12h5M5 5l3.5 3.5M15.5 15.5 19 19M19 5l-3.5 3.5M8.5 15.5 5 19"/>'),

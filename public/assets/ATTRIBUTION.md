@@ -14,6 +14,9 @@ the [pret/pokefirered](https://github.com/pret/pokefirered) decompilation's `gra
 The held-item icons in `public/assets/items/` come from the PokeAPI sprites repository (`sprites/items/`), fetched
 by `tools/fetch-item-icons.mjs` (unchanged).
 
+Fonts: Lilita One (Juan Montoreano) and Fredoka (Milena Brandão), both SIL Open Font License 1.1, bundled from npm
+via @fontsource.
+
 Pokémon and all related names, characters, images and sounds are © Nintendo / Creatures Inc. /
 GAME FREAK inc. This is a non-commercial fan project, not affiliated with or endorsed by
 Nintendo, The Pokémon Company, Creatures Inc. or GAME FREAK inc. No assets are sold or used for

@@ -2,6 +2,7 @@ import type { Battle } from '../battle/engine';
 import type { Action, BattleMon, Side, StatusCond, TimingGrade, WeatherKind } from '../battle/types';
 import { CONFIG } from '../battle/config';
 import { itemIcon, ITEMS, type ItemId } from '../battle/items';
+import { ICONS } from './icons';
 import { SPECIES } from '../data/gamedata';
 import { effectiveMove } from '../battle/engine';
 import { TYPE_COLOR } from '../data/typeColors';
@@ -28,11 +29,6 @@ export function typeBadge(type: string) {
 
 export function iconUrl(speciesKey: string) {
   return assetUrl(SPECIES[speciesKey].dex, 'icon.png');
-}
-
-function moveGradient(type: string) {
-  const c = TYPE_COLOR[type as PokeType] ?? '#888';
-  return `linear-gradient(160deg, ${c} 0%, ${shade(c, -0.35)} 100%)`;
 }
 
 export function shade(hex: string, k: number) {
@@ -85,10 +81,11 @@ class InfoCard {
 
   setMon(m: BattleMon, hasNext: boolean) {
     this.nm.textContent = m.name;
-    this.portrait.src = iconUrl(m.speciesKey);
+    this.portrait.src = assetUrl(SPECIES[m.speciesKey].dex, 'frlg-front.png');
     this.el.style.setProperty('--accent', TYPE_COLOR[m.types[0]] ?? '#58e1ff');
     this.el.style.setProperty('--accent2', TYPE_COLOR[m.types[1] ?? m.types[0]] ?? '#58e1ff');
-    this.lv.textContent = `${t('level')}${m.level}`;
+    clear(this.lv);
+    this.lv.append(h('small', null, t('level')), String(m.level));
     clear(this.types);
     m.types.forEach((ty) => this.types.appendChild(typeBadge(ty)));
     this.maxHp = m.stats.hp;
@@ -204,7 +201,7 @@ export class Hud {
 
   setTop(...items: (string | HTMLElement)[]) {
     clear(this.topEl);
-    for (const it of items) this.topEl.appendChild(typeof it === 'string' ? h('span', { class: 'pill' }, it) : it);
+    for (const it of items) this.topEl.appendChild(typeof it === 'string' ? h('span', { class: 'pill' }, h('span', { class: 'ic', html: ICONS.swords }), it) : it);
   }
 
   // ------------------------------------------------------------ messages
@@ -256,11 +253,12 @@ export class Hud {
 
   abilityPop(side: Side, text: string) {
     const pos = side === 0 ? 'right:24px;bottom:330px' : 'left:24px;top:150px';
-    this.pop(h('div', { class: 'ability-pop', style: pos }, text), 1800);
+    this.pop(h('div', { class: 'ability-pop', style: pos }, h('span', { class: 'ic', html: ICONS.evolve }), text), 1800);
   }
 
   async moveBanner(name: string, type: string) {
-    const el = h('div', { class: 'move-banner', style: `background:${moveGradient(type)}` }, name);
+    const c = TYPE_COLOR[type as PokeType] ?? '#888';
+    const el = h('div', { class: 'move-banner', style: `--mc:${c};--mc2:${shade(c, -0.45)}` }, typeBadge(type), h('span', { class: 'mb-name' }, name));
     this.overlay.appendChild(el);
     setTimeout(() => {
       el.classList.add('out');
@@ -269,15 +267,23 @@ export class Hud {
   }
 
   async vsIntro(left: { name: string; icons: string[]; pic?: string }, right: { name: string; icons: string[]; pic?: string }) {
-    const side = (s: { name: string; icons: string[]; pic?: string }) =>
-      h('div', { class: 'side' }, s.pic ? h('img', { class: 'trainer-pic', src: s.pic, alt: '' }) : null, s.name, h('div', { class: 'icons' }, s.icons.map((src) => h('img', { src }))));
-    const el = h('div', { class: `vs-intro ${right.pic ? 'with-pic' : ''}` }, side(left), h('div', { class: 'vs' }, t('vs')), side(right));
+    const side = (s: { name: string; icons: string[]; pic?: string }, cls: string) =>
+      h(
+        'div',
+        { class: `side ${cls}` },
+        s.pic ? h('img', { class: 'trainer-pic', src: s.pic, alt: '' }) : null,
+        h('span', { class: 'nm' }, s.name),
+        h('div', { class: 'icons' }, s.icons.map((src, i) => h('span', { class: 'ped', style: `animation-delay:${0.25 + i * 0.1}s` }, h('img', { src })))),
+      );
+    const el = h('div', { class: `vs-intro ${right.pic ? 'with-pic' : ''}` }, h('div', { class: 'vs-lines' }), side(left, 'left'), h('div', { class: 'vs' }, t('vs')), side(right, 'right'));
+    this.root.classList.add('intro');
     this.overlay.appendChild(el);
     await sleep(right.pic ? 2400 : 1900);
     el.style.transition = 'opacity .35s';
     el.style.opacity = '0';
     await sleep(350);
     el.remove();
+    this.root.classList.remove('intro');
   }
 
   // ------------------------------------------------------------ QTE
@@ -396,40 +402,41 @@ export class Hud {
       let eff: HTMLElement | null = null;
       if (mv.category !== 'status') {
         const est = b.estimateDamage(side, slot.key);
-        if (est.eff === 0) eff = h('span', { class: 'eff ne' }, t('noEffect'));
-        else if (est.eff > 1) eff = h('span', { class: 'eff se' }, t('superEffective'));
-        else if (est.eff < 1) eff = h('span', { class: 'eff nve' }, t('notVery'));
+        // compact multiplier chip (full text in the tooltip) so long move names keep their room
+        const x = est.eff >= 4 ? '×4' : est.eff > 1 ? '×2' : est.eff === 0 ? '×0' : est.eff <= 0.25 ? '×¼' : '×½';
+        if (est.eff === 0) eff = h('span', { class: 'eff ne', title: t('noEffect') }, x);
+        else if (est.eff > 1) eff = h('span', { class: 'eff se', title: t('superEffective') }, '▲', x);
+        else if (est.eff < 1) eff = h('span', { class: 'eff nve', title: t('notVery') }, '▼', x);
       }
-      const cat = mv.category === 'physical' ? '#ff8a4a' : mv.category === 'special' ? '#6ab0ff' : '#c8c8c8';
+      const c = TYPE_COLOR[mv.type as PokeType] ?? '#888';
       const btn = h(
         'button',
         {
-          class: 'move-btn',
-          style: `background:${moveGradient(mv.type)}`,
+          class: `move-btn ${slot.pp <= Math.ceil(slot.maxPp / 4) ? 'low-pp' : ''}`,
+          style: `--mc:${c};--mc2:${shade(c, -0.5)}`,
           disabled: (slot.pp <= 0 && !allOut) || !b.moveAllowed(side, i),
           title: mv.description,
           onclick: () => choose({ type: 'move', slot: i }),
           onmouseenter: () => audio.playSfx('uiHover', { volume: 0.3 }),
         },
-        h('span', { class: 'k kbd' }, String(i + 1)),
+        h('span', { class: `cat-ic ${mv.category}`, title: t(mv.category), html: ICONS[mv.category as 'physical' | 'special' | 'status'] }, h('span', { class: 'k' }, String(i + 1))),
         h('span', { class: 'mn' }, mv.name),
+        eff ?? h('span'),
         h(
           'span',
           { class: 'meta' },
-          h('span', { class: 'cat', style: `background:${cat}`, title: t(mv.category) }),
-          h('span', null, mv.type),
-          h('span', null, `${t('power')} ${mv.power > 1 ? mv.power : '—'}`),
-          h('span', null, `${t('acc')} ${mv.accuracy || '∞'}`),
-          h('span', null, `PP ${slot.pp}/${slot.maxPp}`),
+          h('span', { class: 'ty' }, mv.type),
+          h('span', { class: 'st', title: t('power') }, h('i', { html: ICONS.power }), mv.power > 1 ? String(mv.power) : '—'),
+          h('span', { class: 'st', title: t('acc') }, h('i', { html: ICONS.target }), mv.accuracy ? String(mv.accuracy) : '∞'),
         ),
-        eff,
+        h('span', { class: 'pp' }, h('small', null, 'PP'), `${slot.pp}/${slot.maxPp}`),
       );
       this.cmdEl.appendChild(btn);
     });
     const canEvo = b.canEvolve(mon);
     const hasNext = b.hasNextStage(mon);
-    const evoBtn = h('button', { class: `btn evo-btn ${canEvo ? 'ready' : ''}`, disabled: !canEvo, onclick: () => choose({ type: 'evolve' }) }, h('span', { class: 'kbd' }, 'E'), ' ', hasNext ? t('evolve') : 'MAX');
-    const swBtn = h('button', { class: 'btn', disabled: !opts.canSwitch, onclick: () => this.openParty(b, side, false).then((i) => i !== null && choose({ type: 'switch', index: i })) }, h('span', { class: 'kbd' }, 'S'), ' ', t('switch'));
+    const evoBtn = h('button', { class: `btn evo-btn ${canEvo ? 'ready' : ''}`, disabled: !canEvo, onclick: () => choose({ type: 'evolve' }) }, h('span', { class: 'ic', html: ICONS.evolve }), h('span', null, hasNext ? t('evolve') : 'MAX'), h('span', { class: 'kbd' }, 'E'));
+    const swBtn = h('button', { class: 'btn sw-btn', disabled: !opts.canSwitch, onclick: () => this.openParty(b, side, false).then((i) => i !== null && choose({ type: 'switch', index: i })) }, h('span', { class: 'ic', html: ICONS.swap }), h('span', null, t('switch')), h('span', { class: 'kbd' }, 'S'));
     this.cmdEl.appendChild(h('div', { class: 'side-btns' }, evoBtn, swBtn));
     this.cmdEl.classList.remove('off');
     this.setMessage(t('chooseMove', mon.name));
@@ -480,14 +487,17 @@ export class Hud {
       st.team.forEach((m, i) => {
         const f = m.hp / m.stats.hp;
         const cls = f <= 0.2 ? 'low' : f <= 0.5 ? 'mid' : '';
+        const c = TYPE_COLOR[m.types[0]] ?? '#888';
         list.appendChild(
           h(
             'button',
-            { class: 'party-mon', disabled: m.fainted || i === st.active, onclick: () => pick(i) },
-            h('img', { src: iconUrl(m.speciesKey) }),
-            h('b', null, m.name, ' ', h('small', null, `${t('level')}${m.level}`)),
-            h('small', null, m.fainted ? t('fainted') : i === st.active ? t('active_') : `${m.hp}/${m.stats.hp}`),
-            h('div', { class: 'hpbar' }, h('div', { class: `fill ${cls}`, style: `width:${f * 100}%` })),
+            { class: `party-mon ${m.fainted ? 'fainted' : ''} ${i === st.active ? 'active' : ''}`, style: `--t1:${c}`, disabled: m.fainted || i === st.active, onclick: () => pick(i) },
+            h('span', { class: 'pk' }, String(i + 1)),
+            h('img', { src: assetUrl(SPECIES[m.speciesKey].dex, 'frlg-front.png') }),
+            h('b', null, m.name, h('small', null, ` ${t('level')}${m.level}`)),
+            h('span', { class: 'ptypes' }, m.types.map(typeBadge)),
+            h('div', { class: 'hpbar' }, h('div', { class: `fill ${cls}`, style: `width:${f * 100}%` }), h('i', { class: 'gloss' })),
+            h('small', { class: 'pstate' }, m.fainted ? t('fainted') : i === st.active ? t('active_') : `${m.hp} / ${m.stats.hp}`),
           ),
         );
       });
@@ -496,7 +506,7 @@ export class Hud {
         { class: 'party panel interactive' },
         h('h4', null, t('choosePokemon')),
         list,
-        forced ? null : h('button', { class: 'btn', onclick: () => (audio.playSfx('uiBack'), this.closeParty()) }, t('cancel')),
+        forced ? null : h('button', { class: 'btn ghost', onclick: () => (audio.playSfx('uiBack'), this.closeParty()) }, t('cancel')),
       );
       this.overlay.appendChild(this.partyEl);
       const onKey = (e: KeyboardEvent) => {
